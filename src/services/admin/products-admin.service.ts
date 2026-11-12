@@ -1,5 +1,6 @@
 // Admin catalog editing (admin.md §2 "Products"): major→minor prices, activation rules, optimistic concurrency.
 import type {
+  AdminProductListItem,
   AdminProductRecord,
   AdminProductsRepo,
   AdminVariant,
@@ -176,8 +177,21 @@ export async function getProductForEdit(deps: AdminProductsDeps, id: string): Pr
   };
 }
 
-export async function listAdminProducts(deps: AdminProductsDeps) {
-  return deps.products.list();
+export interface AdminProductListView extends AdminProductListItem {
+  title: string;
+  coverUrl: string | null;
+  /** Lowest TRY price across editions (minor units), for the list. */
+  fromPriceTry: number | null;
+}
+
+export async function listAdminProducts(deps: AdminProductsDeps): Promise<AdminProductListView[]> {
+  const rows = await deps.products.list();
+  return rows.map((p) => ({
+    ...p,
+    title: p.titles.find((x) => x.locale === 'tr')?.title ?? p.titles[0]?.title ?? p.slug,
+    coverUrl: p.coverImageKey ? mediaUrl(deps.mediaBaseUrl, p.coverImageKey, 240) : null,
+    fromPriceTry: p.variants.length > 0 ? Math.min(...p.variants.map((v) => v.priceTry)) : null,
+  }));
 }
 
 export async function listProductOptions(deps: AdminProductsDeps) {

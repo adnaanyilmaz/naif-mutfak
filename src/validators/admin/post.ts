@@ -61,3 +61,13 @@ export const postIdSchema = z.guid();
 export type PostSharedInput = z.infer<typeof postSharedInputSchema>;
 export type PostTranslationInput = z.infer<typeof postTranslationInputSchema>;
 export type SavePostInput = z.infer<typeof savePostInputSchema>;
+
+const firstParam = (v: unknown) => {
+  const first = Array.isArray(v) ? v[0] : v;
+  return first === '' ? undefined : first;
+};
+
+export const postListQuerySchema = z.object({
+  q: z.preprocess(firstParam, z.string().max(100).optional()),
+  status: z.preprocess(firstParam, z.enum(POST_STATUSES).optional()),
+});

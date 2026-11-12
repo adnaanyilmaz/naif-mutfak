@@ -6,7 +6,10 @@ import { LOCALE_META } from '@/i18n/config';
 import type { AdminProductEditView, ProductIssue, SaveProductResult } from '@/services/admin/products-admin.service';
 import { PRODUCT_STATUSES } from '@/validators/admin/product';
 import { LOCALES, type Locale } from '@/validators/content';
+import Link from 'next/link';
+import { AdminCard, StatusBadge, accentButton, primaryButton, secondaryButton } from './AdminPage';
 import { CheckboxField, SelectField, TextField } from './fields';
+import { AlertIcon, BackIcon, CheckIcon, ExternalIcon, ImageIcon } from './icons';
 import { MarkdownField } from './MarkdownField';
 import { UploadButton } from './UploadButton';
 
@@ -122,39 +125,68 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
   const missingEditions = LOCALES.filter((l) => !variants.some((v) => v.contentLocale === l));
 
   return (
-    <div className="mx-auto max-w-page">
-      <header className="sticky top-0 z-10 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b border-hairline bg-cream/95 px-4 py-3 backdrop-blur md:-mx-8 md:px-8">
-        <h1 className="font-display text-h3">{translations.tr?.title || product.slug}</h1>
-        <div className="flex items-center gap-2">
-          <span aria-live="polite" className="text-eyebrow text-muted">
-            {pending ? t('common.saving') : status === 'saved' ? t('common.saved') : ''}
-          </span>
-          <button
-            type="button"
-            onClick={save}
-            disabled={pending}
-            className="rounded-pill bg-terracotta px-4 py-2 font-medium text-white hover:bg-terracotta-deep disabled:opacity-50"
-          >
-            {t('common.save')}
-          </button>
+    <div className="mx-auto max-w-wide">
+      <header className="sticky top-0 z-20 -mx-4 border-b border-hairline bg-linen/90 px-4 py-3 backdrop-blur md:-mx-10 md:px-10">
+        <div className="mx-auto flex max-w-wide flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <Link href="/admin/products" className="inline-flex items-center gap-1 text-[0.8125rem] font-medium text-muted hover:text-charcoal">
+              <BackIcon className="size-4 rtl:-scale-x-100" />
+              {t('productEditor.back')}
+            </Link>
+            <div className="flex min-w-0 items-center gap-2">
+              <h1 className="truncate font-display text-[1.25rem] font-extrabold">{translations.tr?.title || product.slug}</h1>
+              <StatusBadge status={product.status} label={t(`status.${product.status}`)} />
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span aria-live="polite" className="hidden items-center gap-1.5 text-[0.8125rem] text-muted sm:inline-flex">
+              {pending ? (
+                t('common.saving')
+              ) : dirty ? (
+                <>
+                  <span aria-hidden className="size-2 rounded-full bg-brand" />
+                  {t('editor.unsaved')}
+                </>
+              ) : status === 'saved' ? (
+                <>
+                  <CheckIcon className="size-4 text-olive" />
+                  {t('editor.allSaved')}
+                </>
+              ) : null}
+            </span>
+            {view.product.status === 'active' ? (
+              <Link href={`/tr/ebooks/${view.product.slug}`} target="_blank" rel="noopener" className={secondaryButton}>
+                {t('productEditor.viewOnSite')}
+                <ExternalIcon className="size-4" />
+              </Link>
+            ) : null}
+            <button type="button" onClick={save} disabled={pending} className={accentButton}>
+              {t('common.save')}
+            </button>
+          </div>
         </div>
       </header>
 
+      <div className="mt-6 space-y-6">
       {status === 'conflict' ? (
-        <div role="alert" className="mt-4 flex flex-wrap items-center gap-3 rounded-card border border-danger bg-paper p-3 text-danger">
-          <span>{t('editor.conflict')}</span>
-          <button type="button" className="font-medium underline" onClick={() => window.location.reload()}>
+        <div role="alert" className="flex flex-wrap items-center gap-3 rounded-2xl border border-[#f5c2bd] bg-[#fdecea] px-4 py-3 text-danger">
+          <AlertIcon className="size-5" />
+          <span className="flex-1">{t('editor.conflict')}</span>
+          <button type="button" className="font-semibold underline underline-offset-4" onClick={() => window.location.reload()}>
             {t('common.reload')}
           </button>
         </div>
       ) : null}
       {issues ? (
-        <div role="alert" className="mt-4 rounded-card border border-danger bg-paper p-3">
-          <p className="font-medium text-danger">{t('editor.issuesTitle')}</p>
-          <ul className="mt-1 list-disc ps-5 text-stone">
+        <div role="alert" className="rounded-2xl border border-[#f5c2bd] bg-white p-4">
+          <p className="flex items-center gap-2 font-semibold text-danger">
+            <AlertIcon className="size-5" />
+            {t('editor.issuesTitle')}
+          </p>
+          <ul className="mt-2 list-disc ps-6 text-stone">
             {issues.map((i) => (
               <li key={`${i.path}:${i.code}`}>
-                {i.path.startsWith('variants.') && /^variants\.(tr|en|ar)/.test(i.path)
+                {/^variants\.(tr|en|ar)/.test(i.path)
                   ? t('issues.inLocale', { locale: i.path.slice(9, 11).toUpperCase(), message: t(`issues.${i.code}`, { path: i.path }) })
                   : t(`issues.${i.code}`, { path: i.path })}
               </li>
@@ -163,54 +195,63 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
         </div>
       ) : null}
 
-      <section className="mt-6 grid gap-4 rounded-card border border-hairline bg-paper p-4 md:grid-cols-[auto_1fr] md:p-5">
-        <div className="flex flex-col items-start gap-2">
-          {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element -- admin preview of the R2 original
-            <img src={cover} alt="" className="h-40 w-28 rounded-card object-cover shadow-card" />
-          ) : (
-            <span className="flex h-40 w-28 items-center justify-center rounded-card bg-linen text-center text-eyebrow text-muted">{t('productEditor.noCover')}</span>
-          )}
-          <UploadButton
-            kind="product_cover"
-            entityId={view.product.id}
-            accept="image/jpeg,image/png,image/webp"
-            label={cover ? t('common.replace') : t('productEditor.cover')}
-            onUploaded={(_key, url) => setCover(url)}
-          />
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <TextField
-            label={t('productEditor.slug')}
-            value={product.slug}
-            dir="ltr"
-            onChange={(slug) => {
-              touch();
-              setProduct((p) => ({ ...p, slug }));
-            }}
-          />
-          <SelectField
-            label={t('productEditor.status')}
-            value={product.status}
-            options={PRODUCT_STATUSES.map((s) => ({ value: s, label: t(`status.${s}`) }))}
-            onChange={(s) => {
-              touch();
-              setProduct((p) => ({ ...p, status: s }));
-            }}
-          />
-          <TextField
-            label={t('productEditor.pageCount')}
-            value={product.pageCount}
-            inputMode="numeric"
-            onChange={(pageCount) => {
-              touch();
-              setProduct((p) => ({ ...p, pageCount }));
-            }}
-          />
-        </div>
-      </section>
+      <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
+        <AdminCard title={t('productEditor.sectionGeneral')}>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <TextField
+              label={t('productEditor.slug')}
+              value={product.slug}
+              dir="ltr"
+              hint={`/tr/ebooks/${product.slug}`}
+              onChange={(slug) => {
+                touch();
+                setProduct((p) => ({ ...p, slug }));
+              }}
+            />
+            <SelectField
+              label={t('productEditor.status')}
+              value={product.status}
+              options={PRODUCT_STATUSES.map((s) => ({ value: s, label: t(`status.${s}`) }))}
+              onChange={(s) => {
+                touch();
+                setProduct((p) => ({ ...p, status: s }));
+              }}
+            />
+            <TextField
+              label={t('productEditor.pageCount')}
+              value={product.pageCount}
+              inputMode="numeric"
+              onChange={(pageCount) => {
+                touch();
+                setProduct((p) => ({ ...p, pageCount }));
+              }}
+            />
+          </div>
+        </AdminCard>
+        <AdminCard title={t('productEditor.cover')}>
+          <div className="flex items-start gap-4 lg:flex-col">
+            {cover ? (
+              // eslint-disable-next-line @next/next/no-img-element -- admin preview of the R2 original
+              <img src={cover} alt="" className="aspect-[3/4] w-28 rounded-xl object-cover shadow-card" />
+            ) : (
+              <span className="flex aspect-[3/4] w-28 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-hairline bg-linen text-center text-[0.75rem] text-muted">
+                <ImageIcon className="size-6" />
+                {t('productEditor.noCover')}
+              </span>
+            )}
+            <UploadButton
+              kind="product_cover"
+              entityId={view.product.id}
+              accept="image/jpeg,image/png,image/webp"
+              label={cover ? t('common.replace') : t('common.upload')}
+              onUploaded={(_key, url) => setCover(url)}
+            />
+          </div>
+        </AdminCard>
+      </div>
 
-      <div role="tablist" className="mt-6 flex gap-1">
+      <AdminCard title={t('productEditor.sectionTexts')} hint={t('productEditor.sectionTextsHint')}>
+      <div role="tablist" className="mb-4 flex w-fit gap-1 rounded-pill bg-linen p-1">
         {LOCALES.map((l) => (
           <button
             key={l}
@@ -218,13 +259,14 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
             role="tab"
             aria-selected={active === l}
             onClick={() => setActive(l)}
-            className={`rounded-t-card border border-b-0 border-hairline px-4 py-2 ${active === l ? 'bg-paper font-medium' : 'bg-linen text-stone'}`}
+            className={`inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-[0.875rem] font-semibold ${active === l ? 'bg-white text-charcoal shadow-[0_1px_3px_rgb(0_0_0/0.1)]' : 'text-stone hover:text-charcoal'}`}
           >
-            {l.toUpperCase()} {translations[l]?.title ? '●' : '○'}
+            <span aria-hidden className={`size-2 rounded-full ${translations[l]?.title ? 'bg-olive' : 'bg-hairline'}`} />
+            {t(`locales.${l}`)}
           </button>
         ))}
       </div>
-      <section role="tabpanel" lang={active} dir={meta.dir} data-script={meta.script} className="space-y-4 rounded-card border border-hairline bg-paper p-4 md:p-5">
+      <section role="tabpanel" lang={active} dir={meta.dir} data-script={meta.script} className="space-y-4">
         {tr ? (
           <>
             {(['title', 'subtitle', 'coverAlt'] as const).map((field) => (
@@ -260,22 +302,20 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
             <button
               type="button"
               onClick={() => setTranslations((all) => ({ ...all, [active]: blankTranslation }))}
-              className="mt-3 rounded-pill bg-charcoal px-4 py-2 text-white"
+              className={`mt-3 ${primaryButton}`}
             >
               {t('editor.startTranslation')}
             </button>
           </div>
         )}
       </section>
+      </AdminCard>
 
-      <section className="mt-6 rounded-card border border-hairline bg-paper p-4 md:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-display text-h3">{t('productEditor.variants')}</h2>
-          <p className="text-eyebrow text-muted">{t('productEditor.providerHint', { provider: t(`analytics.providers.${view.provider}`) })}</p>
-        </div>
+      <AdminCard title={t('productEditor.variants')} hint={t('productEditor.editionsHint')}>
+        <p className="-mt-3 mb-2 text-[0.8125rem] font-medium text-stone">{t('productEditor.providerHint', { provider: t(`analytics.providers.${view.provider}`) })}</p>
         <div className="mt-4 space-y-4">
           {variants.map((v, i) => (
-            <fieldset key={v.id ?? `new-${v.contentLocale}`} className="rounded-card border border-hairline bg-cream p-3">
+            <fieldset key={v.id ?? `new-${v.contentLocale}`} className="rounded-xl border border-hairline bg-linen/50 p-4">
               <legend className="px-1 font-medium">
                 {t('productEditor.edition')}: {t(`locales.${v.contentLocale}`)}
               </legend>
@@ -344,14 +384,15 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
                     },
                   ]);
                 }}
-                className="rounded-pill border border-hairline bg-paper px-3 py-1.5 hover:bg-linen"
+                className={secondaryButton}
               >
                 + {t('productEditor.addEdition', { locale: t(`locales.${l}`) })}
               </button>
             ))}
           </div>
         ) : null}
-      </section>
+      </AdminCard>
+      </div>
     </div>
   );
 }

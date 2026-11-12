@@ -8,6 +8,8 @@ import { product, seedPosts } from './seed-data.ts';
 
 const DB_NAME = 'naif-mutfak-db';
 const EBOOKS_BUCKET = 'naif-mutfak-ebooks';
+const MEDIA_BUCKET = 'naif-mutfak-media';
+const MEDIA_DIR = join('scripts', 'seed-media');
 const OUT_DIR = join('.wrangler', 'seed');
 
 type SqlValue = string | number | boolean | null | Date | object;
@@ -112,7 +114,7 @@ function buildSql(pdfSizes: Map<string, number>): string {
           id: p.id,
           status: 'published',
           category: p.category,
-          hero_image_key: null,
+          hero_image_key: p.heroImage.key,
           is_recipe: true,
           prep_minutes: p.prepMinutes,
           cook_minutes: p.cookMinutes,
@@ -171,8 +173,12 @@ for (const v of product.variants) {
   wrangler(['r2', 'object', 'put', `${EBOOKS_BUCKET}/${pdfKey(v.id)}`, '--local', '--file', file, '--content-type', 'application/pdf']);
 }
 
+for (const p of seedPosts) {
+  wrangler(['r2', 'object', 'put', `${MEDIA_BUCKET}/${p.heroImage.key}`, '--local', '--file', join(MEDIA_DIR, p.heroImage.file), '--content-type', 'image/jpeg']);
+}
+
 const sqlFile = join(OUT_DIR, 'seed.sql');
 writeFileSync(sqlFile, buildSql(sizes), 'utf8');
 wrangler(['d1', 'execute', DB_NAME, '--local', '--file', sqlFile]);
 
-console.log(`Seeded ${seedPosts.length} posts, 1 product (${product.variants.length} variants) into local D1/R2.`);
+console.log(`Seeded ${seedPosts.length} posts, 1 product (${product.variants.length} variants) with hero photos into local D1/R2.`);

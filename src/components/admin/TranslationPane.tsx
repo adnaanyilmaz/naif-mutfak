@@ -50,7 +50,7 @@ export function TranslationPane(props: TranslationPaneProps) {
   const err = (field: string) => props.fieldErrors[field];
 
   return (
-    <section lang={locale} dir={meta.dir} data-script={meta.script} className="space-y-5 rounded-card border border-hairline bg-paper p-4 md:p-5">
+    <section lang={locale} dir={meta.dir} data-script={meta.script} className="space-y-5 rounded-2xl border border-hairline bg-white p-4 md:p-5">
       <TextField
         label={t('title')}
         value={value.title}
@@ -62,6 +62,7 @@ export function TranslationPane(props: TranslationPaneProps) {
         label={t('slug')}
         value={value.slug}
         dir="ltr"
+        hint={value.slug ? t('urlPreview', { url: `/${locale}/blog/${value.slug}` }) : undefined}
         error={
           props.slugStatus === 'taken' ? t('slugTaken') : props.slugStatus === 'invalid' ? t('slugInvalid') : err('slug')
         }
@@ -107,13 +108,21 @@ export function TranslationPane(props: TranslationPaneProps) {
       ) : null}
 
       <div className="grid gap-4 md:grid-cols-2">
-        <TextField label={t('seoTitle')} value={value.seoTitle} maxLength={120} {...fieldProps} onChange={(v) => set('seoTitle', v)} />
+        <TextField
+          label={t('seoTitle')}
+          value={value.seoTitle}
+          maxLength={120}
+          hint={t('charCount', { count: value.seoTitle.length, max: 60 })}
+          {...fieldProps}
+          onChange={(v) => set('seoTitle', v)}
+        />
         <TextField label={t('heroAlt')} value={value.heroImageAlt} {...fieldProps} onChange={(v) => set('heroImageAlt', v)} />
       </div>
       <TextField
         label={t('seoDescription')}
         value={value.seoDescription}
         maxLength={320}
+        hint={t('charCount', { count: value.seoDescription.length, max: 160 })}
         multiline
         {...fieldProps}
         onChange={(v) => set('seoDescription', v)}

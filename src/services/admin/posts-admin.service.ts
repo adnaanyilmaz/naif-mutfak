@@ -131,7 +131,17 @@ export interface AdminPostListView {
   category: string;
   updatedAt: Date;
   title: string;
-  locales: { locale: Locale; isPublished: boolean }[];
+  thumbnailUrl: string | null;
+  locales: { locale: Locale; isPublished: boolean; slug: string }[];
+  /** First published locale's public path, for "view on site". */
+  publicPath: string | null;
+}
+
+/** Public URL of the first published locale (TR first), or null while the post is not live. */
+export function publicPathOf(status: AdminPostRecord['status'], translations: { locale: Locale; slug: string; isPublished: boolean }[]): string | null {
+  if (status !== 'published') return null;
+  const live = ['tr', 'en', 'ar'].map((l) => translations.find((t) => t.locale === l && t.isPublished)).find(Boolean);
+  return live ? `/${live.locale}/blog/${live.slug}` : null;
 }
 
 export async function listAdminPosts(deps: AdminPostsDeps): Promise<AdminPostListView[]> {
@@ -144,7 +154,9 @@ export async function listAdminPosts(deps: AdminPostsDeps): Promise<AdminPostLis
       category: p.category,
       updatedAt: p.updatedAt,
       title: primary?.title ?? '',
-      locales: p.translations.map((t) => ({ locale: t.locale, isPublished: t.isPublished })),
+      thumbnailUrl: p.heroImageKey ? mediaUrl(deps.mediaBaseUrl, p.heroImageKey, 240) : null,
+      locales: p.translations.map((t) => ({ locale: t.locale, isPublished: t.isPublished, slug: t.slug })),
+      publicPath: publicPathOf(p.status, p.translations),
     };
   });
 }
@@ -167,4 +179,16 @@ export async function getPostForEdit(deps: AdminPostsDeps, id: string): Promise<
     heroImageUrl: post.heroImageKey ? mediaUrl(deps.mediaBaseUrl, post.heroImageKey) : null,
     completeness: { tr: at('tr'), en: at('en'), ar: at('ar') },
   };
+}
+
+export interface PostListFilter {
+  q?: string | undefined;
+  status?: AdminPostRecord['status'] | undefined;
+}
+
+/** Case-/diacritic-insensitive title search + status filter for the admin list. */
+export function filterAdminPosts(posts: AdminPostListView[], filter: PostListFilter): AdminPostListView[] {
+  const fold = (s: string) => s.toLocaleLowerCase('tr').normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+  const q = fold(filter.q?.trim() ?? '');
+  return posts.filter((p) => (!filter.status || p.status === filter.status) && (!q || fold(p.title).includes(q)));
 }

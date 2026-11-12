@@ -81,7 +81,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <header className="mx-auto max-w-[52rem] px-4 pt-10 text-center sm:px-6 md:pt-16 print:hidden">
         <Link
           href="/blog"
-          className="inline-flex rounded-pill bg-terracotta-tint px-3 py-1.5 text-[0.8125rem] font-semibold text-terracotta-deep hover:bg-[#ffe4d1]"
+          className="inline-flex rounded-pill bg-terracotta-tint px-3 py-1.5 text-[0.8125rem] font-semibold text-terracotta-deep hover:bg-[#ffe9c7]"
         >
           {c(categoryKey(post.category))}
         </Link>
@@ -98,7 +98,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {recipe && (
           <a
             href="#recipe"
-            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-pill bg-terracotta px-6 text-ui font-semibold text-white shadow-[0_8px_20px_-8px_rgb(194_65_12/0.6)] transition-colors duration-200 ease-editorial hover:bg-terracotta-deep"
+            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-pill bg-terracotta px-6 text-ui font-semibold text-white shadow-[0_8px_20px_-8px_rgb(180_83_9/0.6)] transition-colors duration-200 ease-editorial hover:bg-terracotta-deep"
           >
             {t('jumpToRecipe')}
             <span aria-hidden>↓</span>

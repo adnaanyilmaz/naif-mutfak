@@ -119,7 +119,11 @@
       "subscribers": "Aboneler",
       "signedInAs": "{email} olarak giriş yapıldı",
       "devMode": "Yerel geliştirme oturumu",
-      "viewSite": "Siteyi görüntüle"
+      "viewSite": "Siteyi görüntüle",
+      "overview": "Genel bakış",
+      "content": "İçerik",
+      "insights": "Raporlar",
+      "signedIn": "Oturum açık"
     },
     "auth": {
       "unauthorizedTitle": "Oturum gerekli",
@@ -184,7 +188,17 @@
       "colStatus": "Durum",
       "colLocales": "Diller",
       "colUpdated": "Güncellendi",
-      "untitled": "Başlıksız"
+      "untitled": "Başlıksız",
+      "subtitle": "Tarifleri ve yazıları üç dilde düzenleyin.",
+      "search": "Yazılarda ara…",
+      "searchLabel": "Yazılarda ara",
+      "filterLabel": "Duruma göre filtrele",
+      "all": "Tümü",
+      "noResults": "Aramanızla eşleşen yazı yok.",
+      "viewOnSite": "Sitede görüntüle",
+      "emptyTitle": "İlk yazınızı oluşturun",
+      "emptyBody": "Oluşturduğunuz tarifler ve yazılar burada listelenir.",
+      "localeLegend": "Yeşil: o dilde yayında · gri: taslak"
     },
     "editor": {
       "heading": "Yazıyı düzenle",
@@ -269,7 +283,24 @@
       "discard": "Yok say",
       "issuesTitle": "Kaydedilemedi",
       "warningsTitle": "Uyarılar",
-      "notFound": "Yazı bulunamadı."
+      "notFound": "Yazı bulunamadı.",
+      "back": "Yazılar",
+      "unsaved": "Kaydedilmemiş değişiklikler",
+      "allSaved": "Tüm değişiklikler kaydedildi",
+      "shortcut": "Kaydetmek için Ctrl + S",
+      "viewOnSite": "Sitede görüntüle",
+      "sectionGeneral": "Genel bilgiler",
+      "sectionGeneralHint": "Durum, kategori ve öne çıkan e-kitap tüm diller için ortaktır.",
+      "sectionRecipe": "Tarif bilgileri",
+      "sectionRecipeHint": "Süreler dakika cinsindendir; toplam süre otomatik hesaplanır.",
+      "sectionMedia": "Kapak görseli",
+      "sectionMediaHint": "JPEG, PNG, WebP veya AVIF · en fazla 15 MB. Tariflerin yayınlanması için gereklidir.",
+      "sectionContent": "İçerik",
+      "sectionContentHint": "Her dil ayrı yayınlanır. Sekmedeki nokta o dilin durumunu gösterir.",
+      "urlPreview": "Adres: {url}",
+      "charCount": "{count, number} / {max, number} karakter",
+      "issueGoTo": "İlgili dile git",
+      "savedToast": "Değişiklikler kaydedildi"
     },
     "issues": {
       "invalid": "Geçersiz değer: {path}",
@@ -303,7 +334,12 @@
       "colTitle": "Başlık",
       "colSlug": "Kısa adres",
       "colStatus": "Durum",
-      "colEditions": "Baskılar"
+      "colEditions": "Baskılar",
+      "subtitle": "E-kitapları, dil baskılarını ve fiyatları yönetin.",
+      "price": "Fiyat",
+      "pdfMissingHint": "PDF eksik",
+      "emptyTitle": "İlk e-kitabınızı ekleyin",
+      "emptyBody": "Kapak, dil baskıları, fiyatlar ve PDF dosyaları tek ekrandan yönetilir."
     },
     "productEditor": {
       "heading": "E-kitabı düzenle",
@@ -331,7 +367,13 @@
       "pdfInfo": "{size} · SHA-256 {sha}",
       "saveFirst": "PDF yüklemek için önce kaydedin.",
       "providerHint": "Aktif ödeme sağlayıcı: {provider}",
-      "notFound": "E-kitap bulunamadı."
+      "notFound": "E-kitap bulunamadı.",
+      "back": "E-kitaplar",
+      "sectionGeneral": "Genel bilgiler",
+      "sectionTexts": "Metinler",
+      "sectionTextsHint": "Mağaza sayfasında görünen başlık ve açıklama; her dil için ayrı.",
+      "editionsHint": "Her baskı ayrı PDF ve fiyatla satılır. Satışa açmak için PDF ve ödeme sağlayıcı kimliği gerekir.",
+      "viewOnSite": "Mağazada görüntüle"
     },
     "upload": {
       "error": {
@@ -413,6 +455,51 @@
         "lemonsqueezy": "Lemon Squeezy",
         "paddle": "Paddle"
       }
+    },
+    "overview": {
+      "title": "Genel bakış",
+      "subtitle": "Sitenin durumuna hızlı bir bakış.",
+      "posts": "Yazılar",
+      "published": "{n, number} yayında",
+      "drafts": "{n, number} taslak",
+      "ebooks": "E-kitaplar",
+      "activeEditions": "{n, number} baskı satışta",
+      "sales30": "Son 30 gün satış",
+      "orders": "{n, number} sipariş",
+      "noSales": "Henüz satış yok",
+      "subscribers": "Aboneler",
+      "activeSubs": "{n, number} aktif",
+      "pendingSubs": "{n, number} onay bekliyor",
+      "quickActions": "Hızlı işlemler",
+      "recentPosts": "Son düzenlenen yazılar",
+      "webhookAlert": "Son 7 günde {n, number} ödeme bildirimi işlenemedi.",
+      "review": "İncele",
+      "allPosts": "Tüm yazılar"
     }
+  },
+  "About": {
+    "metaTitle": "Hakkında",
+    "metaDescription": "Naif Mutfak; sade malzemelerle, sabırla ve adım adım test edilerek hazırlanan tariflerin üç dilde buluştuğu bir mutfak defteri.",
+    "eyebrow": "Hakkında",
+    "title": "Sade malzemeler, sabırlı eller, paylaşılan sofralar",
+    "intro": "Naif Mutfak, evde güvenle tekrar edilebilen tarifler için kuruldu. Az ve iyi malzemeyle, acele etmeden pişirmenin keyfini Türkçe, İngilizce ve Arapça olarak paylaşıyoruz.",
+    "imageAlt": "Unlu bir tezgâhta hamur yoğuran eller",
+    "storyTitle": "Hikâyemiz",
+    "story1": "Bir tarifin değeri, ilk denemede değil; mutfağınızda üçüncü, beşinci kez yapıldığında anlaşılır. Naif Mutfak bu fikirle doğdu: süslü sunumlardan çok, gerçekten işe yarayan tariflere odaklanan, sakin bir mutfak defteri.",
+    "story2": "Ekşi mayalı ekmekten fıstıklı baklavaya kadar her tarifi gramajlarıyla, ipuçlarıyla ve sık yapılan hatalarla birlikte anlatıyoruz. Amacımız, malzemeyi tanıyan ve hamuru hissederek çalışan bir el kazandırmak.",
+    "principlesTitle": "Nasıl çalışıyoruz",
+    "principleSimpleTitle": "Sade malzeme",
+    "principleSimpleBody": "Her tarif, mahalle marketinde bulunabilecek malzemelerle başlar. Az ama doğru malzeme, iyi bir sonucun yarısıdır.",
+    "principleTestedTitle": "Adım adım test",
+    "principleTestedBody": "Tarifler yayımlanmadan önce ev mutfağında defalarca denenir; gram ölçüleri, süreler ve ipuçları bu denemelerden çıkar.",
+    "principleLanguagesTitle": "Üç dil, tek sofra",
+    "principleLanguagesBody": "Tüm içerik Türkçe, İngilizce ve Arapça yayımlanır; böylece aynı tarif farklı mutfaklarda aynı özenle pişirilebilir.",
+    "featuresTitle": "Sitede neler bulacaksınız",
+    "featureRecipes": "Porsiyon çarpanı, işaretlenebilir malzemeler ve yazdırılabilir tarif kartları",
+    "featureEbooks": "Konuya odaklanan, PDF formatında dijital yemek kitapları",
+    "featureNewsletter": "Ayda iki kez mevsimin tariflerini getiren bülten",
+    "ctaTitle": "Mutfağa girmeye hazır mısınız?",
+    "ctaRecipes": "Tariflere göz atın",
+    "ctaEbooks": "E-kitapları keşfedin"
   }
 }

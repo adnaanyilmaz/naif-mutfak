@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { PostEditor } from '@/components/admin/PostEditor';
 import { toPostForm } from '@/services/admin/post-form';
-import { getPostForEdit } from '@/services/admin/posts-admin.service';
+import { getPostForEdit, publicPathOf } from '@/services/admin/posts-admin.service';
 import { listProductOptions } from '@/services/admin/products-admin.service';
 import { adminPostsDeps, adminProductsDeps } from '@/services/container';
 import { postIdSchema } from '@/validators/admin/post';
@@ -28,6 +28,7 @@ export default async function AdminPostEditPage({ params }: { params: Promise<{ 
       products={products}
       saveAction={savePostAction}
       checkSlugAction={checkSlugAction}
+      publicPath={publicPathOf(view.post.status, view.post.translations)}
     />
   );
 }

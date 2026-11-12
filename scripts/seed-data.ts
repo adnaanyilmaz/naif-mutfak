@@ -25,6 +25,8 @@ export interface SeedPost {
   baseServings: number;
   difficulty: 'easy' | 'medium' | 'advanced';
   publishedAt: string;
+  /** Stock photo in scripts/seed-media (Unsplash License, see CREDITS.md) → local MEDIA_PUBLIC key. */
+  heroImage: { file: string; key: string };
   translations: SeedPostTranslation[];
 }
 
@@ -84,6 +86,10 @@ const callout = `::ebook{product="${PRODUCT_SLUG}"}`;
 const sourdough: SeedPost = {
   id: '7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a01',
   category: 'bread',
+  heroImage: {
+    file: 'sourdough-hero.jpg',
+    key: 'posts/7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a01/4f3c2b1a-0d9e-4c8b-9a7f-6e5d4c3b2a11.jpg',
+  },
   prepMinutes: 30,
   cookMinutes: 45,
   restMinutes: 840,
@@ -96,7 +102,7 @@ const sourdough: SeedPost = {
       slug: 'eksi-mayali-koy-ekmegi',
       title: 'Ekşi Mayalı Köy Ekmeği',
       dek: 'Çıtır kabuk, parlak ve açık gözenekli bir iç: iki günlük sabrın en sade ödülü.',
-      heroImageAlt: 'Döküm tencereden yeni çıkmış, kabuğu çatlamış ekşi mayalı ekmek',
+      heroImageAlt: 'Ahşap tahta üzerinde, keten bezin üstünde duran kabuğu çatlamış ekşi mayalı köy ekmeği',
       seoTitle: 'Ekşi Mayalı Köy Ekmeği Tarifi (Adım Adım)',
       seoDescription: 'Ev fırınında çıtır kabuklu, açık gözenekli ekşi mayalı köy ekmeği: gramajlı tarif, zamanlama ve ipuçları.',
       cuisine: 'Avrupa',
@@ -163,7 +169,7 @@ ${callout}
       slug: 'sourdough-country-loaf',
       title: 'Sourdough Country Loaf',
       dek: 'A crackling crust and a glossy, open crumb: the plainest reward for two days of patience.',
-      heroImageAlt: 'A freshly baked sourdough loaf with a burst crust, just out of a cast-iron pot',
+      heroImageAlt: 'A rustic sourdough loaf with a burst crust on a linen cloth and wooden board',
       seoTitle: 'Sourdough Country Loaf Recipe (Step by Step)',
       seoDescription: 'A crisp, open-crumbed sourdough country loaf in a home oven: gram-weighted recipe, timeline and tips.',
       cuisine: 'European',
@@ -230,7 +236,7 @@ Stretch and fold every 30 minutes for the first two hours. Then let the dough re
       slug: 'khubz-al-ajeen-al-mukhammar',
       title: 'خبز ريفي بالعجين المخمّر',
       dek: 'قشرة مقرمشة ولبّ لامع واسع المسامّ: أبسط مكافأة ليومين من الصبر.',
-      heroImageAlt: 'رغيف عجين مخمّر خرج للتو من قدر الحديد الزهر وقشرته متشققة',
+      heroImageAlt: 'رغيف ريفي من العجين المخمّر بقشرة متشققة على قطعة كتان ولوح خشبي',
       seoTitle: 'وصفة الخبز الريفي بالعجين المخمّر خطوة بخطوة',
       seoDescription: 'خبز ريفي بالعجين المخمّر بقشرة مقرمشة ولبّ مفتوح في فرن البيت: وصفة بالغرامات وجدول زمني ونصائح.',
       cuisine: 'أوروبي',
@@ -300,6 +306,10 @@ ${callout}
 const baklava: SeedPost = {
   id: '7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a02',
   category: 'pastry',
+  heroImage: {
+    file: 'baklava-hero.jpg',
+    key: 'posts/7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a02/5a4b3c2d-1e0f-4a9b-8c7d-6e5f4a3b2c12.jpg',
+  },
   prepMinutes: 60,
   cookMinutes: 50,
   restMinutes: 240,
@@ -312,7 +322,7 @@ const baklava: SeedPost = {
       slug: 'antep-fistikli-baklava',
       title: 'Antep Fıstıklı Baklava',
       dek: 'Hazır yufkayla, ama acele etmeden: kat kat çıtırlık ve tam kıvamında şerbet.',
-      heroImageAlt: 'Tepside dilimlenmiş, üzeri toz fıstıkla kaplı baklava',
+      heroImageAlt: 'Metal tepside dizili, içi bol Antep fıstıklı çıtır baklavalar',
       seoTitle: 'Antep Fıstıklı Baklava Tarifi (Hazır Yufkayla)',
       seoDescription: 'Hazır yufkayla çıtır, şerbeti tam kıvamında Antep fıstıklı baklava: ölçüler, pişirme süreleri ve ipuçları.',
       cuisine: 'Türk',
@@ -374,7 +384,7 @@ Baklavayı pişirmeden önce keskin bir bıçakla dilimleyin. Fırının alt raf
       slug: 'pistachio-baklava',
       title: 'Pistachio Baklava',
       dek: 'Store-bought phyllo, but no shortcuts: layer upon layer of crunch and a perfectly set syrup.',
-      heroImageAlt: 'Sliced baklava in a tray, topped with ground pistachios',
+      heroImageAlt: 'Crisp baklava pastries packed with chopped pistachios in a metal tray',
       seoTitle: 'Pistachio Baklava Recipe (With Store-Bought Phyllo)',
       seoDescription: 'Crisp pistachio baklava with store-bought phyllo and a perfectly set syrup: measurements, bake times and tips.',
       cuisine: 'Turkish',
@@ -436,7 +446,7 @@ Cut the baklava with a sharp knife before baking. Bake on the lowest rack until 
       slug: 'baklawa-bil-fustuq',
       title: 'بقلاوة بالفستق الحلبي',
       dek: 'بعجينة جاهزة لكن من دون استعجال: طبقات مقرمشة وقطر بالقوام المثالي.',
-      heroImageAlt: 'بقلاوة مقطّعة في صينية ومغطاة بالفستق المطحون',
+      heroImageAlt: 'قطع بقلاوة مقرمشة محشوة بالفستق المفروم في صينية معدنية',
       seoTitle: 'وصفة بقلاوة بالفستق الحلبي بعجينة جاهزة',
       seoDescription: 'بقلاوة مقرمشة بالفستق الحلبي بعجينة الفيلو الجاهزة وقطر بالقوام المثالي: المقادير وأوقات الخَبز ونصائح.',
       cuisine: 'تركي',

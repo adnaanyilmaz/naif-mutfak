@@ -15,9 +15,10 @@
   --color-stone: #4a4744; /* secondary text */
   --color-muted: #8b8782; /* tertiary text */
   --color-hairline: #ebe8e4; /* borders */
-  --color-terracotta: #c2410c; /* accent (AA on white) */
-  --color-terracotta-deep: #9a3412;
-  --color-terracotta-tint: #fff1e8;
+  --color-brand: #ee8005; /* logo orange: surfaces/decoration only, never text on white */
+  --color-terracotta: #b45309; /* accent text/CTA, logo hue darkened for AA (5.0:1) */
+  --color-terracotta-deep: #92400e;
+  --color-terracotta-tint: #fff4e3;
   --color-olive: #3f6212;
   --color-olive-tint: #ecf5dc;
   --color-butter: #fcd34d;

@@ -21,9 +21,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   return (
     <html lang={ADMIN_LOCALE} dir={LOCALE_META[ADMIN_LOCALE].dir} data-script="latin" className={fontVariables}>
-      <body className="min-h-dvh bg-cream font-sans text-ui text-charcoal">
+      <body className="min-h-dvh bg-linen font-sans text-ui text-charcoal">
         {typeof admin === 'string' ? (
-          <main className="mx-auto max-w-content px-6 py-24">
+          <main className="mx-auto max-w-content px-6 py-24 text-center">
             <h1 className="font-display text-h2">{t(admin === 'forbidden' ? 'auth.forbiddenTitle' : 'auth.unauthorizedTitle')}</h1>
             <p className="mt-4 text-stone">{t(admin === 'forbidden' ? 'auth.forbiddenBody' : 'auth.unauthorizedBody')}</p>
           </main>
@@ -31,7 +31,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           <NextIntlClientProvider locale={ADMIN_LOCALE} messages={messages}>
             <div className="flex min-h-dvh flex-col md:flex-row">
               <AdminNav email={admin.email} devMode={admin.via === 'dev'} />
-              <main className="min-w-0 flex-1 px-4 py-8 md:px-8">{children}</main>
+              <main className="min-w-0 flex-1 px-4 py-6 md:px-10 md:py-10">{children}</main>
             </div>
           </NextIntlClientProvider>
         )}

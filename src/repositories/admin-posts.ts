@@ -14,6 +14,7 @@ export interface AdminPostListItem {
   id: string;
   status: PostStatus;
   category: string;
+  heroImageKey: string | null;
   updatedAt: Date;
   translations: { locale: Locale; title: string; slug: string; isPublished: boolean }[];
 }
@@ -94,7 +95,7 @@ export function createAdminPostsRepo(db: Db): AdminPostsRepo {
   return {
     async list() {
       const rows = await db
-        .select({ id: posts.id, status: posts.status, category: posts.category, updatedAt: posts.updatedAt })
+        .select({ id: posts.id, status: posts.status, category: posts.category, heroImageKey: posts.heroImageKey, updatedAt: posts.updatedAt })
         .from(posts)
         .orderBy(desc(posts.updatedAt));
       const translations = await db

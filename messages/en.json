@@ -119,7 +119,11 @@
       "subscribers": "Subscribers",
       "signedInAs": "Signed in as {email}",
       "devMode": "Local development session",
-      "viewSite": "View site"
+      "viewSite": "View site",
+      "overview": "Overview",
+      "content": "Content",
+      "insights": "Reports",
+      "signedIn": "Signed in"
     },
     "auth": {
       "unauthorizedTitle": "Sign-in required",
@@ -184,7 +188,17 @@
       "colStatus": "Status",
       "colLocales": "Languages",
       "colUpdated": "Updated",
-      "untitled": "Untitled"
+      "untitled": "Untitled",
+      "subtitle": "Edit recipes and stories in three languages.",
+      "search": "Search posts…",
+      "searchLabel": "Search posts",
+      "filterLabel": "Filter by status",
+      "all": "All",
+      "noResults": "No posts match your search.",
+      "viewOnSite": "View on site",
+      "emptyTitle": "Create your first post",
+      "emptyBody": "Recipes and stories you create will be listed here.",
+      "localeLegend": "Green: published in that language · grey: draft"
     },
     "editor": {
       "heading": "Edit post",
@@ -269,7 +283,24 @@
       "discard": "Discard",
       "issuesTitle": "Could not save",
       "warningsTitle": "Warnings",
-      "notFound": "Post not found."
+      "notFound": "Post not found.",
+      "back": "Posts",
+      "unsaved": "Unsaved changes",
+      "allSaved": "All changes saved",
+      "shortcut": "Press Ctrl + S to save",
+      "viewOnSite": "View on site",
+      "sectionGeneral": "General",
+      "sectionGeneralHint": "Status, category and featured e-book are shared by all languages.",
+      "sectionRecipe": "Recipe details",
+      "sectionRecipeHint": "Times are in minutes; the total is calculated automatically.",
+      "sectionMedia": "Hero image",
+      "sectionMediaHint": "JPEG, PNG, WebP or AVIF · up to 15 MB. Required to publish a recipe.",
+      "sectionContent": "Content",
+      "sectionContentHint": "Each language is published separately. The dot on a tab shows its status.",
+      "urlPreview": "URL: {url}",
+      "charCount": "{count, number} / {max, number} characters",
+      "issueGoTo": "Go to language",
+      "savedToast": "Changes saved"
     },
     "issues": {
       "invalid": "Invalid value: {path}",
@@ -303,7 +334,12 @@
       "colTitle": "Title",
       "colSlug": "Slug",
       "colStatus": "Status",
-      "colEditions": "Editions"
+      "colEditions": "Editions",
+      "subtitle": "Manage e-books, language editions and prices.",
+      "price": "Price",
+      "pdfMissingHint": "PDF missing",
+      "emptyTitle": "Add your first e-book",
+      "emptyBody": "Cover, language editions, prices and PDF files are managed on one screen."
     },
     "productEditor": {
       "heading": "Edit e-book",
@@ -331,7 +367,13 @@
       "pdfInfo": "{size} · SHA-256 {sha}",
       "saveFirst": "Save first to upload a PDF.",
       "providerHint": "Active payment provider: {provider}",
-      "notFound": "E-book not found."
+      "notFound": "E-book not found.",
+      "back": "E-books",
+      "sectionGeneral": "General",
+      "sectionTexts": "Texts",
+      "sectionTextsHint": "Title and description shown on the store page, per language.",
+      "editionsHint": "Each edition is sold with its own PDF and price. A PDF and a payment provider id are required to put it on sale.",
+      "viewOnSite": "View in store"
     },
     "upload": {
       "error": {
@@ -413,6 +455,51 @@
         "lemonsqueezy": "Lemon Squeezy",
         "paddle": "Paddle"
       }
+    },
+    "overview": {
+      "title": "Overview",
+      "subtitle": "A quick look at how the site is doing.",
+      "posts": "Posts",
+      "published": "{n, number} published",
+      "drafts": "{n, number} drafts",
+      "ebooks": "E-books",
+      "activeEditions": "{n, number} editions on sale",
+      "sales30": "Sales, last 30 days",
+      "orders": "{n, number} orders",
+      "noSales": "No sales yet",
+      "subscribers": "Subscribers",
+      "activeSubs": "{n, number} active",
+      "pendingSubs": "{n, number} awaiting confirmation",
+      "quickActions": "Quick actions",
+      "recentPosts": "Recently edited posts",
+      "webhookAlert": "{n, number} payment notifications failed in the last 7 days.",
+      "review": "Review",
+      "allPosts": "All posts"
     }
+  },
+  "About": {
+    "metaTitle": "About",
+    "metaDescription": "Naif Mutfak is a kitchen notebook of recipes made with simple ingredients, patience and step-by-step testing, in three languages.",
+    "eyebrow": "About",
+    "title": "Simple ingredients, patient hands, shared tables",
+    "intro": "Naif Mutfak exists for recipes you can repeat at home with confidence. We share the joy of cooking unhurriedly with a few good ingredients, in Turkish, English and Arabic.",
+    "imageAlt": "Hands kneading dough on a floured counter",
+    "storyTitle": "Our story",
+    "story1": "A recipe proves its worth not on the first try but the third or fifth time it comes out of your kitchen. Naif Mutfak grew from that idea: a calm kitchen notebook that cares more about recipes that truly work than about fancy styling.",
+    "story2": "From sourdough to pistachio baklava, every recipe comes with weights, tips and the mistakes people commonly make. Our goal is to help you build hands that know the ingredients and can feel the dough.",
+    "principlesTitle": "How we work",
+    "principleSimpleTitle": "Simple ingredients",
+    "principleSimpleBody": "Every recipe starts with ingredients you can find at the corner shop. Few but well-chosen ingredients are half of a good result.",
+    "principleTestedTitle": "Tested step by step",
+    "principleTestedBody": "Before publishing, recipes are cooked again and again in a home kitchen; the weights, timings and tips come from those trials.",
+    "principleLanguagesTitle": "Three languages, one table",
+    "principleLanguagesBody": "Everything is published in Turkish, English and Arabic, so the same recipe can be cooked with the same care in different kitchens.",
+    "featuresTitle": "What you will find here",
+    "featureRecipes": "Serving multipliers, checkable ingredients and printable recipe cards",
+    "featureEbooks": "Focused digital cookbooks in PDF format",
+    "featureNewsletter": "A newsletter with seasonal recipes, twice a month",
+    "ctaTitle": "Ready to get cooking?",
+    "ctaRecipes": "Browse recipes",
+    "ctaEbooks": "Explore e-books"
   }
 }

@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getFormatter, getTranslations } from 'next-intl/server';
+import { AdminPageHeader, EmptyState, StatusBadge, primaryButton } from '@/components/admin/AdminPage';
+import { AlertIcon, PlusIcon } from '@/components/admin/icons';
 import { ADMIN_LOCALE } from '@/i18n/config';
 import { listAdminProducts } from '@/services/admin/products-admin.service';
 import { adminProductsDeps } from '@/services/container';
@@ -8,64 +10,72 @@ import { createProductAction } from './actions';
 
 export default async function AdminProductsPage() {
   await requireAdmin();
-  const [products, t] = await Promise.all([
+  const [products, t, format] = await Promise.all([
     listAdminProducts(adminProductsDeps()),
     getTranslations({ locale: ADMIN_LOCALE, namespace: 'Admin' }),
+    getFormatter({ locale: ADMIN_LOCALE }),
   ]);
+  const newButton = (
+    <form action={createProductAction}>
+      <button className={primaryButton}>
+        <PlusIcon className="size-4" />
+        {t('products.new')}
+      </button>
+    </form>
+  );
 
   return (
-    <div className="mx-auto max-w-wide">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-h2">{t('products.title')}</h1>
-        <form action={createProductAction}>
-          <button className="rounded-pill bg-terracotta px-5 py-2 font-medium text-white hover:bg-terracotta-deep">{t('products.new')}</button>
-        </form>
-      </header>
+    <div className="mx-auto max-w-wide space-y-6">
+      <AdminPageHeader title={t('products.title')} subtitle={t('products.subtitle')} actions={newButton} />
       {products.length === 0 ? (
-        <p className="mt-8 text-stone">{t('products.empty')}</p>
+        <EmptyState title={t('products.emptyTitle')} body={t('products.emptyBody')} action={newButton} />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-card border border-hairline bg-paper">
-          <table className="w-full min-w-[36rem]">
-            <thead className="border-b border-hairline text-eyebrow uppercase tracking-wide text-muted">
-              <tr>
-                <th className="px-4 py-3 text-start font-medium">{t('products.colTitle')}</th>
-                <th className="px-4 py-3 text-start font-medium">{t('products.colSlug')}</th>
-                <th className="px-4 py-3 text-start font-medium">{t('products.colStatus')}</th>
-                <th className="px-4 py-3 text-start font-medium">{t('products.colEditions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p) => {
-                const title = p.titles.find((x) => x.locale === 'tr')?.title ?? p.titles[0]?.title ?? p.slug;
-                return (
-                  <tr key={p.id} className="border-b border-hairline last:border-b-0">
-                    <td className="px-4 py-3">
-                      <Link href={`/admin/products/${p.id}`} className="font-medium underline-offset-4 hover:underline">
-                        {title}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-[0.8125rem] text-stone">{p.slug}</td>
-                    <td className="px-4 py-3">{t(`status.${p.status}`)}</td>
-                    <td className="px-4 py-3">
-                      <span className="flex flex-wrap gap-1">
-                        {p.variants.map((v) => (
-                          <span
-                            key={v.contentLocale}
-                            className={`rounded-pill px-2 py-0.5 text-eyebrow uppercase ${v.isActive ? 'bg-olive-tint text-olive' : 'bg-linen text-stone'}`}
-                            title={`${t(v.isActive ? 'status.active' : 'status.draft')} · ${v.hasPdf ? 'PDF' : t('productEditor.pdfMissing')}`}
-                          >
-                            {v.contentLocale}
-                            {v.hasPdf ? '' : ' !'}
-                          </span>
-                        ))}
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {products.map((p) => {
+            const missingPdf = p.variants.some((v) => !v.hasPdf);
+            return (
+              <li key={p.id} className="group relative flex gap-4 rounded-2xl border border-hairline bg-white p-4 transition-shadow hover:shadow-card">
+                {p.coverUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail
+                  <img src={p.coverUrl} alt="" className="aspect-[3/4] w-20 shrink-0 rounded-xl object-cover" />
+                ) : (
+                  <span aria-hidden className="aspect-[3/4] w-20 shrink-0 rounded-xl bg-gradient-to-br from-brand via-[#d96d04] to-[#8a3b06]" />
+                )}
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex items-start justify-between gap-2">
+                    <Link href={`/admin/products/${p.id}`} className="font-semibold leading-snug after:absolute after:inset-0 group-hover:text-terracotta">
+                      {p.title}
+                    </Link>
+                    <StatusBadge status={p.status} label={t(`status.${p.status}`)} />
+                  </div>
+                  <p className="mt-0.5 truncate font-mono text-[0.75rem] text-muted">{p.slug}</p>
+                  <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
+                    {p.variants.map((v) => (
+                      <span
+                        key={v.contentLocale}
+                        title={`${t(v.isActive ? 'status.active' : 'status.draft')}${v.hasPdf ? '' : ` · ${t('products.pdfMissingHint')}`}`}
+                        className={`rounded-md px-1.5 py-0.5 text-[0.6875rem] font-bold uppercase ${v.isActive ? 'bg-olive-tint text-olive' : 'bg-linen text-muted'}`}
+                      >
+                        {v.contentLocale}
                       </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    ))}
+                    {missingPdf ? (
+                      <span className="inline-flex items-center gap-1 text-[0.75rem] font-medium text-[#8a5a00]">
+                        <AlertIcon className="size-3.5" />
+                        {t('products.pdfMissingHint')}
+                      </span>
+                    ) : null}
+                    {p.fromPriceTry !== null ? (
+                      <span className="ms-auto text-[0.875rem] font-bold tabular-nums">
+                        {format.number(p.fromPriceTry / 100, { style: 'currency', currency: 'TRY' })}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </div>
   );

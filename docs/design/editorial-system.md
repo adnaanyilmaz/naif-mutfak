@@ -15,9 +15,10 @@ Implementation: Tailwind CSS v4 `@theme` tokens in `src/app/globals.css`. Token 
 | `--color-stone` | `#4A4744` | Secondary text, deks | 9.0 : 1 |
 | `--color-muted` | `#8B8782` | Meta labels, captions (non-essential) | 3.6 : 1 |
 | `--color-hairline` | `#EBE8E4` | Borders, dividers | — |
-| `--color-terracotta` | `#C2410C` | Accent: CTAs, links, category labels, active states | 5.2 : 1 |
-| `--color-terracotta-deep` | `#9A3412` | Accent hover / text on tint | 7.3 : 1 |
-| `--color-terracotta-tint` | `#FFF1E8` | Pills, newsletter card, blockquotes, step numbers | — |
+| `--color-brand` | `#EE8005` | Logo orange: decorative surfaces only (cover gradient, glows), never text on white | 2.6 : 1 |
+| `--color-terracotta` | `#B45309` | Accent (logo hue, darkened for AA): CTAs, links, category labels, active states | 5.0 : 1 |
+| `--color-terracotta-deep` | `#92400E` | Accent hover / text on tint | 7.3 : 1 |
+| `--color-terracotta-tint` | `#FFF4E3` | Pills, newsletter card, blockquotes, step numbers | — |
 | `--color-olive` | `#3F6212` | Success, completed steps | 7.6 : 1 |
 | `--color-olive-tint` | `#ECF5DC` | Checked ingredient wash | — |
 | `--color-butter` | `#FCD34D` | Decorative only (dev badge, ratings) | — |
@@ -164,7 +165,8 @@ inline:  tint pill row — label · linked title · price
 
 ## 6. Other Core Components (tokens summary)
 
-- **Header:** sticky, white/85 with backdrop blur, hairline bottom border. Wordmark = orange rounded tile with bowl glyph + "naif mutfak" (Jakarta 800, always LTR). Nav links are pill hovers; on phones they move to a scrollable second row. Locale switcher is a segmented pill (TR · EN · ع) with endonyms as accessible names.
+- **Logo:** the official round logo (`public/brand/logo-{96,192}.webp`, source 1080 px JPEG) beside the "Naif Mutfak" wordmark (Jakarta 800, always LTR). Also used for the favicon (`src/app/icon.png`, `apple-icon.png`), the default share image (`src/app/[locale]/opengraph-image.jpg`), e-book cover placeholders, the admin menu and the global 404.
+- **Header:** sticky, white/85 with backdrop blur, hairline bottom border, logo at `start`. Nav links are pill hovers; on phones they move to a scrollable second row. Locale switcher is a segmented pill (TR · EN · ع) with endonyms as accessible names.
 - **Story card:** 4:3 rounded image with category pill overlaid at `start`, then meta chips (⏱ total time, difficulty bars), bold title (turns accent on hover), 2-line dek. Whole card is clickable (stretched link).
 - **Recipe card:** white, 2rem radius, meta tiles in `linen`, servings as a segmented pill control, ingredients as rounded checkable rows, steps with tinted number circles (olive when done).
 - **Newsletter:** tint card with soft glow; email field and button joined in one white pill.

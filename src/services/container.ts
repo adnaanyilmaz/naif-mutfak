@@ -14,6 +14,7 @@ import { createPostsRepo } from '@/repositories/posts';
 import { createProductsRepo } from '@/repositories/products';
 import { createSubscribersRepo } from '@/repositories/subscribers';
 import type { AdminAuthDeps } from './admin/auth.service';
+import type { OverviewDeps } from './admin/overview.service';
 import type { AnalyticsDeps } from './admin/analytics.service';
 import type { AdminPostsDeps } from './admin/posts-admin.service';
 import type { AdminProductsDeps } from './admin/products-admin.service';
@@ -167,4 +168,8 @@ export function devMediaDeps(): DevMediaDeps {
 
 export function devUploadStores(): UploadDeps['stores'] {
   return getUploadStores();
+}
+
+export function overviewDeps(): OverviewDeps {
+  return { posts: adminPostsDeps(), products: adminProductsDeps(), analytics: analyticsDeps() };
 }

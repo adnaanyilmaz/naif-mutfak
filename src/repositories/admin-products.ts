@@ -47,9 +47,11 @@ export interface AdminProductListItem {
   id: string;
   slug: string;
   status: ProductStatus;
+  coverImageKey: string | null;
+  pageCount: number | null;
   updatedAt: Date;
   titles: { locale: Locale; title: string }[];
-  variants: { contentLocale: Locale; isActive: boolean; hasPdf: boolean }[];
+  variants: { contentLocale: Locale; isActive: boolean; hasPdf: boolean; priceTry: number }[];
 }
 
 export type VariantWrite = Omit<AdminVariant, 'pdfR2Key' | 'pdfSizeBytes' | 'pdfSha256'>;
@@ -90,7 +92,14 @@ export function createAdminProductsRepo(db: Db): AdminProductsRepo {
     async list() {
       const [rows, titles, variants] = await Promise.all([
         db
-          .select({ id: products.id, slug: products.slug, status: products.status, updatedAt: products.updatedAt })
+          .select({
+            id: products.id,
+            slug: products.slug,
+            status: products.status,
+            coverImageKey: products.coverImageKey,
+            pageCount: products.pageCount,
+            updatedAt: products.updatedAt,
+          })
           .from(products)
           .orderBy(desc(products.updatedAt)),
         db
@@ -102,6 +111,7 @@ export function createAdminProductsRepo(db: Db): AdminProductsRepo {
             contentLocale: productVariants.contentLocale,
             isActive: productVariants.isActive,
             pdfR2Key: productVariants.pdfR2Key,
+            priceTry: productVariants.priceTry,
           })
           .from(productVariants),
       ]);
@@ -110,7 +120,7 @@ export function createAdminProductsRepo(db: Db): AdminProductsRepo {
         titles: titles.filter((t) => t.productId === p.id).map(({ locale, title }) => ({ locale, title })),
         variants: variants
           .filter((v) => v.productId === p.id)
-          .map((v) => ({ contentLocale: v.contentLocale, isActive: v.isActive, hasPdf: v.pdfR2Key !== null })),
+          .map((v) => ({ contentLocale: v.contentLocale, isActive: v.isActive, hasPdf: v.pdfR2Key !== null, priceTry: v.priceTry })),
       }));
     },
 

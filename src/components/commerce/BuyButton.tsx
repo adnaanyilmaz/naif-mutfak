@@ -47,7 +47,7 @@ export function BuyButton({ variantId, productTitle, placement, size = 'md', ton
   const colors =
     tone === 'light'
       ? 'bg-white text-charcoal hover:bg-terracotta-tint'
-      : 'bg-terracotta text-white shadow-[0_8px_20px_-8px_rgb(194_65_12/0.6)] hover:bg-terracotta-deep';
+      : 'bg-terracotta text-white shadow-[0_8px_20px_-8px_rgb(180_83_9/0.6)] hover:bg-terracotta-deep';
 
   return (
     <div className="flex flex-col items-start gap-2" data-placement={placement}>

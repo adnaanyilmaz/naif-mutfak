@@ -9,7 +9,7 @@ export async function SiteFooter() {
     <footer className="mt-8 print:hidden">
       <section aria-labelledby="newsletter-title" className="mx-auto max-w-page px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-[2rem] bg-terracotta-tint px-6 py-12 md:px-14 md:py-16">
-          <div aria-hidden className="pointer-events-none absolute -end-16 -top-16 size-64 rounded-full bg-[#fed7aa] opacity-60 blur-2xl" />
+          <div aria-hidden className="pointer-events-none absolute -end-16 -top-16 size-64 rounded-full bg-[#ffd59a] opacity-60 blur-2xl" />
           <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
             <div>
               <h2 id="newsletter-title" className="font-display text-h2 font-extrabold">

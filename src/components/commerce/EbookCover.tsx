@@ -1,3 +1,4 @@
+import { Logo } from '@/components/layout/Logo';
 import type { EbookView } from '@/services/catalog/catalog.service';
 
 interface EbookCoverProps {
@@ -21,13 +22,13 @@ export function EbookCover({ ebook, size = 'md' }: EbookCoverProps) {
     <div
       role="img"
       aria-label={ebook.coverAlt}
-      className={`${frame} relative flex flex-col justify-between bg-gradient-to-br from-[#fb923c] via-terracotta to-[#7c2d12] text-white ${size === 'sm' ? 'p-1.5' : 'p-5'}`}
+      className={`${frame} relative flex flex-col justify-between bg-gradient-to-br from-brand via-[#d96d04] to-[#8a3b06] text-white ${size === 'sm' ? 'p-1.5' : 'p-5'}`}
     >
       <div aria-hidden className="absolute inset-y-0 start-0 w-2 bg-black/15" />
       {size !== 'sm' && (
         <>
-          <span aria-hidden className="relative text-[0.6875rem] font-bold tracking-[0.12em] uppercase opacity-80 arabic:normal-case arabic:tracking-normal">
-            naif mutfak
+          <span aria-hidden className="relative">
+            <Logo size={size === 'lg' ? 52 : 36} wordmark={false} />
           </span>
           <span aria-hidden className={`relative font-display leading-tight font-extrabold ${size === 'lg' ? 'text-h2' : 'text-h3'}`}>
             {ebook.title}

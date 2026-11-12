@@ -65,18 +65,18 @@ export async function EbookCallout({ ebook, variant, eyebrow }: EbookCalloutProp
       aria-label={t('calloutLabel', { title: ebook.title })}
       className="relative my-12 overflow-hidden rounded-[2rem] bg-charcoal text-white print:hidden"
     >
-      <div aria-hidden className="pointer-events-none absolute -bottom-24 -start-24 size-80 rounded-full bg-terracotta opacity-40 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-24 -start-24 size-80 rounded-full bg-brand opacity-40 blur-3xl" />
       <div className="relative grid items-center gap-8 p-6 sm:p-10 md:grid-cols-[auto_1fr] md:gap-12 md:p-12">
         <Link href={href} tabIndex={-1} aria-hidden className="justify-self-center md:justify-self-start">
           <EbookCover ebook={ebook} size="md" />
         </Link>
         <div className="min-w-0">
-          <p className="text-eyebrow font-semibold text-[#fdba74] uppercase arabic:normal-case">
+          <p className="text-eyebrow font-semibold text-[#fcc56b] uppercase arabic:normal-case">
             {label}
             {fallback}
           </p>
           <h3 className="mt-3 font-display text-h2 font-extrabold">
-            <Link href={href} className="hover:text-[#fdba74]">
+            <Link href={href} className="hover:text-[#fcc56b]">
               {ebook.title}
             </Link>
           </h3>
