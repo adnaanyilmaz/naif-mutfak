@@ -91,10 +91,29 @@ export function SelectField<V extends string>({ value, options, onChange, ...bas
   );
 }
 
-export function CheckboxField({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
+export function CheckboxField({
+  label,
+  checked,
+  onChange,
+  disabled = false,
+  describedBy,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+  describedBy?: string;
+}) {
   return (
-    <label className="inline-flex items-center gap-2">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="size-4 accent-terracotta" />
+    <label className={`inline-flex items-center gap-2 ${disabled ? 'cursor-not-allowed text-muted' : ''}`}>
+      <input
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        aria-describedby={describedBy}
+        onChange={(e) => onChange(e.target.checked)}
+        className="size-4 accent-terracotta"
+      />
       <span>{label}</span>
     </label>
   );

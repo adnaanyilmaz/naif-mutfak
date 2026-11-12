@@ -368,7 +368,7 @@
       "pdf": "PDF",
       "pdfMissing": "PDF yok",
       "pdfInfo": "{size} · SHA-256 {sha}",
-      "saveFirst": "PDF yüklemek için önce kaydedin.",
+      "saveFirst": "Önce kaydedin; ardından PDF yükleyebilirsiniz.",
       "providerHint": "Aktif ödeme sağlayıcı: {provider}",
       "notFound": "E-kitap bulunamadı.",
       "back": "E-kitaplar",
@@ -376,7 +376,10 @@
       "sectionTexts": "Metinler",
       "sectionTextsHint": "Mağaza sayfasında görünen başlık ve açıklama; her dil için ayrı.",
       "editionsHint": "Her baskı ayrı PDF ve fiyatla satılır. Satışa açmak için PDF ve ödeme sağlayıcı kimliği gerekir.",
-      "viewOnSite": "Mağazada görüntüle"
+      "viewOnSite": "Mağazada görüntüle",
+      "activateNeeds": "Satışa açmak için: {missing}",
+      "needPdf": "PDF yükleyin",
+      "needMorId": "{field} kimliğini girin"
     },
     "upload": {
       "error": {

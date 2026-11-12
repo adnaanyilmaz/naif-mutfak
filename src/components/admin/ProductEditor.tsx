@@ -122,6 +122,12 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
     });
   }
 
+  const morField = view.provider === 'lemonsqueezy' ? 'lsVariantId' : 'paddlePriceId';
+  const activationNeeds = (v: VariantState): string[] => [
+    ...(v.pdf ? [] : [t('productEditor.needPdf')]),
+    ...(v[morField].trim() ? [] : [t('productEditor.needMorId', { field: t(`productEditor.${morField}`) })]),
+  ];
+
   const missingEditions = LOCALES.filter((l) => !variants.some((v) => v.contentLocale === l));
 
   return (
@@ -327,9 +333,21 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
                 <TextField label={t('productEditor.lsVariantId')} value={v.lsVariantId} dir="ltr" onChange={(lsVariantId) => setVariant(i, { lsVariantId })} />
                 <TextField label={t('productEditor.paddlePriceId')} value={v.paddlePriceId} dir="ltr" onChange={(paddlePriceId) => setVariant(i, { paddlePriceId })} />
                 <div className="flex items-end pb-2">
-                  <CheckboxField label={t('productEditor.active')} checked={v.isActive} onChange={(isActive) => setVariant(i, { isActive })} />
+                  <CheckboxField
+                    label={t('productEditor.active')}
+                    checked={v.isActive}
+                    // Selling needs a PDF and a MoR id (server rule); unchecking is always allowed.
+                    disabled={!v.isActive && activationNeeds(v).length > 0}
+                    describedBy={`activate-${v.contentLocale}`}
+                    onChange={(isActive) => setVariant(i, { isActive })}
+                  />
                 </div>
               </div>
+              {activationNeeds(v).length > 0 ? (
+                <p id={`activate-${v.contentLocale}`} className="mt-2 text-[0.8125rem] text-stone">
+                  {t('productEditor.activateNeeds', { missing: activationNeeds(v).join(', ') })}
+                </p>
+              ) : null}
               <div className="mt-3 flex flex-wrap items-center gap-3">
                 <span className="font-medium">{t('productEditor.pdf')}:</span>
                 <span className="text-stone" dir="ltr">

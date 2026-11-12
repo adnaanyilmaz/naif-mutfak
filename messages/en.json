@@ -368,7 +368,7 @@
       "pdf": "PDF",
       "pdfMissing": "No PDF",
       "pdfInfo": "{size} · SHA-256 {sha}",
-      "saveFirst": "Save first to upload a PDF.",
+      "saveFirst": "Save first, then upload a PDF.",
       "providerHint": "Active payment provider: {provider}",
       "notFound": "E-book not found.",
       "back": "E-books",
@@ -376,7 +376,10 @@
       "sectionTexts": "Texts",
       "sectionTextsHint": "Title and description shown on the store page, per language.",
       "editionsHint": "Each edition is sold with its own PDF and price. A PDF and a payment provider id are required to put it on sale.",
-      "viewOnSite": "View in store"
+      "viewOnSite": "View in store",
+      "activateNeeds": "To put on sale: {missing}",
+      "needPdf": "upload a PDF",
+      "needMorId": "enter the {field} id"
     },
     "upload": {
       "error": {

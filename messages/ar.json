@@ -368,7 +368,7 @@
       "pdf": "PDF",
       "pdfMissing": "لا يوجد PDF",
       "pdfInfo": "{size} · SHA-256 {sha}",
-      "saveFirst": "احفظ أولًا لرفع ملف PDF.",
+      "saveFirst": "احفظ أولًا، ثم ارفع ملف PDF.",
       "providerHint": "مزوّد الدفع النشط: {provider}",
       "notFound": "الكتاب الإلكتروني غير موجود.",
       "back": "الكتب الإلكترونية",
@@ -376,7 +376,10 @@
       "sectionTexts": "النصوص",
       "sectionTextsHint": "العنوان والوصف المعروضان في صفحة المتجر، لكل لغة.",
       "editionsHint": "يُباع كل إصدار بملف PDF وسعر خاصين به. يلزم ملف PDF ومعرّف مزوّد الدفع لعرضه للبيع.",
-      "viewOnSite": "عرض في المتجر"
+      "viewOnSite": "عرض في المتجر",
+      "activateNeeds": "لعرضه للبيع: {missing}",
+      "needPdf": "ارفع ملف PDF",
+      "needMorId": "أدخل معرّف {field}"
     },
     "upload": {
       "error": {
