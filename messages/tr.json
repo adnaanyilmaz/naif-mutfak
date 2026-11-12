@@ -1,0 +1,30 @@
+{
+  "Metadata": {
+    "siteName": "Naif Mutfak",
+    "description": "Özenle denenmiş tarifler, mutfak hikâyeleri ve dijital yemek kitapları."
+  },
+  "Header": {
+    "home": "Ana sayfa",
+    "recipes": "Tarifler",
+    "ebooks": "E-kitaplar",
+    "about": "Hakkında",
+    "skipToContent": "İçeriğe geç"
+  },
+  "LocaleSwitcher": {
+    "label": "Dil seçin"
+  },
+  "Home": {
+    "eyebrow": "Yeni sezon",
+    "title": "Sade malzemeler, sabırlı eller",
+    "dek": "Ekşi mayadan tereyağlı kurabiyelere: adım adım test edilmiş tarifler ve mutfağımızdan notlar.",
+    "cta": "Tariflere göz atın"
+  },
+  "NotFound": {
+    "title": "Sayfa bulunamadı",
+    "body": "Aradığınız sayfa taşınmış ya da hiç var olmamış olabilir.",
+    "back": "Ana sayfaya dön"
+  },
+  "Footer": {
+    "rights": "Tüm hakları saklıdır."
+  }
+}

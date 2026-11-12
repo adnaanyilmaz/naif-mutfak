@@ -1,0 +1,30 @@
+{
+  "Metadata": {
+    "siteName": "Naif Mutfak",
+    "description": "Carefully tested recipes, kitchen stories, and digital cookbooks."
+  },
+  "Header": {
+    "home": "Home",
+    "recipes": "Recipes",
+    "ebooks": "E-books",
+    "about": "About",
+    "skipToContent": "Skip to content"
+  },
+  "LocaleSwitcher": {
+    "label": "Choose language"
+  },
+  "Home": {
+    "eyebrow": "New season",
+    "title": "Simple ingredients, patient hands",
+    "dek": "From sourdough to brown-butter cookies: step-by-step tested recipes and notes from our kitchen.",
+    "cta": "Browse recipes"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for may have moved or never existed.",
+    "back": "Back to home"
+  },
+  "Footer": {
+    "rights": "All rights reserved."
+  }
+}
