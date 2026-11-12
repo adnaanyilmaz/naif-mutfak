@@ -2,19 +2,22 @@
 // `app/` imports deps from here; business services stay pure and receive deps as arguments.
 import { accessJwks } from '@/lib/cloudflare/access-jwks';
 import { getDb } from '@/lib/cloudflare/db';
-import { getAdminEnv, getEnv, getPaymentEnv, getUploadEnv, waitUntil } from '@/lib/cloudflare/env';
+import { getAdminEnv, getBindings, getEnv, getPaymentEnv, getUploadEnv, isConfigured, waitUntil } from '@/lib/cloudflare/env';
+import { clientKey, getCheckoutLimiter, getDownloadLimiter } from '@/lib/cloudflare/rate-limit';
 import { getPrivateEbookStore, getPublicMediaObject, getUploadStores } from '@/lib/cloudflare/r2';
 import { createDevSigner, createR2Signer } from '@/lib/cloudflare/r2-presign';
 import { createAdminPostsRepo } from '@/repositories/admin-posts';
 import { createAdminProductsRepo } from '@/repositories/admin-products';
 import { createAnalyticsRepo } from '@/repositories/analytics.repo';
 import { createAuditRepo } from '@/repositories/audit';
+import { createOrderSummaryRepo } from '@/repositories/order-summary';
 import { createOrdersRepo } from '@/repositories/orders';
 import { createPostsRepo } from '@/repositories/posts';
 import { createProductsRepo } from '@/repositories/products';
 import { createSubscribersRepo } from '@/repositories/subscribers';
 import type { AdminAuthDeps } from './admin/auth.service';
 import type { OverviewDeps } from './admin/overview.service';
+import type { PaymentSettingsDeps } from './admin/payment-settings.service';
 import type { AnalyticsDeps } from './admin/analytics.service';
 import type { AdminPostsDeps } from './admin/posts-admin.service';
 import type { AdminProductsDeps } from './admin/products-admin.service';
@@ -26,7 +29,9 @@ import type { CheckoutDeps } from './payments/checkout.service';
 import type { RedeemDeps } from './payments/delivery.service';
 import { createLemonSqueezyProvider } from './payments/lemonsqueezy';
 import { createPaddleProvider } from './payments/paddle';
+import type { OrderStatusDeps } from './payments/order-status.service';
 import type { PaymentProvider } from './payments/provider';
+import { withTestCheckout, type TestCheckoutDeps } from './payments/test-checkout.service';
 import type { WebhookDeps } from './payments/webhook.service';
 
 const now = () => new Date();
@@ -47,14 +52,26 @@ export function subscribeDeps(): SubscribeDeps {
   return { subscribers: createSubscribersRepo(getDb()), now, newId };
 }
 
+/** Local development without Lemon Squeezy API keys: checkout opens /{locale}/checkout/test instead of the overlay. */
+export function testCheckoutEnabled(): boolean {
+  const env = getPaymentEnv();
+  return (
+    env.ENVIRONMENT === 'development' &&
+    env.PAYMENT_PROVIDER === 'lemonsqueezy' &&
+    !(env.LEMONSQUEEZY_API_KEY && env.LEMONSQUEEZY_STORE_ID) &&
+    Boolean(env.LEMONSQUEEZY_WEBHOOK_SECRET)
+  );
+}
+
 export function paymentProvider(): PaymentProvider {
   const env = getPaymentEnv();
   if (env.PAYMENT_PROVIDER === 'lemonsqueezy') {
-    return createLemonSqueezyProvider({
+    const ls = createLemonSqueezyProvider({
       webhookSecret: env.LEMONSQUEEZY_WEBHOOK_SECRET ?? '',
       apiKey: env.LEMONSQUEEZY_API_KEY,
       storeId: env.LEMONSQUEEZY_STORE_ID,
     });
+    return testCheckoutEnabled() ? withTestCheckout(ls) : ls;
   }
   return createPaddleProvider({
     webhookSecret: env.PADDLE_WEBHOOK_SECRET ?? '',
@@ -80,6 +97,30 @@ export function checkoutDeps(): CheckoutDeps {
     siteUrl: env.SITE_URL,
     now,
     newId,
+    limiter: getCheckoutLimiter(),
+  };
+}
+
+/** Hashed client key for rate limiting (never the raw IP). */
+export function requestClientKey(headers: Headers): Promise<string> {
+  return clientKey(headers);
+}
+
+export function orderStatusDeps(): OrderStatusDeps {
+  return { summaries: createOrderSummaryRepo(getDb()), secret: getPaymentEnv().DOWNLOAD_SIGNING_SECRET, now };
+}
+
+/** null outside local development (the test checkout routes then 404). */
+export function testCheckoutDeps(): TestCheckoutDeps | null {
+  if (!testCheckoutEnabled()) return null;
+  const env = getPaymentEnv();
+  return {
+    summaries: createOrderSummaryRepo(getDb()),
+    secret: env.DOWNLOAD_SIGNING_SECRET,
+    webhookSecret: env.LEMONSQUEEZY_WEBHOOK_SECRET ?? '',
+    provider: paymentProvider(),
+    webhook: webhookDeps(),
+    now,
   };
 }
 
@@ -90,6 +131,7 @@ export function deliveryDeps(): RedeemDeps {
     products: createProductsRepo(db),
     store: getPrivateEbookStore(),
     secret: getPaymentEnv().DOWNLOAD_SIGNING_SECRET,
+    limiter: getDownloadLimiter(),
     now,
   };
 }
@@ -172,4 +214,22 @@ export function devUploadStores(): UploadDeps['stores'] {
 
 export function overviewDeps(): OverviewDeps {
   return { posts: adminPostsDeps(), products: adminProductsDeps(), analytics: analyticsDeps() };
+}
+
+export function paymentSettingsDeps(): PaymentSettingsDeps {
+  const env = getEnv();
+  const db = getDb();
+  const raw: Record<string, unknown> = { ...getBindings() };
+  const paddleEnv = raw.PADDLE_ENV === 'production' ? 'production' : 'sandbox';
+  return {
+    provider: env.PAYMENT_PROVIDER,
+    environment: env.ENVIRONMENT,
+    paddleEnv,
+    siteUrl: env.SITE_URL,
+    testCheckout: env.ENVIRONMENT === 'development' && env.PAYMENT_PROVIDER === 'lemonsqueezy' && !(isConfigured('LEMONSQUEEZY_API_KEY') && isConfigured('LEMONSQUEEZY_STORE_ID')) && isConfigured('LEMONSQUEEZY_WEBHOOK_SECRET'),
+    isConfigured,
+    listProducts: () => createAdminProductsRepo(db).list(),
+    webhookOutcomes: (since) => createAnalyticsRepo(db).webhookOutcomes(since),
+    now,
+  };
 }

@@ -38,6 +38,8 @@ export type OrderEvent =
 /** Overlay parameters returned to the browser. Never contains secrets. */
 export type CheckoutParams =
   | { provider: 'lemonsqueezy'; url: string }
+  /** Local development stand-in (no MoR keys): navigates to /{locale}/checkout/test. */
+  | { provider: 'test'; url: string }
   | {
       provider: 'paddle';
       priceId: string;

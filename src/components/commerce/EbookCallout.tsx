@@ -4,6 +4,7 @@ import type { EbookView } from '@/services/catalog/catalog.service';
 import type { EbookCalloutVariant } from '@/services/content/markdown';
 import { BuyButton } from './BuyButton';
 import { EbookCover } from './EbookCover';
+import { PaymentMethods } from './PaymentMethods';
 
 interface EbookCalloutProps {
   ebook: EbookView;
@@ -90,6 +91,9 @@ export async function EbookCallout({ ebook, variant, eyebrow }: EbookCalloutProp
             <BuyButton variantId={ebook.variantId} productTitle={ebook.title} placement="callout" tone="light" />
           </div>
           <p className="mt-2 text-[0.8125rem] text-white/50">{t('priceNote')}</p>
+          <div className="mt-5">
+            <PaymentMethods tone="inverted" />
+          </div>
         </div>
       </div>
     </aside>

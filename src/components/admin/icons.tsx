@@ -77,3 +77,9 @@ export const CheckIcon = (p: { className?: string }) => (
     <path d="m5 12 4.5 4.5L19 7" />
   </Icon>
 );
+export const CardIcon = (p: { className?: string }) => (
+  <Icon {...p}>
+    <rect x="2.5" y="5" width="19" height="14" rx="2" />
+    <path d="M2.5 10h19M6.5 15h4" />
+  </Icon>
+);

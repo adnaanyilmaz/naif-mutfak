@@ -41,3 +41,10 @@ export function getUploadEnv(): UploadEnv {
 export function waitUntil(promise: Promise<unknown>): void {
   getCloudflareContext().ctx.waitUntil(promise);
 }
+
+/** Whether a var/secret is set (non-empty). Never exposes the value. */
+export function isConfigured(name: string): boolean {
+  const raw: Record<string, unknown> = { ...getBindings() };
+  const v = raw[name];
+  return typeof v === 'string' && v.trim().length > 0;
+}

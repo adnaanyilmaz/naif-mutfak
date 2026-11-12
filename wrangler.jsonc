@@ -25,6 +25,11 @@
     { "binding": "MEDIA_PUBLIC", "bucket_name": "naif-mutfak-media" },
     { "binding": "EBOOKS_PRIVATE", "bucket_name": "naif-mutfak-ebooks" }
   ],
+  // Workers Rate Limiting (payments.md): checkout keyed on a hashed client IP, downloads on the order id.
+  "ratelimits": [
+    { "name": "CHECKOUT_LIMITER", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "DOWNLOAD_LIMITER", "namespace_id": "1002", "simple": { "limit": 20, "period": 60 } }
+  ],
   "vars": {
     "ENVIRONMENT": "development",
     "SITE_URL": "http://localhost:3000",

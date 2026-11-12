@@ -1,17 +1,26 @@
 import type { CheckoutParams } from '@/services/payments/provider';
 
+interface LemonSqueezyEvent {
+  event: string;
+}
+
 interface LemonSqueezyGlobal {
   Url: { Open: (url: string) => void };
+  Setup: (opts: { eventHandler: (e: LemonSqueezyEvent) => void }) => void;
+}
+
+interface PaddleEvent {
+  name?: string;
 }
 
 interface PaddleGlobal {
   Environment: { set: (env: 'sandbox') => void };
-  Initialize: (opts: { token: string }) => void;
+  Initialize: (opts: { token: string; eventCallback?: (e: PaddleEvent) => void }) => void;
   Checkout: {
     open: (opts: {
       items: { priceId: string; quantity: number }[];
       customData: Record<string, string>;
-      settings: { displayMode: 'overlay'; locale: string };
+      settings: { displayMode: 'overlay'; locale: string; successUrl?: string };
     }) => void;
   };
 }
@@ -47,14 +56,30 @@ function loadScript(src: string): Promise<void> {
 }
 
 let paddleInitialized = false;
+/** Updated on every open so the (one-time) Paddle callback always routes to the latest locale. */
+let successPathRef = '/';
 
-/** Opens the MoR overlay. MoR scripts load only after a buy click. */
-export async function openCheckoutOverlay(params: CheckoutParams): Promise<void> {
+/**
+ * Opens the payment screen. MoR scripts load only after a buy click. On a successful payment the
+ * buyer is routed to `successPath` (`/{locale}/checkout/success`), which polls the order status.
+ */
+export async function openCheckoutOverlay(params: CheckoutParams, successPath: string): Promise<void> {
+  successPathRef = successPath;
+  if (params.provider === 'test') {
+    window.location.assign(params.url);
+    return;
+  }
   if (params.provider === 'lemonsqueezy') {
     await loadScript(SCRIPTS.lemonsqueezy);
     window.createLemonSqueezy?.();
-    if (!window.LemonSqueezy) throw new Error('overlay_unavailable');
-    window.LemonSqueezy.Url.Open(params.url);
+    const ls = window.LemonSqueezy;
+    if (!ls) throw new Error('overlay_unavailable');
+    ls.Setup({
+      eventHandler: (e) => {
+        if (e.event === 'Checkout.Success') window.location.assign(successPathRef);
+      },
+    });
+    ls.Url.Open(params.url);
     return;
   }
   await loadScript(SCRIPTS.paddle);
@@ -62,12 +87,17 @@ export async function openCheckoutOverlay(params: CheckoutParams): Promise<void>
   if (!paddle) throw new Error('overlay_unavailable');
   if (!paddleInitialized) {
     if (params.environment === 'sandbox') paddle.Environment.set('sandbox');
-    paddle.Initialize({ token: params.clientToken });
+    paddle.Initialize({
+      token: params.clientToken,
+      eventCallback: (e) => {
+        if (e.name === 'checkout.completed') window.location.assign(successPathRef);
+      },
+    });
     paddleInitialized = true;
   }
   paddle.Checkout.open({
     items: [{ priceId: params.priceId, quantity: 1 }],
     customData: params.customData,
-    settings: { displayMode: 'overlay', locale: params.locale },
+    settings: { displayMode: 'overlay', locale: params.locale, successUrl: `${window.location.origin}${successPath}` },
   });
 }

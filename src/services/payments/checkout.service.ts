@@ -12,17 +12,23 @@ export interface CheckoutDeps {
   siteUrl: string;
   now: () => Date;
   newId: () => string;
+  /** CHECKOUT_LIMITER keyed on a hashed client IP (payments.md §1). */
+  limiter?: { allow(key: string): Promise<boolean> };
 }
 
 export type CheckoutResult =
   | { ok: true; params: CheckoutParams; orderCookie: string }
-  | { ok: false; status: 404 | 409 | 503; error: 'variant_unavailable' | 'provider_unavailable' | 'provider_not_configured' };
+  | { ok: false; status: 404 | 409 | 429 | 503; error: 'variant_unavailable' | 'provider_unavailable' | 'provider_not_configured' | 'rate_limited' };
 
 /** Creates the pending order (order_ref) and returns overlay params. Price/currency/email never come from the client. */
 export async function startCheckout(
   deps: CheckoutDeps,
   input: { variantId: string; locale: Locale },
+  opts: { clientKey?: string } = {},
 ): Promise<CheckoutResult> {
+  if (deps.limiter && opts.clientKey && !(await deps.limiter.allow(opts.clientKey))) {
+    return { ok: false, status: 429, error: 'rate_limited' };
+  }
   const variant = await deps.products.findVariantForCheckout(input.variantId);
   if (!variant || !variant.isActive || variant.productStatus !== 'active') {
     return { ok: false, status: 404, error: 'variant_unavailable' };

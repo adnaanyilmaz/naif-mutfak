@@ -6,6 +6,7 @@ import { cache } from 'react';
 import { MarkdownBody } from '@/components/blog/MarkdownBody';
 import { BuyButton } from '@/components/commerce/BuyButton';
 import { EbookCover } from '@/components/commerce/EbookCover';
+import { PaymentMethods } from '@/components/commerce/PaymentMethods';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
@@ -70,6 +71,9 @@ export default async function EbookPage({ params }: EbookPageProps) {
             <BuyButton variantId={ebook.variantId} productTitle={ebook.title} placement="storefront" />
           </div>
           <p className="mt-3 text-[0.8125rem] text-muted">{t('priceNote')}</p>
+          <div className="mt-5">
+            <PaymentMethods />
+          </div>
           <MarkdownBody parsed={ebook.description} className="mt-10" />
         </div>
       </div>

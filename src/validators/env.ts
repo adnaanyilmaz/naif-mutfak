@@ -31,6 +31,7 @@ export function parseEnv(source: Record<string, unknown>): AppEnv {
 /** Payment/delivery secrets. Parsed lazily, only by payment routes. */
 export const paymentEnvSchema = z
   .object({
+    ENVIRONMENT: z.enum(['development', 'preview', 'production']),
     SITE_URL: z.url(),
     PAYMENT_PROVIDER: z.enum(['lemonsqueezy', 'paddle']),
     DOWNLOAD_SIGNING_SECRET: z.string().min(32),

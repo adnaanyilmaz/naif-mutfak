@@ -31,3 +31,9 @@ export const downloadTokenParamSchema = z
   .regex(/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/);
 
 export type SubscribeInputBody = z.infer<typeof subscribeInputSchema>;
+
+/** GET /api/orders/status?locale= */
+export const orderStatusQuerySchema = z.object({ locale: localeSchema });
+
+/** POST /api/checkout/test (local development only) */
+export const testCheckoutInputSchema = z.object({ orderRef: z.uuid(), locale: localeSchema });

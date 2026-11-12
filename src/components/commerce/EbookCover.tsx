@@ -15,7 +15,14 @@ export function EbookCover({ ebook, size = 'md' }: EbookCoverProps) {
   if (ebook.coverUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element -- URLs are pre-sized by Cloudflare Image Transformations.
-      <img src={ebook.coverUrl} alt={ebook.coverAlt} className={`${frame} object-cover`} loading="lazy" />
+      <img
+        src={ebook.coverUrl}
+        alt={ebook.coverAlt}
+        className={`${frame} object-cover`}
+        // The large cover is the detail page's main image: load it immediately.
+        loading={size === 'lg' ? 'eager' : 'lazy'}
+        fetchPriority={size === 'lg' ? 'high' : 'auto'}
+      />
     );
   }
   return (

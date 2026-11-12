@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { BookIcon, ChartIcon, HomeIcon, PostsIcon, UsersIcon } from './icons';
+import { BookIcon, CardIcon, ChartIcon, HomeIcon, PostsIcon, UsersIcon } from './icons';
 
 const GROUPS = [
   { key: null, items: [{ href: '/admin', key: 'overview', Icon: HomeIcon, exact: true }] },
@@ -20,6 +20,10 @@ const GROUPS = [
       { href: '/admin/analytics/sales', key: 'sales', Icon: ChartIcon, exact: false },
       { href: '/admin/analytics/subscribers', key: 'subscribers', Icon: UsersIcon, exact: false },
     ],
+  },
+  {
+    key: 'settings',
+    items: [{ href: '/admin/payments', key: 'payments', Icon: CardIcon, exact: false }],
   },
 ] as const;
 

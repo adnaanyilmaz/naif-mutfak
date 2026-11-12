@@ -105,7 +105,8 @@
     "details": "Ayrıntılar",
     "back": "Tüm e-kitaplar",
     "empty": "Henüz e-kitap yok.",
-    "calloutLabel": "E-kitap: {title}"
+    "calloutLabel": "E-kitap: {title}",
+    "rateLimited": "Çok fazla deneme yapıldı. Lütfen bir dakika sonra tekrar deneyin."
   },
   "Admin": {
     "meta": {
@@ -123,7 +124,9 @@
       "overview": "Genel bakış",
       "content": "İçerik",
       "insights": "Raporlar",
-      "signedIn": "Oturum açık"
+      "signedIn": "Oturum açık",
+      "settings": "Ayarlar",
+      "payments": "Ödeme ayarları"
     },
     "auth": {
       "unauthorizedTitle": "Oturum gerekli",
@@ -475,6 +478,38 @@
       "webhookAlert": "Son 7 günde {n, number} ödeme bildirimi işlenemedi.",
       "review": "İncele",
       "allPosts": "Tüm yazılar"
+    },
+    "payments": {
+      "title": "Ödeme ayarları",
+      "subtitle": "Ödeme sağlayıcısının durumu ve kurulum adımları.",
+      "provider": "Ödeme sağlayıcısı",
+      "mode": "Mod",
+      "modeTest": "Yerel test ödemesi",
+      "modeSandbox": "Sandbox (test)",
+      "modeLive": "Canlı",
+      "switchHint": "Sağlayıcıyı değiştirmek için PAYMENT_PROVIDER değişkenini güncelleyip siteyi yeniden yayınlayın.",
+      "checklist": "Kurulum kontrol listesi",
+      "secretsHint": "Gizli anahtarlar “wrangler secret put” ile tanımlanır; değerleri burada gösterilmez.",
+      "checks": {
+        "webhookSecret": "Webhook gizli anahtarı",
+        "apiKey": "API anahtarı",
+        "storeId": "Mağaza kimliği",
+        "clientToken": "İstemci anahtarı (client token)",
+        "downloadSecret": "İndirme imzalama anahtarı"
+      },
+      "configured": "Tanımlı",
+      "missing": "Eksik",
+      "webhookUrl": "Webhook adresi",
+      "webhookUrlHint": "Bu adresi sağlayıcı panelinde webhook olarak ekleyin ve aşağıdaki olaylara abone olun.",
+      "events": "Abone olunacak olaylar",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "editions": "Satış kimliği eksik baskılar",
+      "editionsNone": "Tüm baskıların ödeme sağlayıcı kimliği tanımlı.",
+      "webhooks7d": "Son 7 gün webhook olayları",
+      "methods": "Müşterinin göreceği ödeme yöntemleri",
+      "methodsHint": "Ödeme yöntemleri sağlayıcının ödeme penceresinde gösterilir ve sağlayıcı panelinden açılıp kapatılır.",
+      "testHint": "Yerelde API anahtarı olmadığı için “Satın al” butonu test ödeme ekranını açar. Canlı ortamda bu mod kapalıdır."
     }
   },
   "About": {
@@ -501,5 +536,58 @@
     "ctaTitle": "Mutfağa girmeye hazır mısınız?",
     "ctaRecipes": "Tariflere göz atın",
     "ctaEbooks": "E-kitapları keşfedin"
+  },
+  "Checkout": {
+    "metaTitle": "Ödeme",
+    "steps": {
+      "pay": "Ödeme",
+      "confirm": "Onay",
+      "download": "İndirme"
+    },
+    "pendingTitle": "Ödemeniz onaylanıyor",
+    "pendingBody": "Ödeme sağlayıcısından onay bekliyoruz. Bu genellikle birkaç saniye sürer; lütfen sayfayı kapatmayın.",
+    "slowTitle": "Onay beklenenden uzun sürüyor",
+    "slowBody": "Ödemeniz alındıysa e-kitabınız birkaç dakika içinde hazır olur. Durumu yeniden kontrol edebilirsiniz.",
+    "checkAgain": "Yeniden kontrol et",
+    "paidTitle": "Teşekkürler, ödemeniz alındı!",
+    "paidBody": "E-kitabınız indirilmeye hazır. İndirme bağlantısı 15 dakika geçerlidir.",
+    "download": "PDF’i indir",
+    "downloading": "Hazırlanıyor…",
+    "downloadsLeft": "{n, number} indirme hakkınız kaldı",
+    "downloadError": "İndirme bağlantısı oluşturulamadı. Lütfen tekrar deneyin.",
+    "refundedTitle": "Bu sipariş iade edildi",
+    "refundedBody": "İade edilen siparişlerde indirme kapatılır.",
+    "failedTitle": "Ödeme tamamlanamadı",
+    "failedBody": "Hesabınızdan çekim yapılmadıysa yeniden deneyebilirsiniz.",
+    "backToEbook": "E-kitaba dön",
+    "noOrderTitle": "Sipariş bulunamadı",
+    "noOrderBody": "Bu sayfa, ödemeyi başlattığınız tarayıcıda 24 saat boyunca açılabilir. Satın aldıysanız e-postanızdaki makbuzu kontrol edin.",
+    "browse": "E-kitaplara göz atın",
+    "summary": "Sipariş özeti",
+    "product": "Ürün",
+    "edition": "Baskı",
+    "total": "Toplam",
+    "orderRef": "Sipariş no",
+    "secure": "Güvenli ödeme",
+    "methodsLabel": "Kabul edilen ödeme yöntemleri",
+    "methods": {
+      "card": "Kredi / banka kartı",
+      "paypal": "PayPal",
+      "applePay": "Apple Pay",
+      "googlePay": "Google Pay"
+    },
+    "morNote": "Ödemeler, vergi ve faturayı da yöneten uluslararası ödeme ortağımız tarafından alınır; kart bilgileriniz bize ulaşmaz.",
+    "test": {
+      "badge": "Test modu",
+      "title": "Test ödemesi",
+      "notice": "Bu ekran yalnızca yerel geliştirmede görünür. Gerçek ödeme alınmaz; ödeme, sitenin gerçek webhook akışından geçirilerek simüle edilir.",
+      "methodTitle": "Ödeme yöntemi",
+      "pay": "Test ödemesini tamamla",
+      "paying": "İşleniyor…",
+      "cancel": "Vazgeç",
+      "error": "Test ödemesi tamamlanamadı ({error}).",
+      "notFoundTitle": "Test ödemesi bulunamadı",
+      "notFoundBody": "Bu ödeme tamamlanmış ya da başka bir tarayıcıda başlatılmış olabilir. Satın alma işlemini yeniden başlatın."
+    }
   }
 }

@@ -75,16 +75,19 @@ export async function issueDownloadToken(
 export interface RedeemDeps extends IssueDeps {
   products: ProductsRepo;
   store: PrivateFileStore;
+  /** DOWNLOAD_LIMITER keyed on the order id (payments.md §4). Optional so tests can omit it. */
+  limiter?: { allow(key: string): Promise<boolean> };
 }
 
 export type RedeemResult =
   | { status: 200; body: ReadableStream; size: number; filename: string }
-  | { status: 401 | 403 | 404; error: string };
+  | { status: 401 | 403 | 404 | 429; error: string };
 
 /** Token check → atomic entitlement + counter (refunds revoke instantly) → stream from private R2. */
 export async function redeemDownloadToken(deps: RedeemDeps, token: string): Promise<RedeemResult> {
   const check = await verifyDownloadToken(deps.secret, token, deps.now());
   if (!check.valid) return { status: 401, error: check.reason };
+  if (deps.limiter && !(await deps.limiter.allow(check.orderId))) return { status: 429, error: 'rate_limited' };
 
   const variantId = await deps.orders.consumeDownload(check.orderId);
   if (!variantId) return { status: 403, error: 'not_entitled' };

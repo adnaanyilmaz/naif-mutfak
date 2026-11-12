@@ -7,6 +7,8 @@ export const checkoutResponseSchema = z.discriminatedUnion('ok', [
     ok: z.literal(true),
     checkout: z.discriminatedUnion('provider', [
       z.object({ provider: z.literal('lemonsqueezy'), url: z.url() }),
+      // Same-origin path only: the local test checkout screen.
+      z.object({ provider: z.literal('test'), url: z.string().regex(/^\/(tr|en|ar)\/checkout\/test\?ref=[0-9a-f-]{36}$/) }),
       z.object({
         provider: z.literal('paddle'),
         priceId: z.string().min(1),

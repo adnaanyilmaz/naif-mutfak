@@ -105,7 +105,8 @@
     "details": "Details",
     "back": "All e-books",
     "empty": "No e-books yet.",
-    "calloutLabel": "E-book: {title}"
+    "calloutLabel": "E-book: {title}",
+    "rateLimited": "Too many attempts. Please try again in a minute."
   },
   "Admin": {
     "meta": {
@@ -123,7 +124,9 @@
       "overview": "Overview",
       "content": "Content",
       "insights": "Reports",
-      "signedIn": "Signed in"
+      "signedIn": "Signed in",
+      "settings": "Settings",
+      "payments": "Payment settings"
     },
     "auth": {
       "unauthorizedTitle": "Sign-in required",
@@ -475,6 +478,38 @@
       "webhookAlert": "{n, number} payment notifications failed in the last 7 days.",
       "review": "Review",
       "allPosts": "All posts"
+    },
+    "payments": {
+      "title": "Payment settings",
+      "subtitle": "Payment provider status and setup steps.",
+      "provider": "Payment provider",
+      "mode": "Mode",
+      "modeTest": "Local test checkout",
+      "modeSandbox": "Sandbox (test)",
+      "modeLive": "Live",
+      "switchHint": "To switch providers, update PAYMENT_PROVIDER and redeploy the site.",
+      "checklist": "Setup checklist",
+      "secretsHint": "Secrets are set with “wrangler secret put”; their values are never shown here.",
+      "checks": {
+        "webhookSecret": "Webhook secret",
+        "apiKey": "API key",
+        "storeId": "Store id",
+        "clientToken": "Client token",
+        "downloadSecret": "Download signing secret"
+      },
+      "configured": "Configured",
+      "missing": "Missing",
+      "webhookUrl": "Webhook URL",
+      "webhookUrlHint": "Add this URL as a webhook in the provider dashboard and subscribe to the events below.",
+      "events": "Events to subscribe to",
+      "copy": "Copy",
+      "copied": "Copied",
+      "editions": "Editions missing a provider id",
+      "editionsNone": "Every edition has a payment provider id.",
+      "webhooks7d": "Webhook events, last 7 days",
+      "methods": "Payment methods buyers see",
+      "methodsHint": "Payment methods are shown in the provider’s checkout and switched on or off in the provider dashboard.",
+      "testHint": "With no API key locally, “Buy” opens the test checkout screen. This mode is off in production."
     }
   },
   "About": {
@@ -501,5 +536,58 @@
     "ctaTitle": "Ready to get cooking?",
     "ctaRecipes": "Browse recipes",
     "ctaEbooks": "Explore e-books"
+  },
+  "Checkout": {
+    "metaTitle": "Checkout",
+    "steps": {
+      "pay": "Payment",
+      "confirm": "Confirmation",
+      "download": "Download"
+    },
+    "pendingTitle": "Confirming your payment",
+    "pendingBody": "We are waiting for confirmation from the payment provider. This usually takes a few seconds; please keep this page open.",
+    "slowTitle": "Confirmation is taking longer than usual",
+    "slowBody": "If your payment went through, your e-book will be ready within a few minutes. You can check the status again.",
+    "checkAgain": "Check again",
+    "paidTitle": "Thank you, your payment was received!",
+    "paidBody": "Your e-book is ready to download. The download link is valid for 15 minutes.",
+    "download": "Download PDF",
+    "downloading": "Preparing…",
+    "downloadsLeft": "{n, number} downloads left",
+    "downloadError": "Could not create a download link. Please try again.",
+    "refundedTitle": "This order was refunded",
+    "refundedBody": "Downloads are disabled for refunded orders.",
+    "failedTitle": "Payment not completed",
+    "failedBody": "If you were not charged, you can try again.",
+    "backToEbook": "Back to the e-book",
+    "noOrderTitle": "Order not found",
+    "noOrderBody": "This page works for 24 hours in the browser where you started checkout. If you purchased, check the receipt in your email.",
+    "browse": "Browse e-books",
+    "summary": "Order summary",
+    "product": "Product",
+    "edition": "Edition",
+    "total": "Total",
+    "orderRef": "Order no.",
+    "secure": "Secure checkout",
+    "methodsLabel": "Accepted payment methods",
+    "methods": {
+      "card": "Credit / debit card",
+      "paypal": "PayPal",
+      "applePay": "Apple Pay",
+      "googlePay": "Google Pay"
+    },
+    "morNote": "Payments are taken by our international payment partner, which also handles tax and invoicing; your card details never reach us.",
+    "test": {
+      "badge": "Test mode",
+      "title": "Test payment",
+      "notice": "This screen only appears in local development. No real payment is taken; the purchase is simulated through the site’s real webhook flow.",
+      "methodTitle": "Payment method",
+      "pay": "Complete test payment",
+      "paying": "Processing…",
+      "cancel": "Cancel",
+      "error": "The test payment could not be completed ({error}).",
+      "notFoundTitle": "Test payment not found",
+      "notFoundBody": "It may already be completed or was started in another browser. Please start the purchase again."
+    }
   }
 }

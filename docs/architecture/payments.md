@@ -185,6 +185,18 @@ Primary: **Worker stream** from the private R2 binding (no public URL ever exist
 
 Refunds revoke access immediately because every download re-checks `status = 'paid'`.
 
+## 4b. Buyer Screens & Local Test Checkout
+
+| Screen / route | Purpose |
+|---|---|
+| E-book page + full callout | Price, buy button and `PaymentMethods` note. Card, PayPal, Apple Pay and Google Pay are offered **inside the MoR overlay**; no card data reaches us. |
+| `/{locale}/checkout/success` | Server renders the first status; the client polls `GET /api/orders/status?locale=` (cookie `nm_ord`) with 1 s → 4 s backoff for ~45 s, then offers "check again". Paid → `POST /api/download/token` → PDF. Shows the order summary, downloads left, and refunded / failed / no-order states. |
+| MoR overlay success | LS `Checkout.Success` event and Paddle `checkout.completed` callback (plus Paddle `successUrl`, LS `redirect_url`) route to the success page. |
+| `/{locale}/checkout/test` + `POST /api/checkout/test` | **Development only** (`ENVIRONMENT=development`, provider Lemon Squeezy, no LS API key/store id, webhook secret set). Checkout returns `{ provider: 'test' }`; completing builds a real LS `order_created` payload, signs it with `LEMONSQUEEZY_WEBHOOK_SECRET` and runs it through `handleWebhook`. Requires the matching `nm_ord` cookie and same origin; 404 everywhere else. |
+| `/admin/payments` | Provider and mode, secret presence checklist (values never shown), webhook URL and events, editions missing a provider id, 7-day webhook outcomes. |
+
+Rate limits (Workers Rate Limiting, `ratelimits` in `wrangler.jsonc`): `CHECKOUT_LIMITER` 10/min per salted SHA-256 of the client IP → 429 `rate_limited`; `DOWNLOAD_LIMITER` 20/min per order id, checked before the download counter is touched. A missing binding fails open.
+
 ## 5. Security Checklist
 
 - [ ] No `node:crypto`; all HMAC/digests via `crypto.subtle`.

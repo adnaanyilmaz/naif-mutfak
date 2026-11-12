@@ -14,7 +14,7 @@ interface BuyButtonProps {
   tone?: 'accent' | 'light';
 }
 
-type State = { kind: 'idle' } | { kind: 'loading' } | { kind: 'error'; message: 'error' | 'unavailable' };
+type State = { kind: 'idle' } | { kind: 'loading' } | { kind: 'error'; message: 'error' | 'unavailable' | 'rateLimited' };
 
 export function BuyButton({ variantId, productTitle, placement, size = 'md', tone = 'accent' }: BuyButtonProps) {
   const t = useTranslations('Ebooks');
@@ -31,11 +31,11 @@ export function BuyButton({ variantId, productTitle, placement, size = 'md', ton
       });
       const body = checkoutResponseSchema.safeParse(await res.json().catch(() => null));
       if (!body.success || !body.data.ok) {
-        const unavailable = body.success && !body.data.ok && body.data.error === 'provider_not_configured';
-        setState({ kind: 'error', message: unavailable ? 'unavailable' : 'error' });
+        const code = body.success && !body.data.ok ? body.data.error : null;
+        setState({ kind: 'error', message: code === 'provider_not_configured' ? 'unavailable' : code === 'rate_limited' ? 'rateLimited' : 'error' });
         return;
       }
-      await openCheckoutOverlay(body.data.checkout);
+      await openCheckoutOverlay(body.data.checkout, `/${locale}/checkout/success`);
       setState({ kind: 'idle' });
     } catch {
       setState({ kind: 'error', message: 'error' });

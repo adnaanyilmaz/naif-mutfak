@@ -51,7 +51,7 @@ export interface AdminProductListItem {
   pageCount: number | null;
   updatedAt: Date;
   titles: { locale: Locale; title: string }[];
-  variants: { contentLocale: Locale; isActive: boolean; hasPdf: boolean; priceTry: number }[];
+  variants: { contentLocale: Locale; isActive: boolean; hasPdf: boolean; priceTry: number; lsVariantId: string | null; paddlePriceId: string | null }[];
 }
 
 export type VariantWrite = Omit<AdminVariant, 'pdfR2Key' | 'pdfSizeBytes' | 'pdfSha256'>;
@@ -112,6 +112,8 @@ export function createAdminProductsRepo(db: Db): AdminProductsRepo {
             isActive: productVariants.isActive,
             pdfR2Key: productVariants.pdfR2Key,
             priceTry: productVariants.priceTry,
+            lsVariantId: productVariants.lsVariantId,
+            paddlePriceId: productVariants.paddlePriceId,
           })
           .from(productVariants),
       ]);
@@ -120,7 +122,14 @@ export function createAdminProductsRepo(db: Db): AdminProductsRepo {
         titles: titles.filter((t) => t.productId === p.id).map(({ locale, title }) => ({ locale, title })),
         variants: variants
           .filter((v) => v.productId === p.id)
-          .map((v) => ({ contentLocale: v.contentLocale, isActive: v.isActive, hasPdf: v.pdfR2Key !== null, priceTry: v.priceTry })),
+          .map((v) => ({
+            contentLocale: v.contentLocale,
+            isActive: v.isActive,
+            hasPdf: v.pdfR2Key !== null,
+            priceTry: v.priceTry,
+            lsVariantId: v.lsVariantId,
+            paddlePriceId: v.paddlePriceId,
+          })),
       }));
     },
 
