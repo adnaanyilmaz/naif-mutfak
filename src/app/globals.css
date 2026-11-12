@@ -104,3 +104,98 @@
     }
   }
 }
+
+/* Long-form article body (Markdown). Logical properties only (RTL-safe). */
+@layer components {
+  .prose-editorial {
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 500;
+    max-inline-size: 68ch;
+  }
+  html[data-script='arabic'] .prose-editorial {
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+  .prose-editorial > :where(p, ul, ol, blockquote) {
+    margin-block-start: 1.1em;
+  }
+  .prose-editorial > :where(h2) {
+    margin-block-start: 2em;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+    font-weight: 600;
+  }
+  .prose-editorial > :where(h3) {
+    margin-block-start: 1.6em;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: 600;
+  }
+  .prose-editorial :where(ul) {
+    list-style: disc;
+    padding-inline-start: 1.25em;
+  }
+  .prose-editorial :where(ol) {
+    list-style: decimal;
+    padding-inline-start: 1.25em;
+  }
+  .prose-editorial :where(li + li) {
+    margin-block-start: 0.4em;
+  }
+  .prose-editorial :where(li)::marker {
+    color: var(--color-terracotta);
+  }
+  .prose-editorial :where(blockquote) {
+    border-inline-start: 2px solid var(--color-terracotta);
+    padding-inline-start: 1.25em;
+    font-style: italic;
+    color: var(--color-stone);
+  }
+  html[data-script='arabic'] .prose-editorial :where(blockquote) {
+    font-style: normal;
+  }
+  .prose-editorial :where(a) {
+    color: var(--color-terracotta);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .prose-editorial :where(strong) {
+    font-weight: 600;
+  }
+  .prose-editorial :where(code) {
+    font-family: var(--font-sans);
+    font-size: 0.85em;
+    background: var(--color-linen);
+    padding-inline: 0.3em;
+    border-radius: var(--radius-card);
+  }
+  .prose-editorial > :first-child {
+    margin-block-start: 0;
+  }
+}
+
+/* Print: only the Recipe Card (other regions carry `print:hidden`). Black on white. */
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .recipe-card * {
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+  .recipe-group,
+  .recipe-card li {
+    break-inside: avoid;
+  }
+}

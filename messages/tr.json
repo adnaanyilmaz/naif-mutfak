@@ -17,7 +17,10 @@
     "eyebrow": "Yeni sezon",
     "title": "Sade malzemeler, sabırlı eller",
     "dek": "Ekşi mayadan tereyağlı kurabiyelere: adım adım test edilmiş tarifler ve mutfağımızdan notlar.",
-    "cta": "Tariflere göz atın"
+    "cta": "Tariflere göz atın",
+    "latest": "Son tarifler",
+    "viewAll": "Tüm tarifler",
+    "ebookEyebrow": "Mutfaktan kitaplığa"
   },
   "NotFound": {
     "title": "Sayfa bulunamadı",
@@ -26,5 +29,77 @@
   },
   "Footer": {
     "rights": "Tüm hakları saklıdır."
+  },
+  "Blog": {
+    "title": "Tarifler",
+    "dek": "Defalarca denenmiş tarifler, mevsimin malzemeleri ve mutfaktan notlar.",
+    "empty": "Henüz yayımlanmış tarif yok.",
+    "metaTitle": "Tarifler"
+  },
+  "Categories": {
+    "bread": "Ekmek",
+    "pastry": "Hamur işi",
+    "other": "Mutfak"
+  },
+  "Article": {
+    "jumpToRecipe": "Tarife geç",
+    "publishedOn": "{date} tarihinde yayımlandı",
+    "author": "Naif Mutfak"
+  },
+  "Recipe": {
+    "eyebrow": "Tarif",
+    "print": "Yazdır",
+    "prep": "Hazırlık",
+    "cook": "Pişirme",
+    "rest": "Dinlenme",
+    "total": "Toplam",
+    "difficulty": "Zorluk",
+    "difficultyEasy": "Kolay",
+    "difficultyMedium": "Orta",
+    "difficultyAdvanced": "İleri",
+    "durationHM": "{h, number, digits} sa {m, number, digits} dk",
+    "durationH": "{h, number, digits} sa",
+    "durationM": "{m, number, digits} dk",
+    "servings": "Porsiyon",
+    "yield": "{count, number, digits} porsiyon",
+    "multiplier": "Tarifi ölçekle",
+    "decrease": "Porsiyonu azalt",
+    "increase": "Porsiyonu artır",
+    "announce": "Malzemeler {count, number, digits} porsiyona göre güncellendi.",
+    "ingredients": "Malzemeler",
+    "instructions": "Yapılışı",
+    "reset": "İşaretleri temizle",
+    "stepDone": "Adımı tamamlandı olarak işaretle",
+    "timer": "Süre: {time}"
+  },
+  "Newsletter": {
+    "title": "Yeni tarifler e-postanızda",
+    "dek": "Ayda iki kez: mevsimin tarifleri, mutfak notları ve e-kitap duyuruları.",
+    "emailLabel": "E-posta adresi",
+    "placeholder": "ornek@eposta.com",
+    "submit": "Abone ol",
+    "submitting": "Gönderiliyor…",
+    "consent": "Abone olarak e-posta almayı kabul edersiniz. İstediğiniz zaman ayrılabilirsiniz.",
+    "success": "Teşekkürler! Aboneliği onaylamak için e-postanızı kontrol edin.",
+    "error": "Bir sorun oluştu. Lütfen tekrar deneyin.",
+    "invalid": "Lütfen geçerli bir e-posta adresi girin."
+  },
+  "Ebooks": {
+    "title": "E-kitaplar",
+    "dek": "Mutfağımızdan, ev fırınları için yazılmış dijital yemek kitapları.",
+    "eyebrow": "E-kitap",
+    "pages": "{count, number, digits} sayfa",
+    "format": "PDF",
+    "buy": "E-kitabı satın al",
+    "buyFor": "{title} e-kitabını satın al",
+    "loading": "Ödeme açılıyor…",
+    "error": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
+    "unavailable": "Ödeme şu anda kullanılamıyor.",
+    "priceNote": "Son fiyat ve vergiler ödeme adımında gösterilir.",
+    "fallbackEdition": "Türkçe baskı",
+    "details": "Ayrıntılar",
+    "back": "Tüm e-kitaplar",
+    "empty": "Henüz e-kitap yok.",
+    "calloutLabel": "E-kitap: {title}"
   }
 }

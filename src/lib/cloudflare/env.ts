@@ -1,5 +1,5 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { parseEnv, type AppEnv } from '@/validators/env';
+import { parseEnv, parsePaymentEnv, type AppEnv, type PaymentEnv } from '@/validators/env';
 
 export type Bindings = CloudflareEnv;
 
@@ -11,6 +11,11 @@ export function getBindings(): Bindings {
 /** Validated string vars/secrets. Throws EnvValidationError on misconfiguration. */
 export function getEnv(): AppEnv {
   return parseEnv({ ...getBindings() });
+}
+
+/** Payment/delivery secrets. Throws EnvValidationError when the active provider is not configured. */
+export function getPaymentEnv(): PaymentEnv {
+  return parsePaymentEnv({ ...getBindings() });
 }
 
 /** `ctx.waitUntil` for post-response side effects. */

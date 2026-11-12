@@ -3,7 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { LocaleSwitcher } from './LocaleSwitcher';
 
 const NAV = [
-  { href: '/recipes', key: 'recipes' },
+  { href: '/blog', key: 'recipes' },
   { href: '/ebooks', key: 'ebooks' },
   { href: '/about', key: 'about' },
 ] as const;
@@ -11,7 +11,7 @@ const NAV = [
 export async function SiteHeader() {
   const t = await getTranslations('Header');
   return (
-    <header className="border-b border-hairline">
+    <header className="border-b border-hairline print:hidden">
       <div className="mx-auto flex max-w-page items-center justify-between gap-6 px-6 py-5">
         <Link href="/" className="font-display text-h3 font-semibold tracking-tight" aria-label={t('home')}>
           Naif Mutfak

@@ -17,7 +17,10 @@
     "eyebrow": "New season",
     "title": "Simple ingredients, patient hands",
     "dek": "From sourdough to brown-butter cookies: step-by-step tested recipes and notes from our kitchen.",
-    "cta": "Browse recipes"
+    "cta": "Browse recipes",
+    "latest": "Latest recipes",
+    "viewAll": "All recipes",
+    "ebookEyebrow": "From the kitchen to your shelf"
   },
   "NotFound": {
     "title": "Page not found",
@@ -26,5 +29,77 @@
   },
   "Footer": {
     "rights": "All rights reserved."
+  },
+  "Blog": {
+    "title": "Recipes",
+    "dek": "Recipes tested again and again, seasonal ingredients and notes from the kitchen.",
+    "empty": "No recipes published yet.",
+    "metaTitle": "Recipes"
+  },
+  "Categories": {
+    "bread": "Bread",
+    "pastry": "Pastry",
+    "other": "Kitchen"
+  },
+  "Article": {
+    "jumpToRecipe": "Jump to recipe",
+    "publishedOn": "Published {date}",
+    "author": "Naif Mutfak"
+  },
+  "Recipe": {
+    "eyebrow": "Recipe",
+    "print": "Print",
+    "prep": "Prep",
+    "cook": "Cook",
+    "rest": "Rest",
+    "total": "Total",
+    "difficulty": "Difficulty",
+    "difficultyEasy": "Easy",
+    "difficultyMedium": "Medium",
+    "difficultyAdvanced": "Advanced",
+    "durationHM": "{h, number, digits} h {m, number, digits} min",
+    "durationH": "{h, number, digits} h",
+    "durationM": "{m, number, digits} min",
+    "servings": "Servings",
+    "yield": "{count, number, digits} servings",
+    "multiplier": "Scale recipe",
+    "decrease": "Decrease servings",
+    "increase": "Increase servings",
+    "announce": "Ingredients updated for {count, number, digits} servings.",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "reset": "Clear checks",
+    "stepDone": "Mark step as done",
+    "timer": "Timer: {time}"
+  },
+  "Newsletter": {
+    "title": "New recipes in your inbox",
+    "dek": "Twice a month: seasonal recipes, kitchen notes and e-book news.",
+    "emailLabel": "Email address",
+    "placeholder": "you@example.com",
+    "submit": "Subscribe",
+    "submitting": "Sending…",
+    "consent": "By subscribing you agree to receive emails. Unsubscribe at any time.",
+    "success": "Thank you! Check your inbox to confirm your subscription.",
+    "error": "Something went wrong. Please try again.",
+    "invalid": "Please enter a valid email address."
+  },
+  "Ebooks": {
+    "title": "E-books",
+    "dek": "Digital cookbooks from our kitchen, written for home ovens.",
+    "eyebrow": "E-book",
+    "pages": "{count, number, digits} pages",
+    "format": "PDF",
+    "buy": "Buy the e-book",
+    "buyFor": "Buy the e-book {title}",
+    "loading": "Opening checkout…",
+    "error": "Checkout could not be started. Please try again.",
+    "unavailable": "Checkout is currently unavailable.",
+    "priceNote": "Final price & tax shown at checkout.",
+    "fallbackEdition": "Turkish edition",
+    "details": "Details",
+    "back": "All e-books",
+    "empty": "No e-books yet.",
+    "calloutLabel": "E-book: {title}"
   }
 }
