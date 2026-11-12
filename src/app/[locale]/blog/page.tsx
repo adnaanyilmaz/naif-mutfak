@@ -32,17 +32,17 @@ export default async function BlogArchivePage({ params }: BlogPageProps) {
   const posts = await listPosts(contentDeps(), locale);
 
   return (
-    <div className="mx-auto max-w-page px-6 py-16 md:py-24">
+    <div className="mx-auto max-w-page px-4 pt-10 pb-16 sm:px-6 md:pt-16 md:pb-24">
       <header className="max-w-content">
-        <h1 className="font-display text-display font-semibold">{t('title')}</h1>
-        <p className="mt-4 font-serif text-dek text-stone italic arabic:not-italic">{t('dek')}</p>
+        <h1 className="font-display text-display font-extrabold">{t('title')}</h1>
+        <p className="mt-4 text-dek text-stone">{t('dek')}</p>
       </header>
       {posts.length === 0 ? (
         <p className="mt-16 text-ui text-stone">{t('empty')}</p>
       ) : (
-        <div className="mt-16 grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => (
-            <StoryCard key={p.id} post={p} />
+        <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((p, i) => (
+            <StoryCard key={p.id} post={p} priority={i < 3} />
           ))}
         </div>
       )}

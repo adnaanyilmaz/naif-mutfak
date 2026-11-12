@@ -20,6 +20,9 @@ export interface PostCardView {
   imageUrl: string | null;
   imageAlt: string;
   publishedAt: string | null;
+  /** Recipes only: prep + cook + rest. */
+  totalMinutes: number | null;
+  difficulty: 'easy' | 'medium' | 'advanced' | null;
 }
 
 export interface RecipeView {
@@ -69,7 +72,14 @@ function toCard(p: PostSummary, mediaBaseUrl: string): PostCardView {
     imageUrl: p.heroImageKey ? mediaUrl(mediaBaseUrl, p.heroImageKey, 1080) : null,
     imageAlt: p.heroImageAlt ?? p.title,
     publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
+    totalMinutes: p.isRecipe ? sumMinutes(p) : null,
+    difficulty: p.isRecipe ? p.difficulty : null,
   };
+}
+
+function sumMinutes(p: Pick<PostSummary, 'prepMinutes' | 'cookMinutes' | 'restMinutes'>): number | null {
+  const parts = [p.prepMinutes, p.cookMinutes, p.restMinutes].filter((v): v is number => v !== null);
+  return parts.length > 0 ? parts.reduce((a, b) => a + b, 0) : null;
 }
 
 export async function listPosts(
@@ -85,7 +95,6 @@ export async function listPosts(
 
 function toRecipe(p: PostDetail): RecipeView | null {
   if (!p.isRecipe || !p.ingredients || !p.instructions || !p.baseServings) return null;
-  const parts = [p.prepMinutes, p.cookMinutes, p.restMinutes].filter((v): v is number => v !== null);
   return {
     postId: p.id,
     title: p.title,
@@ -93,7 +102,7 @@ function toRecipe(p: PostDetail): RecipeView | null {
     prepMinutes: p.prepMinutes,
     cookMinutes: p.cookMinutes,
     restMinutes: p.restMinutes,
-    totalMinutes: parts.length > 0 ? parts.reduce((a, b) => a + b, 0) : null,
+    totalMinutes: sumMinutes(p),
     difficulty: p.difficulty,
     ingredients: p.ingredients,
     instructions: p.instructions,

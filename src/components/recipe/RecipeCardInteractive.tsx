@@ -23,7 +23,7 @@ interface RecipeCardInteractiveProps {
 }
 
 const chip =
-  'min-h-11 min-w-11 rounded-pill border px-3 text-ui font-medium tabular-nums transition-colors duration-200 ease-editorial';
+  'min-h-10 min-w-11 rounded-pill px-3 text-ui font-semibold tabular-nums transition-colors duration-200 ease-editorial';
 
 export function RecipeCardInteractive({ postId, baseServings, ingredients, instructions }: RecipeCardInteractiveProps) {
   const t = useTranslations('Recipe');
@@ -41,8 +41,8 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
   return (
     <>
       {/* Servings controls */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-y border-hairline py-4 print:hidden">
-        <div role="group" aria-label={t('multiplier')} className="flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-hairline p-2 ps-3 print:hidden">
+        <div role="group" aria-label={t('multiplier')} className="flex flex-wrap gap-1 rounded-pill bg-linen p-1">
           {SERVING_MULTIPLIERS.map((m) => {
             const target = clampServings(baseServings * m);
             const active = servings === target;
@@ -52,7 +52,7 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
                 type="button"
                 aria-pressed={active}
                 onClick={() => setServings(target)}
-                className={`${chip} ${active ? 'border-terracotta bg-terracotta-tint text-terracotta-deep' : 'border-hairline bg-paper hover:border-terracotta'}`}
+                className={`${chip} ${active ? 'bg-white text-terracotta-deep shadow-[0_1px_3px_rgb(0_0_0/0.12)]' : 'text-stone hover:text-charcoal'}`}
               >
                 {multiplierLabel(m)}
               </button>
@@ -66,7 +66,7 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
             aria-label={t('decrease')}
             disabled={servings <= MIN_SERVINGS}
             onClick={() => setServings((s) => clampServings(s - 1))}
-            className={`${chip} border-hairline bg-paper disabled:opacity-40`}
+            className={`${chip} border border-hairline bg-white hover:border-charcoal disabled:opacity-40`}
           >
             −
           </button>
@@ -78,7 +78,7 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
             aria-label={t('increase')}
             disabled={servings >= MAX_SERVINGS}
             onClick={() => setServings((s) => clampServings(s + 1))}
-            className={`${chip} border-hairline bg-paper disabled:opacity-40`}
+            className={`${chip} border border-hairline bg-white hover:border-charcoal disabled:opacity-40`}
           >
             +
           </button>
@@ -91,7 +91,7 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
       {/* Ingredients */}
       <div className="mt-8">
         <div className="flex items-baseline justify-between gap-4">
-          <h3 className="font-display text-h3 font-semibold">{t('ingredients')}</h3>
+          <h3 className="font-display text-h3 font-extrabold">{t('ingredients')}</h3>
           {progress.hasProgress && (
             <button type="button" onClick={progress.reset} className="text-ui text-terracotta underline underline-offset-4 print:hidden">
               {t('reset')}
@@ -100,20 +100,20 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
         </div>
         {groups.map((group, gi) => (
           <div key={gi} className="recipe-group mt-5">
-            {group.title && <h4 className="text-eyebrow font-semibold text-olive uppercase arabic:normal-case">{group.title}</h4>}
-            <ul className="mt-2 divide-y divide-hairline">
+            {group.title && <h4 className="text-[0.8125rem] font-bold text-terracotta">{group.title}</h4>}
+            <ul className="mt-2 space-y-1">
               {group.items.map((item) => {
                 const isChecked = progress.checked.has(item.id);
                 return (
                   <li key={item.id}>
                     <label
-                      className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-card px-2 py-2.5 transition-colors duration-200 ease-editorial ${isChecked ? 'bg-olive-tint text-stone line-through print:bg-transparent print:no-underline' : 'hover:bg-linen'}`}
+                      className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 ease-editorial ${isChecked ? 'bg-olive-tint text-muted line-through print:bg-transparent print:no-underline' : 'hover:bg-linen'}`}
                     >
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => progress.toggleIngredient(item.id)}
-                        className="mt-1 size-5 shrink-0 accent-olive print:hidden"
+                        className="mt-0.5 size-5 shrink-0 accent-terracotta print:hidden"
                       />
                       <span className="hidden print:inline" aria-hidden>
                         ☐
@@ -134,11 +134,11 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
 
       {/* Instructions */}
       <div className="mt-10">
-        <h3 className="font-display text-h3 font-semibold">{t('instructions')}</h3>
+        <h3 className="font-display text-h3 font-extrabold">{t('instructions')}</h3>
         {instructions.map((section, si) => (
           <div key={si} className="recipe-group mt-5">
             {section.title && (
-              <h4 className="text-eyebrow font-semibold text-olive uppercase arabic:normal-case">{section.title}</h4>
+              <h4 className="text-[0.8125rem] font-bold text-terracotta">{section.title}</h4>
             )}
             <ol className="mt-3 space-y-3">
               {section.steps.map((step, k) => {
@@ -151,15 +151,15 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
                       aria-pressed={isDone}
                       aria-label={`${nf.format(index + 1)}. ${t('stepDone')}`}
                       onClick={() => progress.toggleStep(step.id)}
-                      className={`flex w-full items-start gap-4 rounded-card p-3 text-start transition-colors duration-200 ease-editorial ${isDone ? 'bg-olive-tint text-stone' : 'hover:bg-linen'}`}
+                      className={`flex w-full items-start gap-4 rounded-2xl p-3 text-start transition-colors duration-200 ease-editorial ${isDone ? 'bg-olive-tint text-muted' : 'hover:bg-linen'}`}
                     >
                       <span
                         aria-hidden
-                        className={`flex size-8 shrink-0 items-center justify-center rounded-pill text-ui font-semibold tabular-nums ${isDone ? 'bg-olive text-paper' : 'bg-linen text-charcoal print:bg-transparent'}`}
+                        className={`flex size-8 shrink-0 items-center justify-center rounded-pill text-ui font-bold tabular-nums ${isDone ? 'bg-olive text-white' : 'bg-terracotta-tint text-terracotta-deep print:bg-transparent'}`}
                       >
                         {isDone ? '✓' : nf.format(index + 1)}
                       </span>
-                      <span className={`pt-1 font-serif text-body ${isDone ? 'line-through print:no-underline' : ''}`}>{step.text}</span>
+                      <span className={`pt-1 text-[1.0625rem] leading-relaxed ${isDone ? 'line-through print:no-underline' : ''}`}>{step.text}</span>
                     </button>
                   </li>
                 );

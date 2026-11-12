@@ -4,60 +4,63 @@
 @custom-variant arabic (&:where([data-script='arabic'], [data-script='arabic'] *));
 @custom-variant latin (&:where([data-script='latin'], [data-script='latin'] *));
 
-/* Tokens: docs/design/editorial-system.md */
+/* Tokens: docs/design/editorial-system.md — modern minimal: white canvas, bold sans headings, one warm accent. */
 @theme {
   --color-*: initial;
-  --color-cream: #faf8f5;
-  --color-paper: #ffffff;
-  --color-linen: #f2ede6;
-  --color-charcoal: #1c1917;
-  --color-stone: #57534e;
-  --color-muted: #8a847c;
-  --color-hairline: #e7e1d8;
-  --color-terracotta: #a4492f;
-  --color-terracotta-deep: #863a25;
-  --color-terracotta-tint: #f4e4dc;
-  --color-olive: #5f6b3a;
-  --color-olive-tint: #e8eadb;
-  --color-butter: #e9c46a;
-  --color-danger: #9b2c2c;
+  /* Token names are kept stable across redesigns; values define the look. */
+  --color-cream: #ffffff; /* page canvas */
+  --color-paper: #ffffff; /* raised surfaces */
+  --color-linen: #f6f5f3; /* subtle surface / placeholders */
+  --color-charcoal: #111110; /* ink */
+  --color-stone: #4a4744; /* secondary text */
+  --color-muted: #8b8782; /* tertiary text */
+  --color-hairline: #ebe8e4; /* borders */
+  --color-terracotta: #c2410c; /* accent (AA on white) */
+  --color-terracotta-deep: #9a3412;
+  --color-terracotta-tint: #fff1e8;
+  --color-olive: #3f6212;
+  --color-olive-tint: #ecf5dc;
+  --color-butter: #fcd34d;
+  --color-danger: #b42318;
   --color-white: #ffffff;
   --color-black: #000000;
   --color-transparent: transparent;
   --color-current: currentColor;
 
-  --font-display: var(--font-playfair), 'Times New Roman', serif;
-  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-display: var(--font-jakarta), system-ui, sans-serif;
+  --font-serif: var(--font-inter), system-ui, sans-serif; /* legacy alias: long-form text is sans now */
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  --text-display: clamp(2.75rem, 2rem + 3.5vw, 4.75rem);
-  --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.02em;
-  --text-h1: clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
-  --text-h1--line-height: 1.1;
-  --text-h1--letter-spacing: -0.015em;
-  --text-h2: clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
-  --text-h2--line-height: 1.15;
-  --text-h2--letter-spacing: -0.01em;
-  --text-h3: 1.5rem;
-  --text-h3--line-height: 1.25;
-  --text-dek: 1.375rem;
-  --text-dek--line-height: 1.45;
-  --text-body: 1.25rem;
-  --text-body--line-height: 1.7;
+  --text-display: clamp(2.5rem, 1.4rem + 4.6vw, 5.25rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.04em;
+  --text-h1: clamp(2.125rem, 1.5rem + 2.6vw, 3.75rem);
+  --text-h1--line-height: 1.06;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h2: clamp(1.625rem, 1.3rem + 1.4vw, 2.5rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h3: 1.3125rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.015em;
+  --text-dek: 1.1875rem;
+  --text-dek--line-height: 1.6;
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.75;
   --text-ui: 0.9375rem;
   --text-ui--line-height: 1.5;
   --text-eyebrow: 0.75rem;
   --text-eyebrow--line-height: 1.2;
-  --text-eyebrow--letter-spacing: 0.14em;
+  --text-eyebrow--letter-spacing: 0.08em;
 
   --container-content: 45rem;
-  --container-wide: 67.5rem;
-  --container-page: 85rem; /* not "full": max-w-full must stay 100% */
+  --container-wide: 72rem;
+  --container-page: 80rem; /* not "full": max-w-full must stay 100% */
 
-  --radius-card: 0.25rem;
+  --radius-card: 1.25rem;
   --radius-pill: 999px;
-  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px -12px rgb(28 25 23 / 0.12);
+  --shadow-card: 0 1px 2px rgb(17 17 16 / 0.04), 0 12px 32px -16px rgb(17 17 16 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(17 17 16 / 0.04), 0 24px 48px -20px rgb(17 17 16 / 0.28);
   --ease-editorial: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -66,20 +69,21 @@
     font-family: var(--font-sans);
   }
 
-  /* Arabic: swap families, no tracking on connected script, +10% leading. Works on <html> (public site)
-     and on any subtree (admin AR editor panes), which also needs font-family re-resolved below. */
+  /* Arabic: one sans family, no tracking on connected script, more leading. Works on <html> (public site)
+     and on any subtree (admin AR editor panes), which also needs font-family re-resolved above. */
   [data-script='arabic'] {
-    --font-display: var(--font-amiri), 'Times New Roman', serif;
-    --font-serif: var(--font-amiri), 'Times New Roman', serif;
+    --font-display: var(--font-plex-ar), system-ui, sans-serif;
+    --font-serif: var(--font-plex-ar), system-ui, sans-serif;
     --font-sans: var(--font-plex-ar), system-ui, sans-serif;
     --text-display--letter-spacing: 0;
     --text-h1--letter-spacing: 0;
     --text-h2--letter-spacing: 0;
+    --text-h3--letter-spacing: 0;
     --text-eyebrow--letter-spacing: 0;
-    --text-display--line-height: 1.2;
-    --text-h1--line-height: 1.25;
-    --text-h2--line-height: 1.3;
-    --text-body--line-height: 1.85;
+    --text-display--line-height: 1.25;
+    --text-h1--line-height: 1.3;
+    --text-h2--line-height: 1.35;
+    --text-body--line-height: 1.9;
   }
 
   html {
@@ -90,13 +94,18 @@
     text-rendering: optimizeLegibility;
   }
 
+  :where(h1, h2, h3, h4) {
+    text-wrap: balance;
+  }
+
   ::selection {
     background-color: var(--color-terracotta-tint);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-charcoal);
-    outline-offset: 2px;
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 3px;
+    border-radius: 6px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -113,15 +122,11 @@
 /* Long-form article body (Markdown). Logical properties only (RTL-safe). */
 @layer components {
   .prose-editorial {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
-    font-weight: 500;
+    color: #2b2927;
     max-inline-size: 68ch;
-  }
-  [data-script='arabic'] .prose-editorial {
-    font-size: 1.125rem;
-    font-weight: 400;
   }
   .prose-editorial > :where(p, ul, ol, blockquote) {
     margin-block-start: 1.1em;
@@ -132,14 +137,17 @@
     font-size: var(--text-h2);
     line-height: var(--text-h2--line-height);
     letter-spacing: var(--text-h2--letter-spacing);
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--color-charcoal);
   }
   .prose-editorial > :where(h3) {
     margin-block-start: 1.6em;
     font-family: var(--font-display);
     font-size: var(--text-h3);
     line-height: var(--text-h3--line-height);
-    font-weight: 600;
+    letter-spacing: var(--text-h3--letter-spacing);
+    font-weight: 700;
+    color: var(--color-charcoal);
   }
   .prose-editorial :where(ul) {
     list-style: disc;
@@ -156,13 +164,13 @@
     color: var(--color-terracotta);
   }
   .prose-editorial :where(blockquote) {
-    border-inline-start: 2px solid var(--color-terracotta);
-    padding-inline-start: 1.25em;
-    font-style: italic;
-    color: var(--color-stone);
-  }
-  [data-script='arabic'] .prose-editorial :where(blockquote) {
-    font-style: normal;
+    border-inline-start: 3px solid var(--color-terracotta);
+    background: var(--color-terracotta-tint);
+    border-radius: 0.75rem;
+    padding-block: 0.9em;
+    padding-inline: 1.25em;
+    color: var(--color-charcoal);
+    font-weight: 500;
   }
   .prose-editorial :where(a) {
     color: var(--color-terracotta);
@@ -171,13 +179,17 @@
     text-underline-offset: 4px;
   }
   .prose-editorial :where(strong) {
-    font-weight: 600;
+    font-weight: 650;
+    color: var(--color-charcoal);
   }
   .prose-editorial :where(code) {
-    font-family: var(--font-sans);
+    font-family: ui-monospace, monospace;
     font-size: 0.85em;
     background: var(--color-linen);
     padding-inline: 0.3em;
+    border-radius: 0.375rem;
+  }
+  .prose-editorial :where(img) {
     border-radius: var(--radius-card);
   }
   .prose-editorial > :first-child {

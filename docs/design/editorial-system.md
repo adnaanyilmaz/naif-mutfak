@@ -1,88 +1,65 @@
 # Editorial Design System
 
-Direction: warm, quiet, magazine-like. Generous whitespace, large serif headlines, photography-led layouts, restrained color. Inspired by the *feel* of high-end baking editorials (e.g. natashasbaking.com) — no copied assets, layouts, or copy.
+Direction: **modern minimal**. White canvas, bold geometric sans headlines, large rounded image cards, pill-shaped controls and a single warm orange accent. Content and photography lead; chrome stays quiet. No copied assets, layouts or copy from other sites.
 
-Implementation: Tailwind CSS v4 `@theme` tokens in `src/app/globals.css`. Components use tokens only — no raw hex values or arbitrary pixel values in JSX.
+Implementation: Tailwind CSS v4 `@theme` tokens in `src/app/globals.css`. Token **names are stable** (they predate this redesign); their values define the look. Components use tokens; one-off gradients/glows are allowed only as decorative layers.
 
 ## 1. Color Tokens
 
-| Token | Hex | Use | Contrast on `cream` |
+| Token | Hex | Use | Contrast on white |
 |---|---|---|---|
-| `--color-cream` | `#FAF8F5` | Page background | — |
-| `--color-paper` | `#FFFFFF` | Cards, recipe card surface | — |
-| `--color-linen` | `#F2EDE6` | Section bands, callout background, input fill | — |
-| `--color-charcoal` | `#1C1917` | Body text, headings | 16.9 : 1 |
-| `--color-stone` | `#57534E` | Secondary text, meta, captions | 7.4 : 1 |
-| `--color-muted` | `#8A847C` | Disabled, placeholders (non-essential text only) | 3.6 : 1 |
-| `--color-hairline` | `#E7E1D8` | Dividers, card borders | — |
-| `--color-terracotta` | `#A4492F` | Primary accent: links, CTAs, active states | 5.5 : 1 |
-| `--color-terracotta-deep` | `#863A25` | CTA hover/pressed | 7.4 : 1 |
-| `--color-terracotta-tint` | `#F4E4DC` | Selected chips, highlight wash | — |
-| `--color-olive` | `#5F6B3A` | Secondary accent: tags, checkmarks, "e-book" eyebrow | 5.4 : 1 |
-| `--color-olive-tint` | `#E8EADB` | Checked ingredient wash, success bg | — |
-| `--color-butter` | `#E9C46A` | Rating stars, sparing decorative use (never text) | — |
-| `--color-danger` | `#9B2C2C` | Form errors | 7.0 : 1 |
+| `--color-cream` | `#FFFFFF` | Page canvas | — |
+| `--color-paper` | `#FFFFFF` | Raised surfaces (recipe card, price box) | — |
+| `--color-linen` | `#F6F5F3` | Subtle surfaces: chips, segmented controls, meta tiles | — |
+| `--color-charcoal` | `#111110` | Headings, body ink, primary dark buttons, e-book banner | 18.9 : 1 |
+| `--color-stone` | `#4A4744` | Secondary text, deks | 9.0 : 1 |
+| `--color-muted` | `#8B8782` | Meta labels, captions (non-essential) | 3.6 : 1 |
+| `--color-hairline` | `#EBE8E4` | Borders, dividers | — |
+| `--color-terracotta` | `#C2410C` | Accent: CTAs, links, category labels, active states | 5.2 : 1 |
+| `--color-terracotta-deep` | `#9A3412` | Accent hover / text on tint | 7.3 : 1 |
+| `--color-terracotta-tint` | `#FFF1E8` | Pills, newsletter card, blockquotes, step numbers | — |
+| `--color-olive` | `#3F6212` | Success, completed steps | 7.6 : 1 |
+| `--color-olive-tint` | `#ECF5DC` | Checked ingredient wash | — |
+| `--color-butter` | `#FCD34D` | Decorative only (dev badge, ratings) | — |
+| `--color-danger` | `#B42318` | Form errors | 6.2 : 1 |
 
-Rules: text ≥ 4.5:1 (WCAG AA). Accent covers < 10% of any viewport. Light theme only for v1; tokens are named semantically so a dark theme can be added later.
-
-```css
-@import 'tailwindcss';
-
-@theme {
-  --color-cream: #FAF8F5;  --color-paper: #FFFFFF;  --color-linen: #F2EDE6;
-  --color-charcoal: #1C1917; --color-stone: #57534E; --color-muted: #8A847C; --color-hairline: #E7E1D8;
-  --color-terracotta: #A4492F; --color-terracotta-deep: #863A25; --color-terracotta-tint: #F4E4DC;
-  --color-olive: #5F6B3A; --color-olive-tint: #E8EADB; --color-butter: #E9C46A; --color-danger: #9B2C2C;
-
-  --font-display: var(--font-playfair), 'Times New Roman', serif;
-  --font-serif: var(--font-cormorant), Georgia, serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-display-ar: var(--font-amiri), 'Times New Roman', serif;
-  --font-sans-ar: var(--font-plex-ar), system-ui, sans-serif;
-
-  --radius-card: 0.25rem;   /* editorial: nearly square */
-  --radius-pill: 999px;
-  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px -12px rgb(28 25 23 / 0.12);
-  --ease-editorial: cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-```
+Rules: text ≥ 4.5:1 (WCAG AA). Accent covers < 10% of a viewport, except the e-book banner (dark) and newsletter card (tint).
 
 ## 2. Typography
 
-Loaded with `next/font/google` (self-hosted at build, `display: 'swap'`), exposed as CSS variables on `<html>`.
+Loaded with `next/font/google` (self-hosted, `display: 'swap'`) in `src/app/fonts.ts`, exposed as CSS variables on `<html>`.
 
-| Role | TR / EN | AR | Notes |
-|---|---|---|---|
-| Display / H1–H2 | Playfair Display 600 (`latin`, `latin-ext` for ç ğ ı İ ö ş ü) | Amiri 700 | Tight leading, optical size via `font-optical-sizing: auto` |
-| H3–H4, dek, pull quotes | Cormorant Garamond 500/600 + italic | Amiri 400 / italic → regular (no Arabic italic) | Dek = standfirst under the headline |
-| Body (long-form) | Cormorant Garamond 500 @ 20–21px | IBM Plex Sans Arabic 400 @ 18px | Cormorant is legible only at ≥ 19px; never use it below |
-| UI, recipe card data, buttons, forms | Inter 400/500/600 | IBM Plex Sans Arabic 400/500/600 | Inter is a UI addition; tabular numerals (`tabular-nums`) for quantities and prices |
+| Role | TR / EN | AR |
+|---|---|---|
+| Display, H1–H3, wordmark, prices | Plus Jakarta Sans 700/800 (`latin`, `latin-ext`) | IBM Plex Sans Arabic 700 |
+| Body, deks, UI, forms | Inter 400–600 | IBM Plex Sans Arabic 400–600 |
 
-Locale switch: `<html lang={locale} dir={dir} data-script={locale === 'ar' ? 'arabic' : 'latin'}>`; base styles map `font-display`/`font-serif`/`font-sans` to the Arabic families when `[data-script=arabic]`. Arabic: `letter-spacing: 0` always (no tracking on connected scripts), line-height +10%.
+`font-serif` remains as a legacy alias of the body sans. No italics anywhere (Arabic has none; the modern system doesn't need them). Locale switch: `[data-script=arabic]` (on `<html>` or any subtree) swaps all three families to IBM Plex Sans Arabic, sets tracking to 0 and adds leading.
 
 Type scale (fluid, `clamp`):
 
-| Token | Size | Line height | Tracking |
+| Token | Size | Line height | Tracking (Latin) |
 |---|---|---|---|
-| `display` | clamp(2.75rem, 2rem + 3.5vw, 4.75rem) | 1.05 | -0.02em |
-| `h1` | clamp(2.25rem, 1.8rem + 2vw, 3.5rem) | 1.1 | -0.015em |
-| `h2` | clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem) | 1.15 | -0.01em |
-| `h3` | 1.5rem | 1.25 | 0 |
-| `dek` | 1.375rem italic | 1.45 | 0 |
-| `body` | 1.25rem | 1.7 | 0 |
+| `display` | clamp(2.5rem, 1.4rem + 4.6vw, 5.25rem), weight 800 | 1.02 | -0.04em |
+| `h1` | clamp(2.125rem, 1.5rem + 2.6vw, 3.75rem), 800 | 1.06 | -0.035em |
+| `h2` | clamp(1.625rem, 1.3rem + 1.4vw, 2.5rem), 800 | 1.12 | -0.025em |
+| `h3` | 1.3125rem, 700 | 1.3 | -0.015em |
+| `dek` | 1.1875rem | 1.6 | 0 |
+| `body` | 1.125rem | 1.75 | 0 |
 | `ui` | 0.9375rem | 1.5 | 0 |
-| `eyebrow` | 0.75rem, Inter 600, uppercase (Latin only) | 1.2 | 0.14em |
+| `eyebrow` | 0.75rem, 600, uppercase (Latin only) | 1.2 | 0.08em |
 
-Measure: article body max `68ch`; recipe card `min(100%, 46rem)`.
+Headings use `text-wrap: balance`. Measure: article body `68ch`; recipe card `min(100%, 48rem)`.
 
-## 3. Layout & Spacing
+## 3. Layout & Shape
 
-- Spacing scale: Tailwind default (4px base). Section rhythm: `py-16 md:py-24`. Paragraph spacing: `mt-[1.1em]`.
-- Containers: `content` 720px (article), `wide` 1080px (galleries, recipe card), `full` 1360px (home grids).
-- Grid: home uses a 12-col editorial grid; hero story spans 7 cols + stacked secondary stories in 5.
-- Images: `aspect-[4/5]` for recipe heroes, `aspect-[3/2]` for in-article, `aspect-square` for grid tiles. Served from `MEDIA_PUBLIC` through Cloudflare Image Transformations (`format=auto`, widths 480/768/1080/1600) via a custom `next/image` loader.
-- Motion: 200–300ms with `--ease-editorial`; respect `prefers-reduced-motion`.
-- **RTL:** all spacing/position via logical utilities (`ms/me/ps/pe/start/end/text-start`). Images and grids mirror automatically; directional icons use `rtl:-scale-x-100`.
+- Containers: `content` 720px (article), `wide` 1152px (article hero image, e-book detail), `page` 1280px (home, archives). Side gutter 16px on phones, 24px from `sm`.
+- Radii: `--radius-card` 1.25rem (cards, images); 2rem for hero/feature images, recipe card, e-book banner and newsletter card; `rounded-pill` for every button, chip and segmented control.
+- Shadows: `shadow-card` (soft, resting) and `shadow-lift` (covers, hover).
+- Home: hero = headline + two pill CTAs (start) beside a full-bleed **feature card** (image, gradient overlay, title + meta chips in white). Then "Latest" in a 3-column card grid (lead excluded), then the dark e-book banner.
+- Images: `aspect-[4/3]` cards, `aspect-[16/10]` article hero, `aspect-[4/5]` feature card. Image-less posts get a category-tinted gradient with a bowl glyph (`EditorialImage`), never an empty grey box.
+- Motion: 200–500ms with `--ease-editorial`; cards zoom images 4% on hover; respect `prefers-reduced-motion`.
+- **RTL:** logical utilities only (`ms/me/ps/pe/start/end/text-start`); directional icons use `rtl:-scale-x-100`.
 
 ## 4. Component: Recipe Card
 
@@ -165,27 +142,31 @@ Authored in `body_md` with a directive (rendered via unified/remark → hast →
 Component: `src/components/commerce/EbookCallout.tsx` (server) + `BuyButton.tsx` (client). Data via `services/catalog` (product + translation + variant for the reader's locale; falls back to TR content variant with a "Turkish edition" badge if no variant exists in that language).
 
 ```
-┌──────────────────────────────────────────────────────────┐ bg-linen, border-s-4 border-terracotta
-│ ┌────────┐  E-BOOK  (eyebrow, olive)                       │
-│ │ cover  │  Sourdough Basics (h3, display)                 │
-│ │ 3:4    │  Subtitle in Cormorant italic                   │
-│ │ shadow │  • 42 recipes · 180 pages · PDF                  │
-│ └────────┘  ₺349,00   [ Buy the e-book → ]  Preview ↗      │
-└──────────────────────────────────────────────────────────┘
+╭──────────────────────────────────────────────────────────╮ full: bg-charcoal, rounded-[2rem], orange glow
+│ ╭────────╮  FROM THE KITCHEN… (eyebrow, orange-300)        │
+│ │ cover  │  Sourdough Basics (h2, 800, white)               │
+│ │ 3:4    │  Subtitle (dek, white/75)                        │
+│ │ lift   │  180 pages · PDF                                 │
+│ ╰────────╯  ₺349,00   ( Buy the e-book → )  ← white pill    │
+╰──────────────────────────────────────────────────────────╯
+compact: white card, hairline border, 56px cover, small accent pill button
+inline:  tint pill row — label · linked title · price
 ```
 
 | Aspect | Spec |
 |---|---|
 | Variants | `full` (default, after 2nd–3rd section) · `compact` (inside recipe card notes, cover 64px) · `inline` (single text line + link) |
 | Price | `Intl.NumberFormat(locale, { style: 'currency', currency })` with `tr→TRY`, `en→USD`, `ar→SAR`. Note under price: "Final price & tax shown at checkout" (MoR may localize). |
-| CTA | Terracotta solid button, 48px height, opens MoR overlay via `POST /api/checkout` (payments.md). Loading state with spinner; error inline in `text-danger`. Arrow icon `rtl:-scale-x-100`. |
+| CTA | Pill button (accent on light surfaces, white on the dark banner), 48px height, opens MoR overlay via `POST /api/checkout` (payments.md). Loading state with spinner; error inline in `text-danger`. Arrow icon `rtl:-scale-x-100`. |
 | Placement rules | Max one `full` callout per article; never above the fold; never inside the ingredient list. |
 | Analytics | `data-ebook-callout={productSlug}` + `data-placement`; subscriber/checkout `source='ebook_callout'`. |
 | Accessibility | `<aside aria-label>`; cover `alt` from `product_translations.cover_alt`; button text includes product title for screen readers. |
 
 ## 6. Other Core Components (tokens summary)
 
-- **Header:** cream, hairline bottom border, centered wordmark (display font), locale switcher (`TR · EN · عربي`) at `end`.
-- **Story card:** image → eyebrow (category, olive) → title (display, h3) → dek (serif italic, stone). No card borders; hover underlines title in terracotta.
-- **Newsletter band:** `bg-linen`, serif headline, single email field + button, consent microcopy; posts to subscribers service with `source`.
-- **Buttons:** primary terracotta / secondary outline charcoal / text link terracotta with 1px underline offset 4px. Radius `--radius-card`. Focus ring: 2px charcoal outline, 2px offset.
+- **Header:** sticky, white/85 with backdrop blur, hairline bottom border. Wordmark = orange rounded tile with bowl glyph + "naif mutfak" (Jakarta 800, always LTR). Nav links are pill hovers; on phones they move to a scrollable second row. Locale switcher is a segmented pill (TR · EN · ع) with endonyms as accessible names.
+- **Story card:** 4:3 rounded image with category pill overlaid at `start`, then meta chips (⏱ total time, difficulty bars), bold title (turns accent on hover), 2-line dek. Whole card is clickable (stretched link).
+- **Recipe card:** white, 2rem radius, meta tiles in `linen`, servings as a segmented pill control, ingredients as rounded checkable rows, steps with tinted number circles (olive when done).
+- **Newsletter:** tint card with soft glow; email field and button joined in one white pill.
+- **Footer:** wordmark + tagline, explore links, small copyright.
+- **Buttons:** primary dark pill (charcoal → accent on hover) or accent pill for purchases; secondary white pill with hairline border. Focus ring: 2px accent outline, 3px offset.

@@ -14,6 +14,10 @@ export interface PostSummary {
   heroImageAlt: string | null;
   isRecipe: boolean;
   publishedAt: Date | null;
+  prepMinutes: number | null;
+  cookMinutes: number | null;
+  restMinutes: number | null;
+  difficulty: 'easy' | 'medium' | 'advanced' | null;
 }
 
 export interface PostDetail extends PostSummary {
@@ -24,11 +28,7 @@ export interface PostDetail extends PostSummary {
   instructions: Instructions | null;
   keywords: string[] | null;
   cuisine: string | null;
-  prepMinutes: number | null;
-  cookMinutes: number | null;
-  restMinutes: number | null;
   baseServings: number | null;
-  difficulty: 'easy' | 'medium' | 'advanced' | null;
   featuredProductId: string | null;
   updatedAt: Date;
 }
@@ -55,6 +55,10 @@ const summaryColumns = {
   heroImageAlt: postTranslations.heroImageAlt,
   isRecipe: posts.isRecipe,
   publishedAt: posts.publishedAt,
+  prepMinutes: posts.prepMinutes,
+  cookMinutes: posts.cookMinutes,
+  restMinutes: posts.restMinutes,
+  difficulty: posts.difficulty,
 };
 
 const isPublic = and(eq(posts.status, 'published'), eq(postTranslations.isPublished, true));
@@ -83,11 +87,7 @@ export function createPostsRepo(db: Db): PostsRepo {
           instructions: postTranslations.instructionsJson,
           keywords: postTranslations.keywordsJson,
           cuisine: postTranslations.cuisine,
-          prepMinutes: posts.prepMinutes,
-          cookMinutes: posts.cookMinutes,
-          restMinutes: posts.restMinutes,
           baseServings: posts.baseServings,
-          difficulty: posts.difficulty,
           featuredProductId: posts.featuredProductId,
           updatedAt: postTranslations.updatedAt,
         })

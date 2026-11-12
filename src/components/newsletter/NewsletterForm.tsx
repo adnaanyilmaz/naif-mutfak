@@ -36,7 +36,7 @@ export function NewsletterForm({ source }: { source: Source }) {
 
   if (state === 'success') {
     return (
-      <p role="status" className="rounded-card bg-olive-tint px-4 py-3 text-ui text-olive">
+      <p role="status" className="rounded-2xl bg-white px-5 py-4 text-ui font-medium text-olive shadow-card">
         {t('success')}
       </p>
     );
@@ -48,7 +48,7 @@ export function NewsletterForm({ source }: { source: Source }) {
       <label htmlFor={`${id}-email`} className="sr-only">
         {t('emailLabel')}
       </label>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-2 rounded-[1.25rem] bg-white p-2 shadow-card sm:flex-row sm:rounded-pill">
         <input
           id={`${id}-email`}
           name="email"
@@ -60,20 +60,20 @@ export function NewsletterForm({ source }: { source: Source }) {
           aria-invalid={state === 'invalid'}
           aria-describedby={`${id}-consent ${id}-msg`}
           dir="ltr"
-          className="min-h-12 flex-1 rounded-card border border-hairline bg-paper px-4 text-ui text-start placeholder:text-muted focus:border-charcoal"
+          className="min-h-12 flex-1 rounded-pill bg-transparent px-4 text-ui text-start outline-none placeholder:text-muted"
         />
         <button
           type="submit"
           disabled={state === 'submitting'}
-          className="min-h-12 rounded-card bg-charcoal px-6 text-ui font-medium text-paper transition-colors duration-200 ease-editorial hover:bg-terracotta disabled:opacity-70"
+          className="min-h-12 rounded-pill bg-charcoal px-6 text-ui font-semibold text-white transition-colors duration-200 ease-editorial hover:bg-terracotta disabled:opacity-70"
         >
           {state === 'submitting' ? t('submitting') : t('submit')}
         </button>
       </div>
-      <p id={`${id}-consent`} className="mt-3 text-ui text-stone">
+      <p id={`${id}-consent`} className="mt-3 px-2 text-[0.8125rem] text-stone">
         {t('consent')}
       </p>
-      <p id={`${id}-msg`} role="alert" className="mt-1 text-ui text-danger">
+      <p id={`${id}-msg`} role="alert" className="mt-1 px-2 text-[0.8125rem] text-danger">
         {message}
       </p>
     </form>

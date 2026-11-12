@@ -20,7 +20,10 @@
     "cta": "Browse recipes",
     "latest": "Latest recipes",
     "viewAll": "All recipes",
-    "ebookEyebrow": "From the kitchen to your shelf"
+    "ebookEyebrow": "From the kitchen to your shelf",
+    "ctaSecondary": "Explore e-books",
+    "featured": "Featured recipe",
+    "readRecipe": "Read the recipe"
   },
   "NotFound": {
     "title": "Page not found",
@@ -28,7 +31,9 @@
     "back": "Back to home"
   },
   "Footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "tagline": "Recipes cooked slowly with simple ingredients. In Turkish, English and Arabic.",
+    "explore": "Explore"
   },
   "Blog": {
     "title": "Recipes",

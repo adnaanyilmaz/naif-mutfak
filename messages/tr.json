@@ -20,7 +20,10 @@
     "cta": "Tariflere göz atın",
     "latest": "Son tarifler",
     "viewAll": "Tüm tarifler",
-    "ebookEyebrow": "Mutfaktan kitaplığa"
+    "ebookEyebrow": "Mutfaktan kitaplığa",
+    "ctaSecondary": "E-kitapları keşfet",
+    "featured": "Öne çıkan tarif",
+    "readRecipe": "Tarifi oku"
   },
   "NotFound": {
     "title": "Sayfa bulunamadı",
@@ -28,7 +31,9 @@
     "back": "Ana sayfaya dön"
   },
   "Footer": {
-    "rights": "Tüm hakları saklıdır."
+    "rights": "Tüm hakları saklıdır.",
+    "tagline": "Sade malzemelerle, sabırla pişirilen tarifler. Türkçe, İngilizce ve Arapça.",
+    "explore": "Keşfet"
   },
   "Blog": {
     "title": "Tarifler",

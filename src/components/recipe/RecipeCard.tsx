@@ -30,23 +30,23 @@ export async function RecipeCard({ recipe }: { recipe: RecipeView }) {
     <section
       id="recipe"
       aria-labelledby="recipe-title"
-      className="recipe-card mx-auto mt-16 w-full max-w-[min(100%,46rem)] scroll-mt-24 rounded-card border border-hairline bg-paper p-6 shadow-card md:p-10 print:mt-0 print:max-w-none print:border-0 print:p-0 print:shadow-none"
+      className="recipe-card mx-auto mt-16 w-full max-w-[min(100%,48rem)] scroll-mt-28 rounded-[2rem] border border-hairline bg-white p-5 shadow-card sm:p-8 md:p-10 print:mt-0 print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-eyebrow font-semibold text-olive uppercase arabic:normal-case">{t('eyebrow')}</p>
-          <h2 id="recipe-title" className="mt-2 font-display text-h2 font-semibold">
+          <p className="text-[0.8125rem] font-semibold text-terracotta">{t('eyebrow')}</p>
+          <h2 id="recipe-title" className="mt-1 font-display text-h2 font-extrabold">
             {recipe.title}
           </h2>
         </div>
         <PrintButton label={t('print')} />
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-hairline bg-hairline sm:grid-cols-3 md:grid-cols-5">
+      <dl className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
         {meta.map((m) => (
-          <div key={m.label} className="bg-paper px-3 py-3">
-            <dt className="text-eyebrow font-semibold text-stone uppercase arabic:normal-case">{m.label}</dt>
-            <dd className="mt-1 text-ui font-semibold tabular-nums">{m.value}</dd>
+          <div key={m.label} className="rounded-2xl bg-linen px-4 py-3 print:bg-transparent print:px-0">
+            <dt className="text-[0.75rem] font-medium text-muted">{m.label}</dt>
+            <dd className="mt-0.5 text-ui font-bold tabular-nums">{m.value}</dd>
           </div>
         ))}
       </dl>

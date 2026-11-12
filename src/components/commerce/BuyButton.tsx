@@ -10,11 +10,13 @@ interface BuyButtonProps {
   productTitle: string;
   placement: 'callout' | 'storefront';
   size?: 'md' | 'sm';
+  /** `light` for dark backgrounds. */
+  tone?: 'accent' | 'light';
 }
 
 type State = { kind: 'idle' } | { kind: 'loading' } | { kind: 'error'; message: 'error' | 'unavailable' };
 
-export function BuyButton({ variantId, productTitle, placement, size = 'md' }: BuyButtonProps) {
+export function BuyButton({ variantId, productTitle, placement, size = 'md', tone = 'accent' }: BuyButtonProps) {
   const t = useTranslations('Ebooks');
   const locale = useLocale();
   const [state, setState] = useState<State>({ kind: 'idle' });
@@ -41,7 +43,11 @@ export function BuyButton({ variantId, productTitle, placement, size = 'md' }: B
   }
 
   const loading = state.kind === 'loading';
-  const height = size === 'sm' ? 'min-h-11 px-4' : 'min-h-12 px-6';
+  const height = size === 'sm' ? 'min-h-10 px-4' : 'min-h-12 px-6';
+  const colors =
+    tone === 'light'
+      ? 'bg-white text-charcoal hover:bg-terracotta-tint'
+      : 'bg-terracotta text-white shadow-[0_8px_20px_-8px_rgb(194_65_12/0.6)] hover:bg-terracotta-deep';
 
   return (
     <div className="flex flex-col items-start gap-2" data-placement={placement}>
@@ -51,10 +57,10 @@ export function BuyButton({ variantId, productTitle, placement, size = 'md' }: B
         disabled={loading}
         aria-label={t('buyFor', { title: productTitle })}
         aria-busy={loading}
-        className={`${height} inline-flex items-center gap-2 rounded-card bg-terracotta text-ui font-medium text-paper transition-colors duration-200 ease-editorial hover:bg-terracotta-deep disabled:cursor-progress disabled:opacity-80`}
+        className={`${height} ${colors} inline-flex items-center gap-2 rounded-pill text-ui font-semibold transition-colors duration-200 ease-editorial disabled:cursor-progress disabled:opacity-80`}
       >
         {loading && (
-          <span aria-hidden className="size-4 animate-spin rounded-pill border-2 border-paper border-t-transparent" />
+          <span aria-hidden className="size-4 animate-spin rounded-pill border-2 border-current border-t-transparent" />
         )}
         {loading ? t('loading') : t('buy')}
         {!loading && (
@@ -63,7 +69,7 @@ export function BuyButton({ variantId, productTitle, placement, size = 'md' }: B
           </span>
         )}
       </button>
-      <p role="status" aria-live="polite" className="text-ui text-danger">
+      <p role="status" aria-live="polite" className={`text-[0.8125rem] empty:hidden ${tone === 'light' ? 'text-[#fca5a5]' : 'text-danger'}`}>
         {state.kind === 'error' ? t(state.message) : ''}
       </p>
     </div>

@@ -3,36 +3,72 @@ import { EditorialImage } from '@/components/media/EditorialImage';
 import { Link } from '@/i18n/navigation';
 import { categoryKey } from '@/services/content/category';
 import type { PostCardView } from '@/services/content/posts.service';
+import { RecipeMeta } from './RecipeMeta';
 
 interface StoryCardProps {
   post: PostCardView;
-  size?: 'lead' | 'default' | 'compact';
+  size?: 'feature' | 'default' | 'compact';
+  priority?: boolean;
 }
 
-export async function StoryCard({ post, size = 'default' }: StoryCardProps) {
+export async function StoryCard({ post, size = 'default', priority = false }: StoryCardProps) {
   const t = await getTranslations('Categories');
   const href = `/blog/${post.slug}`;
-  const aspect = size === 'lead' ? 'aspect-[4/5]' : size === 'compact' ? 'aspect-square' : 'aspect-[3/2]';
-  const titleClass = size === 'lead' ? 'text-h1' : size === 'compact' ? 'text-h3' : 'text-h2';
+  const category = t(categoryKey(post.category));
+
+  if (size === 'feature') {
+    // Full-bleed image card with the title over a gradient (home hero).
+    return (
+      <article className="group relative">
+        <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5]" category={post.category} priority zoom radius="rounded-[2rem]" />
+        <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+          <span className="inline-flex rounded-pill bg-white/90 px-3 py-1 text-[0.75rem] font-semibold text-charcoal backdrop-blur">{category}</span>
+          <h2 className="mt-3 font-display text-h2 font-extrabold text-white">
+            <Link href={href} className="after:absolute after:inset-0 after:rounded-[2rem] focus-visible:outline-none">
+              {post.title}
+            </Link>
+          </h2>
+          <div className="mt-3">
+            <RecipeMeta totalMinutes={post.totalMinutes} difficulty={post.difficulty} tone="inverted" />
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  if (size === 'compact') {
+    return (
+      <article className="group relative grid grid-cols-[5.5rem_1fr] items-center gap-4">
+        <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect="aspect-square" category={post.category} zoom radius="rounded-2xl" />
+        <div>
+          <p className="text-[0.75rem] font-semibold text-terracotta">{category}</p>
+          <h3 className="mt-1 font-display text-[1.0625rem] leading-snug font-bold">
+            <Link href={href} className="after:absolute after:inset-0 group-hover:text-terracotta">
+              {post.title}
+            </Link>
+          </h3>
+        </div>
+      </article>
+    );
+  }
 
   return (
-    <article className={size === 'compact' ? 'group grid grid-cols-[7rem_1fr] items-start gap-5' : 'group'}>
-      <Link href={href} tabIndex={-1} aria-hidden className="block">
-        <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect={aspect} monogram={post.title.charAt(0)} priority={size === 'lead'} />
-      </Link>
-      <div className={size === 'compact' ? '' : 'mt-5'}>
-        <p className="text-eyebrow font-semibold text-olive uppercase arabic:normal-case">{t(categoryKey(post.category))}</p>
-        <h3 className={`mt-2 font-display font-semibold ${titleClass}`}>
-          <Link
-            href={href}
-            className="decoration-terracotta decoration-1 underline-offset-4 transition-colors duration-200 ease-editorial group-hover:underline"
-          >
+    <article className="group relative flex flex-col">
+      <div className="relative">
+        <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect="aspect-[4/3]" category={post.category} priority={priority} zoom />
+        <span className="absolute start-3 top-3 rounded-pill bg-white/90 px-3 py-1 text-[0.75rem] font-semibold text-charcoal shadow-sm backdrop-blur">
+          {category}
+        </span>
+      </div>
+      <div className="mt-4 flex flex-1 flex-col gap-2">
+        <RecipeMeta totalMinutes={post.totalMinutes} difficulty={post.difficulty} />
+        <h3 className="font-display text-h3 font-bold transition-colors duration-200 group-hover:text-terracotta">
+          <Link href={href} className="after:absolute after:inset-0 focus-visible:outline-none">
             {post.title}
           </Link>
         </h3>
-        {post.dek && size !== 'compact' && (
-          <p className="mt-3 font-serif text-dek text-stone italic arabic:not-italic">{post.dek}</p>
-        )}
+        {post.dek && <p className="line-clamp-2 text-ui text-stone">{post.dek}</p>}
       </div>
     </article>
   );
