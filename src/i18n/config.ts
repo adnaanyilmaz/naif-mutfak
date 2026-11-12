@@ -37,3 +37,6 @@ export function getDirection(locale: Locale): Direction {
 export function getCurrency(locale: Locale): Currency {
   return LOCALE_META[locale].currency;
 }
+
+/** `/admin` is not localized by route; its UI language is fixed (messages `Admin` namespace). */
+export const ADMIN_LOCALE: Locale = 'tr';

@@ -12,3 +12,15 @@ PADDLE_WEBHOOK_SECRET=
 PADDLE_API_KEY=
 PADDLE_ENV=sandbox
 NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=
+
+# Admin (docs/architecture/admin.md). Comma-separated allowlist.
+ADMIN_EMAILS=
+# Local only: bypasses Cloudflare Access on localhost when ENVIRONMENT=development. Never set in production.
+ADMIN_DEV_EMAIL=
+# Cloudflare Access (required outside development)
+CF_ACCESS_TEAM_DOMAIN=
+CF_ACCESS_AUD=
+# R2 S3 API for presigned uploads (token scoped to the two buckets). Local dev falls back to /api/admin/uploads/dev.
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=

@@ -1,12 +1,24 @@
 // Composition root: binds request-scoped Cloudflare bindings to repositories and services.
 // `app/` imports deps from here; business services stay pure and receive deps as arguments.
+import { accessJwks } from '@/lib/cloudflare/access-jwks';
 import { getDb } from '@/lib/cloudflare/db';
-import { getEnv, getPaymentEnv } from '@/lib/cloudflare/env';
-import { getPrivateEbookStore } from '@/lib/cloudflare/r2';
+import { getAdminEnv, getEnv, getPaymentEnv, getUploadEnv, waitUntil } from '@/lib/cloudflare/env';
+import { getPrivateEbookStore, getPublicMediaObject, getUploadStores } from '@/lib/cloudflare/r2';
+import { createDevSigner, createR2Signer } from '@/lib/cloudflare/r2-presign';
+import { createAdminPostsRepo } from '@/repositories/admin-posts';
+import { createAdminProductsRepo } from '@/repositories/admin-products';
+import { createAnalyticsRepo } from '@/repositories/analytics.repo';
+import { createAuditRepo } from '@/repositories/audit';
 import { createOrdersRepo } from '@/repositories/orders';
 import { createPostsRepo } from '@/repositories/posts';
 import { createProductsRepo } from '@/repositories/products';
 import { createSubscribersRepo } from '@/repositories/subscribers';
+import type { AdminAuthDeps } from './admin/auth.service';
+import type { AnalyticsDeps } from './admin/analytics.service';
+import type { AdminPostsDeps } from './admin/posts-admin.service';
+import type { AdminProductsDeps } from './admin/products-admin.service';
+import type { UploadDeps } from './admin/upload.service';
+import type { DevMediaDeps } from './media/dev-media.service';
 import type { ContentDeps } from './content/posts.service';
 import type { SubscribeDeps } from './newsletter/subscribe.service';
 import type { CheckoutDeps } from './payments/checkout.service';
@@ -79,4 +91,80 @@ export function deliveryDeps(): RedeemDeps {
     secret: getPaymentEnv().DOWNLOAD_SIGNING_SECRET,
     now,
   };
+}
+
+/* ───────────── Admin ───────────── */
+
+export function adminAuthDeps(): AdminAuthDeps {
+  const env = getAdminEnv();
+  return {
+    config: {
+      environment: env.ENVIRONMENT,
+      teamDomain: env.CF_ACCESS_TEAM_DOMAIN,
+      audience: env.CF_ACCESS_AUD,
+      adminEmails: env.ADMIN_EMAILS,
+      devEmail: env.ADMIN_DEV_EMAIL,
+    },
+    getKey: accessJwks,
+  };
+}
+
+export function adminPostsDeps(): AdminPostsDeps {
+  const env = getEnv();
+  return { posts: createAdminPostsRepo(getDb()), siteUrl: env.SITE_URL, mediaBaseUrl: env.MEDIA_PUBLIC_URL, now, newId };
+}
+
+export function adminProductsDeps(): AdminProductsDeps {
+  const env = getEnv();
+  return {
+    products: createAdminProductsRepo(getDb()),
+    provider: env.PAYMENT_PROVIDER,
+    mediaBaseUrl: env.MEDIA_PUBLIC_URL,
+    now,
+    newId,
+  };
+}
+
+export function uploadDeps(): UploadDeps {
+  const db = getDb();
+  const env = getUploadEnv();
+  const signer =
+    env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY
+      ? createR2Signer({
+          accountId: env.R2_ACCOUNT_ID,
+          accessKeyId: env.R2_ACCESS_KEY_ID,
+          secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+          bucketNames: { media: env.R2_MEDIA_BUCKET, ebooks: env.R2_EBOOKS_BUCKET },
+          ttlSeconds: 300,
+        })
+      : createDevSigner(env.SITE_URL);
+  return {
+    stores: getUploadStores(),
+    signer,
+    posts: createAdminPostsRepo(db),
+    products: createAdminProductsRepo(db),
+    audit: createAuditRepo(db),
+    mediaBaseUrl: env.MEDIA_PUBLIC_URL,
+    newId,
+    defer: waitUntil,
+  };
+}
+
+/** Local PUT fallback is allowed only in development without S3 credentials. */
+export function devUploadsEnabled(): boolean {
+  const env = getUploadEnv();
+  return env.ENVIRONMENT === 'development' && !(env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY);
+}
+
+export function analyticsDeps(): AnalyticsDeps {
+  const db = getDb();
+  return { analytics: createAnalyticsRepo(db), audit: createAuditRepo(db), now };
+}
+
+export function devMediaDeps(): DevMediaDeps {
+  return { environment: getEnv().ENVIRONMENT, getObject: getPublicMediaObject };
+}
+
+export function devUploadStores(): UploadDeps['stores'] {
+  return getUploadStores();
 }

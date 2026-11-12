@@ -29,7 +29,10 @@
     "ENVIRONMENT": "development",
     "SITE_URL": "http://localhost:3000",
     "MEDIA_PUBLIC_URL": "http://localhost:3000/media",
-    "PAYMENT_PROVIDER": "lemonsqueezy"
+    "PAYMENT_PROVIDER": "lemonsqueezy",
+    // R2 bucket names for presigned S3 PUTs (must match r2_buckets above).
+    "R2_MEDIA_BUCKET": "naif-mutfak-media",
+    "R2_EBOOKS_BUCKET": "naif-mutfak-ebooks"
   },
   "observability": { "enabled": true }
 }

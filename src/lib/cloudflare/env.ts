@@ -1,5 +1,14 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { parseEnv, parsePaymentEnv, type AppEnv, type PaymentEnv } from '@/validators/env';
+import {
+  parseAdminEnv,
+  parseEnv,
+  parsePaymentEnv,
+  parseUploadEnv,
+  type AdminEnv,
+  type AppEnv,
+  type PaymentEnv,
+  type UploadEnv,
+} from '@/validators/env';
 
 export type Bindings = CloudflareEnv;
 
@@ -16,6 +25,16 @@ export function getEnv(): AppEnv {
 /** Payment/delivery secrets. Throws EnvValidationError when the active provider is not configured. */
 export function getPaymentEnv(): PaymentEnv {
   return parsePaymentEnv({ ...getBindings() });
+}
+
+/** Admin auth config (Access team/audience, allowlist). */
+export function getAdminEnv(): AdminEnv {
+  return parseAdminEnv({ ...getBindings() });
+}
+
+/** R2 presign credentials and bucket names. */
+export function getUploadEnv(): UploadEnv {
+  return parseUploadEnv({ ...getBindings() });
 }
 
 /** `ctx.waitUntil` for post-response side effects. */

@@ -4,7 +4,10 @@ import { orders, subscribers, webhookEvents } from '@/db/schema';
 import type { Db } from '@/lib/cloudflare/db';
 import type { Currency, Locale } from '@/validators/content';
 import type { PaymentProviderId } from './products';
+import { isUniqueViolation } from './db-errors';
 import { toSubscriberRow, type NewSubscriber } from './subscribers';
+
+export { isUniqueViolation } from './db-errors';
 
 export type OrderStatus = 'pending' | 'paid' | 'refunded' | 'failed';
 export type WebhookOutcome = 'processed' | 'ignored' | 'failed';
@@ -93,17 +96,6 @@ const recordColumns = {
   downloadCount: orders.downloadCount,
   maxDownloads: orders.maxDownloads,
 };
-
-export function isUniqueViolation(err: unknown, table: string): boolean {
-  const seen = new Set<unknown>();
-  let cur: unknown = err;
-  while (cur instanceof Error && !seen.has(cur)) {
-    seen.add(cur);
-    if (cur.message.includes('UNIQUE constraint failed') && cur.message.includes(table)) return true;
-    cur = cur.cause;
-  }
-  return false;
-}
 
 export function createOrdersRepo(db: Db): OrdersRepo {
   function mutationQuery(m: OrderMutation): BatchItem<'sqlite'> {

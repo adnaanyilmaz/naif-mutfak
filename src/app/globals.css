@@ -62,8 +62,13 @@
 }
 
 @layer base {
-  /* Arabic: swap families, no tracking on connected script, +10% leading. */
-  html[data-script='arabic'] {
+  body [data-script='arabic'] {
+    font-family: var(--font-sans);
+  }
+
+  /* Arabic: swap families, no tracking on connected script, +10% leading. Works on <html> (public site)
+     and on any subtree (admin AR editor panes), which also needs font-family re-resolved below. */
+  [data-script='arabic'] {
     --font-display: var(--font-amiri), 'Times New Roman', serif;
     --font-serif: var(--font-amiri), 'Times New Roman', serif;
     --font-sans: var(--font-plex-ar), system-ui, sans-serif;
@@ -114,7 +119,7 @@
     font-weight: 500;
     max-inline-size: 68ch;
   }
-  html[data-script='arabic'] .prose-editorial {
+  [data-script='arabic'] .prose-editorial {
     font-size: 1.125rem;
     font-weight: 400;
   }
@@ -156,7 +161,7 @@
     font-style: italic;
     color: var(--color-stone);
   }
-  html[data-script='arabic'] .prose-editorial :where(blockquote) {
+  [data-script='arabic'] .prose-editorial :where(blockquote) {
     font-style: normal;
   }
   .prose-editorial :where(a) {
