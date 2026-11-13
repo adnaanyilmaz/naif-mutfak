@@ -94,11 +94,13 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
   const tr = translations[active];
   const meta = LOCALE_META[active];
 
-  function save() {
+  function save(statusOverride?: (typeof PRODUCT_STATUSES)[number]) {
+    const status = statusOverride ?? product.status;
+    if (statusOverride) setProduct((p) => ({ ...p, status: statusOverride }));
     const payload = {
       productId: view.product.id,
       expectedUpdatedAt: view.updatedAtSeconds,
-      product: { slug: product.slug, status: product.status, pageCount: product.pageCount.trim() === '' ? null : Number(product.pageCount) },
+      product: { slug: product.slug, status, pageCount: product.pageCount.trim() === '' ? null : Number(product.pageCount) },
       translations: LOCALES.flatMap((l) => {
         const x = translations[l];
         return x && x.title.trim() ? [{ locale: l, ...x }] : [];
@@ -107,6 +109,8 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
     };
     startTransition(async () => {
       const result = await saveAction(payload);
+      // A failed publish leaves the product as it was.
+      if (!result.ok && statusOverride) setProduct((p) => ({ ...p, status: view.product.status }));
       if (result.ok) {
         setIssues(null);
         setDirty(false);
@@ -127,6 +131,9 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
     ...(v.pdf ? [] : [t('productEditor.needPdf')]),
     ...(v[morField].trim() ? [] : [t('productEditor.needMorId', { field: t(`productEditor.${morField}`) })]),
   ];
+
+  // The store lists a product only when the product itself is active AND it has an edition on sale.
+  const canPublish = product.status !== 'active' && variants.some((v) => v.isActive);
 
   const missingEditions = LOCALES.filter((l) => !variants.some((v) => v.contentLocale === l));
 
@@ -166,14 +173,31 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
                 <ExternalIcon className="size-4" />
               </Link>
             ) : null}
-            <button type="button" onClick={save} disabled={pending} className={accentButton}>
+            <button type="button" onClick={() => save()} disabled={pending} className={canPublish ? secondaryButton : accentButton}>
               {t('common.save')}
             </button>
+            {canPublish ? (
+              <button type="button" onClick={() => save('active')} disabled={pending} className={accentButton}>
+                {t('productEditor.publish')}
+              </button>
+            ) : null}
           </div>
         </div>
       </header>
 
       <div className="mt-6 space-y-6">
+      {product.status !== 'active' ? (
+        <div className="flex flex-wrap items-start gap-3 rounded-2xl border border-hairline bg-white px-4 py-3">
+          <AlertIcon className="mt-0.5 size-5 text-brand" />
+          <div className="flex-1 text-[0.9375rem]">
+            <p className="font-semibold">{t('productEditor.notListedTitle')}</p>
+            <p className="text-stone">
+              {canPublish ? t('productEditor.notListedReady') : t('productEditor.notListedNeedsEdition')}
+              {product.slug.startsWith('draft-') ? ` ${t('productEditor.slugHint')}` : ''}
+            </p>
+          </div>
+        </div>
+      ) : null}
       {status === 'conflict' ? (
         <div role="alert" className="flex flex-wrap items-center gap-3 rounded-2xl border border-[#f5c2bd] bg-[#fdecea] px-4 py-3 text-danger">
           <AlertIcon className="size-5" />

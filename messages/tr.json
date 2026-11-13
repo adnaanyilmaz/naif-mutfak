@@ -379,7 +379,12 @@
       "viewOnSite": "Mağazada görüntüle",
       "activateNeeds": "Satışa açmak için: {missing}",
       "needPdf": "PDF yükleyin",
-      "needMorId": "{field} kimliğini girin"
+      "needMorId": "{field} kimliğini girin",
+      "publish": "Yayınla",
+      "notListedTitle": "Bu e-kitap mağazada listelenmiyor",
+      "notListedReady": "Satışta bir baskısı var; mağazada görünmesi için \"Yayınla\"ya basın (durum: Aktif).",
+      "notListedNeedsEdition": "Mağazada görünmesi için en az bir baskıyı satışa açın, ardından yayınlayın.",
+      "slugHint": "Yayınlamadan önce bağlantı adresini (slug) kitaba uygun bir adla değiştirin."
     },
     "upload": {
       "error": {

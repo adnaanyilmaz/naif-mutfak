@@ -379,7 +379,12 @@
       "viewOnSite": "عرض في المتجر",
       "activateNeeds": "لعرضه للبيع: {missing}",
       "needPdf": "ارفع ملف PDF",
-      "needMorId": "أدخل معرّف {field}"
+      "needMorId": "أدخل معرّف {field}",
+      "publish": "نشر",
+      "notListedTitle": "هذا الكتاب غير معروض في المتجر",
+      "notListedReady": "لديه طبعة معروضة للبيع؛ اضغط \"نشر\" لإظهاره في المتجر (الحالة: نشط).",
+      "notListedNeedsEdition": "اعرض طبعة واحدة على الأقل للبيع، ثم انشره ليظهر في المتجر.",
+      "slugHint": "قبل النشر، غيّر الرابط (slug) إلى اسم يناسب الكتاب."
     },
     "upload": {
       "error": {

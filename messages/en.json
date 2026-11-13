@@ -379,7 +379,12 @@
       "viewOnSite": "View in store",
       "activateNeeds": "To put on sale: {missing}",
       "needPdf": "upload a PDF",
-      "needMorId": "enter the {field} id"
+      "needMorId": "enter the {field} id",
+      "publish": "Publish",
+      "notListedTitle": "This e-book is not listed in the store",
+      "notListedReady": "It has an edition on sale; press \"Publish\" to show it in the store (status: Active).",
+      "notListedNeedsEdition": "Put at least one edition on sale, then publish it to show it in the store.",
+      "slugHint": "Before publishing, change the slug to a name that fits the book."
     },
     "upload": {
       "error": {
