@@ -44,9 +44,15 @@ export default async function EbooksPage({ params }: EbooksPageProps) {
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {ebooks.map((e) => (
             <li key={e.id} className="group relative flex flex-col rounded-[1.75rem] border border-hairline bg-white p-3 transition-shadow duration-300 hover:shadow-lift">
-              <div className="flex justify-center rounded-[1.25rem] bg-gradient-to-b from-terracotta-tint to-linen px-6 py-10">
-                <EbookCover ebook={e} size="md" />
-              </div>
+              {e.coverUrl ? (
+                <div className="overflow-hidden rounded-[1.25rem] bg-linen">
+                  <EbookCover ebook={e} size="fill" />
+                </div>
+              ) : (
+                <div className="flex justify-center rounded-[1.25rem] bg-gradient-to-b from-terracotta-tint to-linen px-6 py-10">
+                  <EbookCover ebook={e} size="md" />
+                </div>
+              )}
               <p className="mt-5 px-3 text-[0.8125rem] font-semibold text-terracotta">
                 {t('eyebrow')}
                 {e.isFallbackEdition && <span className="ms-2 normal-case">· {t('fallbackEdition')}</span>}

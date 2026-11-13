@@ -3,41 +3,46 @@ import type { EbookView } from '@/services/catalog/catalog.service';
 
 interface EbookCoverProps {
   ebook: EbookView;
-  size?: 'sm' | 'md' | 'lg';
+  /** `fill`: an uploaded cover spans its container edge to edge (the container rounds and clips it). */
+  size?: 'sm' | 'md' | 'lg' | 'fill';
+  priority?: boolean;
 }
 
-const WIDTH = { sm: 'w-14', md: 'w-40 md:w-48', lg: 'w-full max-w-[18rem]' } as const;
+const WIDTH = { sm: 'w-14', md: 'w-40 md:w-48', lg: 'w-full max-w-[18rem]', fill: 'w-full max-w-[18rem]' } as const;
 
-/** 3:4 cover: uploaded image or a gradient typographic placeholder. */
-export function EbookCover({ ebook, size = 'md' }: EbookCoverProps) {
+/** Uploaded cover at its own aspect ratio (never cropped), or a 3:4 gradient typographic placeholder. */
+export function EbookCover({ ebook, size = 'md', priority = false }: EbookCoverProps) {
   const radius = size === 'sm' ? 'rounded-lg' : 'rounded-2xl';
-  const frame = `${WIDTH[size]} ${radius} aspect-[3/4] shrink-0 overflow-hidden shadow-lift`;
   if (ebook.coverUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element -- URLs are pre-sized by Cloudflare Image Transformations.
       <img
         src={ebook.coverUrl}
         alt={ebook.coverAlt}
-        className={`${frame} object-cover`}
-        // The large cover is the detail page's main image: load it immediately.
-        loading={size === 'lg' ? 'eager' : 'lazy'}
-        fetchPriority={size === 'lg' ? 'high' : 'auto'}
+        // Placeholder 3:4 box until the image loads; afterwards its natural ratio wins (aspect-ratio: auto).
+        width={600}
+        height={800}
+        className={size === 'fill' ? 'block h-auto w-full' : `${WIDTH[size]} ${radius} h-auto shrink-0 shadow-lift`}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
       />
     );
   }
+  const placeholderSize = size === 'fill' ? 'lg' : size;
+  const frame = `${WIDTH[placeholderSize]} ${radius} aspect-[3/4] shrink-0 overflow-hidden shadow-lift`;
   return (
     <div
       role="img"
       aria-label={ebook.coverAlt}
-      className={`${frame} relative flex flex-col justify-between bg-gradient-to-br from-brand via-[#d96d04] to-[#8a3b06] text-white ${size === 'sm' ? 'p-1.5' : 'p-5'}`}
+      className={`${frame} relative flex flex-col justify-between bg-gradient-to-br from-brand via-[#d96d04] to-[#8a3b06] text-white ${placeholderSize === 'sm' ? 'p-1.5' : 'p-5'}`}
     >
       <div aria-hidden className="absolute inset-y-0 start-0 w-2 bg-black/15" />
-      {size !== 'sm' && (
+      {placeholderSize !== 'sm' && (
         <>
           <span aria-hidden className="relative">
-            <Logo size={size === 'lg' ? 52 : 36} wordmark={false} />
+            <Logo size={placeholderSize === 'lg' ? 52 : 36} wordmark={false} />
           </span>
-          <span aria-hidden className={`relative font-display leading-tight font-extrabold ${size === 'lg' ? 'text-h2' : 'text-h3'}`}>
+          <span aria-hidden className={`relative font-display leading-tight font-extrabold ${placeholderSize === 'lg' ? 'text-h2' : 'text-h3'}`}>
             {ebook.title}
           </span>
         </>

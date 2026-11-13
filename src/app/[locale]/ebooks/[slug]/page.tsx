@@ -50,9 +50,15 @@ export default async function EbookPage({ params }: EbookPageProps) {
         {t('back')}
       </Link>
       <div className="mt-8 grid items-start gap-10 md:grid-cols-12 md:gap-14">
-        <div className="flex justify-center rounded-[2rem] bg-gradient-to-br from-terracotta-tint via-[#ffefd6] to-linen px-8 py-14 md:sticky md:top-24 md:col-span-5">
-          <EbookCover ebook={ebook} size="lg" />
-        </div>
+        {ebook.coverUrl ? (
+          <div className="overflow-hidden rounded-[2rem] bg-linen shadow-lift md:sticky md:top-24 md:col-span-5">
+            <EbookCover ebook={ebook} size="fill" priority />
+          </div>
+        ) : (
+          <div className="flex justify-center rounded-[2rem] bg-gradient-to-br from-terracotta-tint via-[#ffefd6] to-linen px-8 py-14 md:sticky md:top-24 md:col-span-5">
+            <EbookCover ebook={ebook} size="lg" priority />
+          </div>
+        )}
         <div className="md:col-span-7">
           <p className="text-[0.8125rem] font-semibold text-terracotta">
             {t('eyebrow')}
