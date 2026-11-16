@@ -1,6 +1,6 @@
 // Pure converters between stored posts and the editor form model. Shared by the editor UI and tests.
 import type { AdminPostRecord, AdminTranslation } from '@/repositories/admin-posts';
-import { categoryKey } from '@/services/content/category';
+import { DEFAULT_CATEGORY, findCategory } from '@/services/content/category';
 import { slugify } from '@/services/content/slug';
 import type { Ingredients, Instructions, Locale } from '@/validators/content';
 import type {
@@ -110,11 +110,10 @@ export function toPostForm(post: AdminPostRecord): PostForm {
     const t = post.translations.find((x) => x.locale === l);
     return t ? translationToForm(t) : null;
   };
-  const category = categoryKey(post.category);
   return {
     shared: {
       status: post.status,
-      category: category === 'other' ? 'bread' : category,
+      category: findCategory(post.category) ?? DEFAULT_CATEGORY,
       isRecipe: post.isRecipe,
       prepMinutes: str(post.prepMinutes),
       cookMinutes: str(post.cookMinutes),

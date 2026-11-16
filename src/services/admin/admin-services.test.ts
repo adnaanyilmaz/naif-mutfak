@@ -26,7 +26,7 @@ function postRecord(over: Partial<AdminPostRecord> = {}): AdminPostRecord {
   return {
     id: POST,
     status: 'draft',
-    category: 'bread',
+    category: 'ekmekler',
     heroImageKey: 'posts/p/h.jpg',
     isRecipe: false,
     prepMinutes: null,
@@ -64,7 +64,7 @@ const postInput = (over: Partial<SavePostInput> = {}): SavePostInput => ({
   expectedUpdatedAt: T0,
   post: {
     status: 'draft',
-    category: 'bread',
+    category: 'ekmekler',
     isRecipe: false,
     prepMinutes: null,
     cookMinutes: null,

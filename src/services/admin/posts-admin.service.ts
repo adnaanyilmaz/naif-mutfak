@@ -1,6 +1,7 @@
 // Admin content editing (admin.md §2): optimistic concurrency, per-locale publish rules, audit, revalidation paths.
 import type { AdminPostRecord, AdminPostsRepo, AdminTranslation } from '@/repositories/admin-posts';
 import { mediaUrl } from '@/services/media/image-url';
+import { DEFAULT_CATEGORY } from '@/services/content/category';
 import { isValidSlug } from '@/services/content/slug';
 import type { AdminIdentity } from '@/services/admin/auth.service';
 import type { SavePostInput } from '@/validators/admin/post';
@@ -112,7 +113,7 @@ function changedFields(existing: AdminPostRecord, input: SavePostInput): Record<
 export async function createDraftPost(deps: AdminPostsDeps, actor: AdminIdentity): Promise<string> {
   const id = deps.newId();
   await deps.posts.createDraft(
-    { id, category: 'bread' },
+    { id, category: DEFAULT_CATEGORY },
     { actorEmail: actor.email, action: 'post.create', entityType: 'post', entityId: id, diff: null },
   );
   return id;

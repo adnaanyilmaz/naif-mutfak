@@ -46,6 +46,7 @@ const DOT_COLOR: Record<Completeness, string> = { complete: 'bg-olive', partial:
 
 export function PostEditor(props: PostEditorProps) {
   const t = useTranslations('Admin');
+  const tc = useTranslations('Categories');
   const [form, setForm] = useState<PostForm>(props.initialForm);
   const [savedJson, setSavedJson] = useState(() => JSON.stringify(props.initialForm));
   const [updatedAt, setUpdatedAt] = useState(props.updatedAt);
@@ -339,7 +340,7 @@ export function PostEditor(props: PostEditorProps) {
               <SelectField
                 label={t('editor.category')}
                 value={form.shared.category}
-                options={CATEGORY_KEYS.map((c) => ({ value: c, label: t(`categories.${c}`) }))}
+                options={CATEGORY_KEYS.map((c) => ({ value: c, label: tc(c) }))}
                 onChange={(v) => setShared('category', v)}
               />
               <SelectField

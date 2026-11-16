@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq } from 'drizzle-orm';
 import { posts, postTranslations } from '@/db/schema';
 import type { Db } from '@/lib/cloudflare/db';
 import type { Ingredients, Instructions, Locale } from '@/validators/content';
@@ -39,7 +39,9 @@ export interface PostAlternate {
 }
 
 export interface PostsRepo {
-  listPublished(locale: Locale, opts: { limit: number; offset: number }): Promise<PostSummary[]>;
+  listPublished(locale: Locale, opts: { limit: number; offset: number; category?: string }): Promise<PostSummary[]>;
+  /** Published post count per stored category value for one locale. */
+  countPublishedByCategory(locale: Locale): Promise<Array<{ category: string; count: number }>>;
   findPublishedBySlug(locale: Locale, slug: string): Promise<PostDetail | null>;
   listPublishedAlternates(postId: string): Promise<PostAlternate[]>;
 }
@@ -65,15 +67,24 @@ const isPublic = and(eq(posts.status, 'published'), eq(postTranslations.isPublis
 
 export function createPostsRepo(db: Db): PostsRepo {
   return {
-    async listPublished(locale, { limit, offset }) {
+    async listPublished(locale, { limit, offset, category }) {
       return db
         .select(summaryColumns)
         .from(postTranslations)
         .innerJoin(posts, eq(posts.id, postTranslations.postId))
-        .where(and(isPublic, eq(postTranslations.locale, locale)))
+        .where(and(isPublic, eq(postTranslations.locale, locale), category === undefined ? undefined : eq(posts.category, category)))
         .orderBy(desc(posts.publishedAt))
         .limit(limit)
         .offset(offset);
+    },
+
+    async countPublishedByCategory(locale) {
+      return db
+        .select({ category: posts.category, count: count() })
+        .from(postTranslations)
+        .innerJoin(posts, eq(posts.id, postTranslations.postId))
+        .where(and(isPublic, eq(postTranslations.locale, locale)))
+        .groupBy(posts.category);
     },
 
     async findPublishedBySlug(locale, slug) {

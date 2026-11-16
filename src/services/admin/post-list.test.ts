@@ -4,7 +4,7 @@ import { filterAdminPosts, publicPathOf, type AdminPostListView } from './posts-
 const row = (over: Partial<AdminPostListView>): AdminPostListView => ({
   id: 'x',
   status: 'published',
-  category: 'bread',
+  category: 'ekmekler',
   updatedAt: new Date(0),
   title: '',
   thumbnailUrl: null,

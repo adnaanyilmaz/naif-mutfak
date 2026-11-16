@@ -4,6 +4,7 @@ import { mediaUrl } from '@/services/media/image-url';
 import { serializeJsonLd } from '@/services/seo/jsonld';
 import { buildRecipeJsonLd } from '@/services/seo/recipe-jsonld';
 import type { Ingredients, Instructions, Locale } from '@/validators/content';
+import { categoriesWithPosts, type CategoryKey } from './category';
 import { ebookSlugs, parseMarkdown, type ParsedMarkdown } from './markdown';
 
 export interface ContentDeps extends CatalogDeps {
@@ -52,11 +53,15 @@ export interface ArticleView {
 /** Localized strings needed by structured data; supplied by the page (services stay i18n-agnostic). */
 export interface ArticleLabels {
   authorName: string;
-  categoryLabel: (category: string) => string;
+  categoryLabel: (category: string) => string | null;
   yieldLabel: (servings: number) => string;
 }
 
 export const ARCHIVE_PAGE_SIZE = 12;
+
+export function categoryPath(locale: Locale, category: CategoryKey): string {
+  return `/${locale}/blog/kategori/${category}`;
+}
 
 export function blogPath(locale: Locale, slug: string): string {
   return `/${locale}/blog/${slug}`;
@@ -83,14 +88,23 @@ function sumMinutes(p: Pick<PostSummary, 'prepMinutes' | 'cookMinutes' | 'restMi
 }
 
 export async function listPosts(
-  deps: ContentDeps,
+  deps: Pick<ContentDeps, 'posts' | 'mediaBaseUrl'>,
   locale: Locale,
-  opts: { page?: number; limit?: number } = {},
+  opts: { page?: number; limit?: number; category?: CategoryKey } = {},
 ): Promise<PostCardView[]> {
   const limit = Math.min(Math.max(opts.limit ?? ARCHIVE_PAGE_SIZE, 1), 48);
   const page = Math.max(opts.page ?? 1, 1);
-  const rows = await deps.posts.listPublished(locale, { limit, offset: (page - 1) * limit });
+  const rows = await deps.posts.listPublished(locale, {
+    limit,
+    offset: (page - 1) * limit,
+    ...(opts.category ? { category: opts.category } : {}),
+  });
   return rows.map((r) => toCard(r, deps.mediaBaseUrl));
+}
+
+/** Categories that have at least one published post in this locale, in display order. */
+export async function listActiveCategories(deps: Pick<ContentDeps, 'posts'>, locale: Locale): Promise<CategoryKey[]> {
+  return categoriesWithPosts(await deps.posts.countPublishedByCategory(locale));
 }
 
 function toRecipe(p: PostDetail): RecipeView | null {

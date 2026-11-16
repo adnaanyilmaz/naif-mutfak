@@ -4,7 +4,7 @@ import { AdminPageHeader, EmptyState, StatusBadge, primaryButton } from '@/compo
 import { ExternalIcon, PlusIcon, SearchIcon } from '@/components/admin/icons';
 import { ADMIN_LOCALE } from '@/i18n/config';
 import { filterAdminPosts, listAdminPosts } from '@/services/admin/posts-admin.service';
-import { categoryKey } from '@/services/content/category';
+import { findCategory } from '@/services/content/category';
 import { adminPostsDeps } from '@/services/container';
 import { POST_STATUSES, postListQuerySchema } from '@/validators/admin/post';
 import { requireAdmin } from '../_server/require-admin';
@@ -14,9 +14,10 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
   await requireAdmin();
   const parsed = postListQuerySchema.safeParse(await searchParams);
   const query = parsed.success ? parsed.data : {};
-  const [all, t, format] = await Promise.all([
+  const [all, t, c, format] = await Promise.all([
     listAdminPosts(adminPostsDeps()),
     getTranslations({ locale: ADMIN_LOCALE, namespace: 'Admin' }),
+    getTranslations({ locale: ADMIN_LOCALE, namespace: 'Categories' }),
     getFormatter({ locale: ADMIN_LOCALE }),
   ]);
   const posts = filterAdminPosts(all, query);
@@ -83,7 +84,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
           ) : (
             <ul className="divide-y divide-hairline">
               {posts.map((p) => {
-                const cat = categoryKey(p.category);
+                const cat = findCategory(p.category);
                 return (
                   <li key={p.id} className="group relative flex items-center gap-4 px-4 py-3 hover:bg-linen/50 md:px-5">
                     {p.thumbnailUrl ? (
@@ -97,7 +98,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
                         {p.title || t('posts.untitled')}
                       </Link>
                       <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] text-muted">
-                        <span>{cat === 'other' ? p.category : t(`categories.${cat}`)}</span>
+                        <span>{cat ? c(cat) : p.category}</span>
                         <span aria-hidden>·</span>
                         <span>{format.dateTime(p.updatedAt, { dateStyle: 'medium', timeStyle: 'short' })}</span>
                       </p>

@@ -39,12 +39,24 @@
     "title": "Recipes",
     "dek": "Recipes tested again and again, seasonal ingredients and notes from the kitchen.",
     "empty": "No recipes published yet.",
-    "metaTitle": "Recipes"
+    "metaTitle": "Recipes",
+    "allCategories": "All",
+    "categoriesNav": "Categories",
+    "emptyCategory": "No recipes in this category yet."
   },
   "Categories": {
-    "bread": "Bread",
-    "pastry": "Pastry",
-    "other": "Kitchen"
+    "ekmekler": "",
+    "pogaca-acma-corek": "",
+    "borek-katmer": "",
+    "tatlilar": "",
+    "kekler": "",
+    "kurabiyeler": "",
+    "kahvaltiliklar": "",
+    "ana-yemekler": "",
+    "pizza-sokak-lezzetleri": "",
+    "corba-meze-salata": "",
+    "peynir-tursu-konserve": "",
+    "icecekler": ""
   },
   "Article": {
     "jumpToRecipe": "Jump to recipe",
@@ -178,10 +190,6 @@
       "tr": "Turkish",
       "en": "English",
       "ar": "Arabic"
-    },
-    "categories": {
-      "bread": "Bread",
-      "pastry": "Pastry"
     },
     "posts": {
       "title": "Posts",

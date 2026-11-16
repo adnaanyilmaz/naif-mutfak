@@ -13,8 +13,8 @@ interface EditorialImageProps {
 }
 
 const TINTS: Record<string, string> = {
-  bread: 'from-[#fde7c8] via-[#fbd7a8] to-[#f3b77b]',
-  pastry: 'from-[#ffe4dc] via-[#fcc9b6] to-[#f29f80]',
+  ekmekler: 'from-[#fde7c8] via-[#fbd7a8] to-[#f3b77b]',
+  tatlilar: 'from-[#ffe4dc] via-[#fcc9b6] to-[#f29f80]',
 };
 
 /** Bowl + steam line icon for image-less posts. */

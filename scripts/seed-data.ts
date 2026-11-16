@@ -85,7 +85,7 @@ const callout = `::ebook{product="${PRODUCT_SLUG}"}`;
 
 const sourdough: SeedPost = {
   id: '7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a01',
-  category: 'bread',
+  category: 'ekmekler',
   heroImage: {
     file: 'sourdough-hero.jpg',
     key: 'posts/7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a01/4f3c2b1a-0d9e-4c8b-9a7f-6e5d4c3b2a11.jpg',
@@ -305,7 +305,7 @@ ${callout}
 
 const baklava: SeedPost = {
   id: '7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a02',
-  category: 'pastry',
+  category: 'tatlilar',
   heroImage: {
     file: 'baklava-hero.jpg',
     key: 'posts/7b0c6c1e-0a51-4c39-9a3e-5f1d2c9e1a02/5a4b3c2d-1e0f-4a9b-8c7d-6e5f4a3b2c12.jpg',

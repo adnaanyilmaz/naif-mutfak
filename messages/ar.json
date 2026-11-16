@@ -39,12 +39,24 @@
     "title": "الوصفات",
     "dek": "وصفات جُرّبت مراراً، ومكوّنات الموسم، وملاحظات من المطبخ.",
     "empty": "لا توجد وصفات منشورة بعد.",
-    "metaTitle": "الوصفات"
+    "metaTitle": "الوصفات",
+    "allCategories": "الكل",
+    "categoriesNav": "التصنيفات",
+    "emptyCategory": "لا توجد وصفات في هذا التصنيف بعد."
   },
   "Categories": {
-    "bread": "خبز",
-    "pastry": "معجنات",
-    "other": "مطبخ"
+    "ekmekler": "",
+    "pogaca-acma-corek": "",
+    "borek-katmer": "",
+    "tatlilar": "",
+    "kekler": "",
+    "kurabiyeler": "",
+    "kahvaltiliklar": "",
+    "ana-yemekler": "",
+    "pizza-sokak-lezzetleri": "",
+    "corba-meze-salata": "",
+    "peynir-tursu-konserve": "",
+    "icecekler": ""
   },
   "Article": {
     "jumpToRecipe": "انتقل إلى الوصفة",
@@ -178,10 +190,6 @@
       "tr": "التركية",
       "en": "الإنجليزية",
       "ar": "العربية"
-    },
-    "categories": {
-      "bread": "خبز",
-      "pastry": "معجنات"
     },
     "posts": {
       "title": "المقالات",

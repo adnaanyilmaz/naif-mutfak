@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { StoryCard } from '@/components/blog/StoryCard';
+import { RecipeArchive } from '@/components/blog/RecipeArchive';
+import { getCategoryLabeler } from '@/i18n/category-label';
 import { routing } from '@/i18n/routing';
 import { contentDeps } from '@/services/container';
-import { listPosts } from '@/services/content/posts.service';
+import { listActiveCategories, listPosts } from '@/services/content/posts.service';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,24 +29,24 @@ export default async function BlogArchivePage({ params }: BlogPageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: 'Blog' });
-  const posts = await listPosts(contentDeps(), locale);
+  const deps = contentDeps();
+  const [t, label, posts, active] = await Promise.all([
+    getTranslations({ locale, namespace: 'Blog' }),
+    getCategoryLabeler(locale),
+    listPosts(deps, locale),
+    listActiveCategories(deps, locale),
+  ]);
 
   return (
-    <div className="mx-auto max-w-page px-4 pt-10 pb-16 sm:px-6 md:pt-16 md:pb-24">
-      <header className="max-w-content">
-        <h1 className="font-display text-display font-extrabold">{t('title')}</h1>
-        <p className="mt-4 text-dek text-stone">{t('dek')}</p>
-      </header>
-      {posts.length === 0 ? (
-        <p className="mt-16 text-ui text-stone">{t('empty')}</p>
-      ) : (
-        <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p, i) => (
-            <StoryCard key={p.id} post={p} priority={i < 3} />
-          ))}
-        </div>
-      )}
-    </div>
+    <RecipeArchive
+      title={t('title')}
+      dek={t('dek')}
+      posts={posts}
+      emptyLabel={t('empty')}
+      categories={active.map((slug) => ({ slug, label: label(slug) ?? slug }))}
+      activeCategory={null}
+      allLabel={t('allCategories')}
+      navLabel={t('categoriesNav')}
+    />
   );
 }

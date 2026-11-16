@@ -9,10 +9,11 @@ import { EditorialImage } from '@/components/media/EditorialImage';
 import { RecipeCard } from '@/components/recipe/RecipeCard';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { LOCALE_META, type Locale } from '@/i18n/config';
+import { getCategoryLabeler } from '@/i18n/category-label';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { contentDeps } from '@/services/container';
-import { categoryKey } from '@/services/content/category';
+import { findCategory } from '@/services/content/category';
 import { blogPath, getArticle } from '@/services/content/posts.service';
 
 export const dynamic = 'force-dynamic';
@@ -24,12 +25,12 @@ interface ArticlePageProps {
 const loadArticle = cache(async (locale: Locale, slug: string) => {
   const [a, c, r] = await Promise.all([
     getTranslations({ locale, namespace: 'Article' }),
-    getTranslations({ locale, namespace: 'Categories' }),
+    getCategoryLabeler(locale),
     getTranslations({ locale, namespace: 'Recipe' }),
   ]);
   return getArticle(contentDeps(), locale, slug, {
     authorName: a('author'),
-    categoryLabel: (category) => c(categoryKey(category)),
+    categoryLabel: c,
     yieldLabel: (count) => r('yield', { count }),
   });
 });
@@ -69,22 +70,26 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const [t, c, format] = await Promise.all([
     getTranslations({ locale, namespace: 'Article' }),
-    getTranslations({ locale, namespace: 'Categories' }),
+    getCategoryLabeler(locale),
     getFormatter({ locale }),
   ]);
   const { post, recipe } = article;
+  const category = findCategory(post.category);
+  const categoryLabel = c(post.category);
 
   return (
     <article className="pb-16 md:pb-24">
       {article.jsonLd && <JsonLd json={article.jsonLd} />}
 
       <header className="mx-auto max-w-[52rem] px-4 pt-10 text-center sm:px-6 md:pt-16 print:hidden">
-        <Link
-          href="/blog"
-          className="inline-flex rounded-pill bg-terracotta-tint px-3 py-1.5 text-[0.8125rem] font-semibold text-terracotta-deep hover:bg-[#ffe9c7]"
-        >
-          {c(categoryKey(post.category))}
-        </Link>
+        {category && categoryLabel && (
+          <Link
+            href={`/blog/kategori/${category}`}
+            className="inline-flex rounded-pill bg-terracotta-tint px-3 py-1.5 text-[0.8125rem] font-semibold text-terracotta-deep hover:bg-[#ffe9c7]"
+          >
+            {categoryLabel}
+          </Link>
+        )}
         <h1 className="mt-5 font-display text-h1 font-extrabold">{post.title}</h1>
         {post.dek && <p className="mx-auto mt-5 max-w-2xl text-dek text-stone">{post.dek}</p>}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">

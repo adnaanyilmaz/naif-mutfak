@@ -26,7 +26,7 @@ beforeAll(async () => {
   await db.batch(sql.split('--> statement-breakpoint').map((s) => s.trim()).filter(Boolean).map((s) => db.prepare(s)));
   const t0 = T0.getTime() / 1000;
   await db.batch([
-    db.prepare("INSERT INTO posts (id, category, status, updated_at) VALUES (?, 'bread', 'draft', ?), (?, 'bread', 'draft', ?)").bind(POST_A, t0, POST_B, t0),
+    db.prepare("INSERT INTO posts (id, category, status, updated_at) VALUES (?, 'ekmekler', 'draft', ?), (?, 'ekmekler', 'draft', ?)").bind(POST_A, t0, POST_B, t0),
     db.prepare("INSERT INTO post_translations (post_id, locale, slug, title) VALUES (?, 'en', 'taken-slug', 'B')").bind(POST_B),
     db.prepare("INSERT INTO products (id, slug, status) VALUES (?, 'p', 'active')").bind(PRODUCT),
     db
@@ -47,7 +47,7 @@ const write = (expected: Date, next: Date, slug: string, title: string): SavePos
   publishAt: next,
   post: {
     status: 'published',
-    category: 'bread',
+    category: 'ekmekler',
     isRecipe: false,
     prepMinutes: null,
     cookMinutes: null,

@@ -5,7 +5,7 @@ import { savePostInputSchema } from '@/validators/admin/post';
 import { copyStructure, emptyTranslation, issueLocale, parseNumber, toPostForm, toSaveInput } from './post-form';
 import { diffStructure, publishIssues, translationCompleteness, type RuleShared, type RuleTranslation } from './post-rules';
 
-const shared: RuleShared = { isRecipe: true, baseServings: 8, prepMinutes: 20, cookMinutes: 35, restMinutes: null, category: 'bread' };
+const shared: RuleShared = { isRecipe: true, baseServings: 8, prepMinutes: 20, cookMinutes: 35, restMinutes: null, category: 'ekmekler' };
 const ctx = { heroImageKey: 'posts/p/hero.jpg', mediaBaseUrl: 'https://media.naifmutfak.com', siteUrl: 'https://naifmutfak.com' };
 const tr: RuleTranslation = {
   locale: 'tr',
@@ -68,7 +68,7 @@ describe('diffStructure', () => {
 const record: AdminPostRecord = {
   id: '7b0c6c1e-0000-4000-8000-000000000a01',
   status: 'draft',
-  category: 'bread',
+  category: 'ekmekler',
   heroImageKey: null,
   isRecipe: true,
   prepMinutes: 20,

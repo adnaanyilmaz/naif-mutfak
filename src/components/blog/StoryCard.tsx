@@ -1,7 +1,9 @@
-import { getTranslations } from 'next-intl/server';
+import { hasLocale } from 'next-intl';
+import { getLocale } from 'next-intl/server';
 import { EditorialImage } from '@/components/media/EditorialImage';
+import { getCategoryLabeler } from '@/i18n/category-label';
 import { Link } from '@/i18n/navigation';
-import { categoryKey } from '@/services/content/category';
+import { routing } from '@/i18n/routing';
 import type { PostCardView } from '@/services/content/posts.service';
 import { RecipeMeta } from './RecipeMeta';
 
@@ -12,9 +14,10 @@ interface StoryCardProps {
 }
 
 export async function StoryCard({ post, size = 'default', priority = false }: StoryCardProps) {
-  const t = await getTranslations('Categories');
+  const requested = await getLocale();
+  const label = await getCategoryLabeler(hasLocale(routing.locales, requested) ? requested : routing.defaultLocale);
   const href = `/blog/${post.slug}`;
-  const category = t(categoryKey(post.category));
+  const category = label(post.category);
 
   if (size === 'feature') {
     // Full-bleed image card with the title over a gradient (home hero).
@@ -23,7 +26,7 @@ export async function StoryCard({ post, size = 'default', priority = false }: St
         <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5]" category={post.category} priority zoom radius="rounded-[2rem]" />
         <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
-          <span className="inline-flex rounded-pill bg-white/90 px-3 py-1 text-[0.75rem] font-semibold text-charcoal backdrop-blur">{category}</span>
+          {category && <span className="inline-flex rounded-pill bg-white/90 px-3 py-1 text-[0.75rem] font-semibold text-charcoal backdrop-blur">{category}</span>}
           <h2 className="mt-3 font-display text-h2 font-extrabold text-white">
             <Link href={href} className="after:absolute after:inset-0 after:rounded-[2rem] focus-visible:outline-none">
               {post.title}
@@ -42,7 +45,7 @@ export async function StoryCard({ post, size = 'default', priority = false }: St
       <article className="group relative grid grid-cols-[5.5rem_1fr] items-center gap-4">
         <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect="aspect-square" category={post.category} zoom radius="rounded-2xl" />
         <div>
-          <p className="text-[0.75rem] font-semibold text-terracotta">{category}</p>
+          {category && <p className="text-[0.75rem] font-semibold text-terracotta">{category}</p>}
           <h3 className="mt-1 font-display text-[1.0625rem] leading-snug font-bold">
             <Link href={href} className="after:absolute after:inset-0 group-hover:text-terracotta">
               {post.title}
@@ -57,9 +60,11 @@ export async function StoryCard({ post, size = 'default', priority = false }: St
     <article className="group relative flex flex-col">
       <div className="relative">
         <EditorialImage src={post.imageUrl} alt={post.imageAlt} aspect="aspect-[4/3]" category={post.category} priority={priority} zoom />
-        <span className="absolute start-3 top-3 rounded-pill bg-white/90 px-3 py-1 text-[0.75rem] font-semibold text-charcoal shadow-sm backdrop-blur">
-          {category}
-        </span>
+        {category && (
+          <span className="absolute start-3 top-3 rounded-pill bg-white/90 px-3 py-1 text-[0.75rem] font-semibold text-charcoal shadow-sm backdrop-blur">
+            {category}
+          </span>
+        )}
       </div>
       <div className="mt-4 flex flex-1 flex-col gap-2">
         <RecipeMeta totalMinutes={post.totalMinutes} difficulty={post.difficulty} />

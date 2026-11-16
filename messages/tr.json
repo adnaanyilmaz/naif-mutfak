@@ -39,12 +39,24 @@
     "title": "Tarifler",
     "dek": "Defalarca denenmiş tarifler, mevsimin malzemeleri ve mutfaktan notlar.",
     "empty": "Henüz yayımlanmış tarif yok.",
-    "metaTitle": "Tarifler"
+    "metaTitle": "Tarifler",
+    "allCategories": "Tümü",
+    "categoriesNav": "Kategoriler",
+    "emptyCategory": "Bu kategoride henüz tarif yok."
   },
   "Categories": {
-    "bread": "Ekmek",
-    "pastry": "Hamur işi",
-    "other": "Mutfak"
+    "ekmekler": "Ekmekler",
+    "pogaca-acma-corek": "Poğaça, Açma & Çörek",
+    "borek-katmer": "Börek & Katmer",
+    "tatlilar": "Tatlılar",
+    "kekler": "Kekler",
+    "kurabiyeler": "Kurabiyeler",
+    "kahvaltiliklar": "Kahvaltılıklar",
+    "ana-yemekler": "Ana Yemekler",
+    "pizza-sokak-lezzetleri": "Pizza & Sokak Lezzetleri",
+    "corba-meze-salata": "Çorba, Meze & Salata",
+    "peynir-tursu-konserve": "Peynir, Turşu & Konserve",
+    "icecekler": "İçecekler"
   },
   "Article": {
     "jumpToRecipe": "Tarife geç",
@@ -178,10 +190,6 @@
       "tr": "Türkçe",
       "en": "İngilizce",
       "ar": "Arapça"
-    },
-    "categories": {
-      "bread": "Ekmek",
-      "pastry": "Hamur işi"
     },
     "posts": {
       "title": "Yazılar",
