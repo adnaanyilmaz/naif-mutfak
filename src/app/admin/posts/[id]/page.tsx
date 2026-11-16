@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { DangerZone } from '@/components/admin/DangerZone';
 import { PostEditor } from '@/components/admin/PostEditor';
 import { toPostForm } from '@/services/admin/post-form';
 import { getPostForEdit, publicPathOf } from '@/services/admin/posts-admin.service';
@@ -6,7 +7,7 @@ import { listProductOptions } from '@/services/admin/products-admin.service';
 import { adminPostsDeps, adminProductsDeps } from '@/services/container';
 import { postIdSchema } from '@/validators/admin/post';
 import { requireAdmin } from '../../_server/require-admin';
-import { checkSlugAction, savePostAction } from '../actions';
+import { checkSlugAction, deletePostAction, savePostAction } from '../actions';
 
 export default async function AdminPostEditPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -17,6 +18,7 @@ export default async function AdminPostEditPage({ params }: { params: Promise<{ 
   if (!view) notFound();
 
   return (
+    <>
     <PostEditor
       postId={view.post.id}
       initialForm={toPostForm(view.post)}
@@ -30,5 +32,7 @@ export default async function AdminPostEditPage({ params }: { params: Promise<{ 
       checkSlugAction={checkSlugAction}
       publicPath={publicPathOf(view.post.status, view.post.translations)}
     />
+    <DangerZone kind="post" entityId={view.post.id} deleteAction={deletePostAction} />
+    </>
   );
 }

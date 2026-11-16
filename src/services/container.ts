@@ -19,8 +19,8 @@ import type { AdminAuthDeps } from './admin/auth.service';
 import type { OverviewDeps } from './admin/overview.service';
 import type { PaymentSettingsDeps } from './admin/payment-settings.service';
 import type { AnalyticsDeps } from './admin/analytics.service';
-import type { AdminPostsDeps } from './admin/posts-admin.service';
-import type { AdminProductsDeps } from './admin/products-admin.service';
+import type { AdminPostsDeps, DeletePostDeps } from './admin/posts-admin.service';
+import type { AdminProductsDeps, DeleteProductDeps } from './admin/products-admin.service';
 import type { UploadDeps } from './admin/upload.service';
 import type { DevMediaDeps } from './media/dev-media.service';
 import type { ContentDeps } from './content/posts.service';
@@ -166,6 +166,18 @@ export function adminProductsDeps(): AdminProductsDeps {
     now,
     newId,
   };
+}
+
+/** Deletes an R2 object after the response; a failure only leaves an orphan for the cleanup cron. */
+const removeFrom = (bucket: 'media' | 'ebooks') => (key: string) =>
+  waitUntil(getUploadStores()[bucket].delete(key).catch(() => undefined));
+
+export function deletePostDeps(): DeletePostDeps {
+  return { posts: createAdminPostsRepo(getDb()), removeMedia: removeFrom('media') };
+}
+
+export function deleteProductDeps(): DeleteProductDeps {
+  return { products: createAdminProductsRepo(getDb()), removeMedia: removeFrom('media'), removeEbook: removeFrom('ebooks') };
 }
 
 export function uploadDeps(): UploadDeps {

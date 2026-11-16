@@ -526,6 +526,25 @@
       "methods": "Payment methods buyers see",
       "methodsHint": "Payment methods are shown in the provider’s checkout and switched on or off in the provider dashboard.",
       "testHint": "With no API key locally, “Buy” opens the test checkout screen. This mode is off in production."
+    },
+    "danger": {
+      "post": {
+        "title": "Delete post",
+        "body": "The post is permanently deleted with all of its translations and its hero image. This cannot be undone.",
+        "button": "Delete post",
+        "confirm": "This post will be permanently deleted. Are you sure?"
+      },
+      "product": {
+        "title": "Delete e-book",
+        "body": "The e-book is permanently deleted with its translations, editions, cover and PDF files. An e-book with orders cannot be deleted; archive it instead.",
+        "button": "Delete e-book",
+        "confirm": "This e-book and its PDF files will be permanently deleted. Are you sure?"
+      },
+      "deleting": "Deleting…",
+      "errors": {
+        "not_found": "Record not found; it may already have been deleted.",
+        "has_orders": "This e-book has orders and cannot be deleted. Set its status to “Archived” to take it off sale."
+      }
     }
   },
   "About": {

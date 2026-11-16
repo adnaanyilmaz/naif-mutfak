@@ -77,6 +77,8 @@ export interface AdminPostsRepo {
   /** Upload finalize: swaps the hero key without touching `updated_at` (editor concurrency token). */
   setHeroImage(postId: string, key: string, audit: AuditEntry): Promise<{ previousKey: string | null } | null>;
   exists(postId: string): Promise<boolean>;
+  /** Hard delete; translations go with it (FK cascade). */
+  remove(postId: string, audit: AuditEntry): Promise<void>;
 }
 
 const sharedColumns = {
@@ -210,6 +212,10 @@ export function createAdminPostsRepo(db: Db): AdminPostsRepo {
         auditInsert(db, audit),
       ]);
       return { previousKey: row.previousKey };
+    },
+
+    async remove(postId, audit) {
+      await db.batch([db.delete(posts).where(eq(posts.id, postId)), auditInsert(db, audit)]);
     },
 
     async exists(postId) {

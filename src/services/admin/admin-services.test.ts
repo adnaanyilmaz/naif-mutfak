@@ -8,8 +8,8 @@ import { majorToMinor, minorToMajor } from '@/services/catalog/money';
 import type { SavePostInput } from '@/validators/admin/post';
 import type { SaveProductInput } from '@/validators/admin/product';
 import type { AdminIdentity } from './auth.service';
-import { savePost } from './posts-admin.service';
-import { activationIssues, saveProduct } from './products-admin.service';
+import { deletePost, savePost } from './posts-admin.service';
+import { activationIssues, deleteProduct, saveProduct } from './products-admin.service';
 import { createUploadIntent, finalizeUpload, isDevUploadKey, type UploadDeps } from './upload.service';
 import { isKeyForKind, sniffType } from './upload-policy';
 
@@ -44,6 +44,7 @@ function postRecord(over: Partial<AdminPostRecord> = {}): AdminPostRecord {
 
 function fakePostsRepo(record: AdminPostRecord, opts: { takenSlugs?: string[]; outcome?: 'saved' | 'conflict' } = {}) {
   const writes: SavePostWrite[] = [];
+  const removed: AuditEntry[] = [];
   const repo: AdminPostsRepo = {
     list: async () => [],
     find: async (id) => (id === record.id ? record : null),
@@ -55,8 +56,11 @@ function fakePostsRepo(record: AdminPostRecord, opts: { takenSlugs?: string[]; o
     },
     setHeroImage: async () => null,
     exists: async (id) => id === record.id,
+    remove: async (_id, audit) => {
+      removed.push(audit);
+    },
   };
-  return { repo, writes };
+  return { repo, writes, removed };
 }
 
 const postInput = (over: Partial<SavePostInput> = {}): SavePostInput => ({
@@ -167,7 +171,8 @@ function productRecord(over: Partial<AdminProductRecord> = {}): AdminProductReco
   };
 }
 
-function fakeProductsRepo(record: AdminProductRecord) {
+function fakeProductsRepo(record: AdminProductRecord, opts: { orders?: number; removeOutcome?: 'removed' | 'has_orders' } = {}) {
+  const removed: AuditEntry[] = [];
   const writes: SaveProductWrite[] = [];
   const audits: AuditEntry[] = [];
   const repo: AdminProductsRepo = {
@@ -196,8 +201,13 @@ function fakeProductsRepo(record: AdminProductRecord) {
       return { previousKey };
     },
     listOptions: async () => [],
+    countOrders: async () => opts.orders ?? 0,
+    remove: async (_id, audit) => {
+      removed.push(audit);
+      return opts.removeOutcome ?? 'removed';
+    },
   };
-  return { repo, writes, audits };
+  return { repo, writes, audits, removed };
 }
 
 const productInput = (over: Partial<SaveProductInput> = {}): SaveProductInput => ({
@@ -385,5 +395,71 @@ describe('upload intent + finalize', () => {
       ok: false,
       error: 'bad_key',
     });
+  });
+});
+
+/* ───────────── Deleting ───────────── */
+
+describe('deletePost', () => {
+  it('removes the post, audits it, drops the hero image and revalidates its public pages', async () => {
+    const record = postRecord({
+      status: 'published',
+      category: 'tatlilar',
+      translations: [{ locale: 'tr', slug: 'baklava', title: 'Baklava', dek: null, bodyMd: '', heroImageAlt: null, seoTitle: null, seoDescription: null, ingredients: null, instructions: null, keywords: [], cuisine: null, isPublished: true }],
+    });
+    const { repo, removed } = fakePostsRepo(record);
+    const media: string[] = [];
+    const result = await deletePost({ posts: repo, removeMedia: (k) => media.push(k) }, admin, POST);
+    expect(result).toEqual({ ok: true, revalidate: ['/tr', '/tr/blog', '/tr/blog/baklava', '/tr/blog/kategori/tatlilar'] });
+    expect(removed).toHaveLength(1);
+    expect(removed[0]).toMatchObject({ action: 'post.delete', entityId: POST, actorEmail: admin.email });
+    expect(media).toEqual(['posts/p/h.jpg']);
+  });
+
+  it('reports a missing post without touching anything', async () => {
+    const { repo, removed } = fakePostsRepo(postRecord());
+    const media: string[] = [];
+    expect(await deletePost({ posts: repo, removeMedia: (k) => media.push(k) }, admin, NEW_ID)).toEqual({ ok: false, error: 'not_found' });
+    expect(removed).toHaveLength(0);
+    expect(media).toHaveLength(0);
+  });
+});
+
+describe('deleteProduct', () => {
+  const run = async (repo: AdminProductsRepo, id = PRODUCT) => {
+    const media: string[] = [];
+    const ebooks: string[] = [];
+    const result = await deleteProduct({ products: repo, removeMedia: (k) => media.push(k), removeEbook: (k) => ebooks.push(k) }, admin, id);
+    return { result, media, ebooks };
+  };
+
+  it('removes an e-book without orders together with its cover and PDFs', async () => {
+    const { repo, removed } = fakeProductsRepo(productRecord({ coverImageKey: 'products/p/c.png' }));
+    const { result, media, ebooks } = await run(repo);
+    expect(result).toMatchObject({ ok: true });
+    expect(result.ok ? result.revalidate : []).toContain('/tr/ebooks/baking-at-home');
+    expect(removed[0]).toMatchObject({ action: 'product.delete', entityId: PRODUCT });
+    expect(media).toEqual(['products/p/c.png']);
+    expect(ebooks).toEqual(['ebooks/p/v/x.pdf']);
+  });
+
+  it('refuses when orders exist and keeps every file', async () => {
+    const { repo, removed } = fakeProductsRepo(productRecord({ coverImageKey: 'products/p/c.png' }), { orders: 2 });
+    const { result, media, ebooks } = await run(repo);
+    expect(result).toEqual({ ok: false, error: 'has_orders' });
+    expect(removed).toHaveLength(0);
+    expect([...media, ...ebooks]).toHaveLength(0);
+  });
+
+  it('keeps the files when an order arrives between the check and the delete', async () => {
+    const { repo } = fakeProductsRepo(productRecord(), { removeOutcome: 'has_orders' });
+    const { result, ebooks } = await run(repo);
+    expect(result).toEqual({ ok: false, error: 'has_orders' });
+    expect(ebooks).toHaveLength(0);
+  });
+
+  it('reports a missing e-book', async () => {
+    const { repo } = fakeProductsRepo(productRecord());
+    expect((await run(repo, NEW_ID)).result).toEqual({ ok: false, error: 'not_found' });
   });
 });

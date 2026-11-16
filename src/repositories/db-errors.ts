@@ -15,6 +15,10 @@ export function isUniqueViolation(err: unknown, table: string): boolean {
   return messages(err).some((m) => m.includes('UNIQUE constraint failed') && m.includes(table));
 }
 
+export function isForeignKeyViolation(err: unknown): boolean {
+  return messages(err).some((m) => m.includes('FOREIGN KEY constraint failed'));
+}
+
 /** Optimistic-concurrency guards abort a batch via `json('conflict')` (see guardUpdatedAt). */
 export function isGuardViolation(err: unknown): boolean {
   return messages(err).some((m) => m.includes('malformed JSON'));

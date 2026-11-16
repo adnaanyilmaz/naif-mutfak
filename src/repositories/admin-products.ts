@@ -1,10 +1,10 @@
-import { and, asc, desc, eq, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, sql } from 'drizzle-orm';
 import type { BatchItem } from 'drizzle-orm/batch';
-import { products, productTranslations, productVariants } from '@/db/schema';
+import { orders, products, productTranslations, productVariants } from '@/db/schema';
 import type { Db } from '@/lib/cloudflare/db';
 import type { Locale } from '@/validators/content';
 import { auditInsert, type AuditEntry } from './audit';
-import { isGuardViolation, isUniqueViolation } from './db-errors';
+import { isForeignKeyViolation, isGuardViolation, isUniqueViolation } from './db-errors';
 import { guardUpdatedAt } from './guards';
 
 export type ProductStatus = 'draft' | 'active' | 'archived';
@@ -85,6 +85,10 @@ export interface AdminProductsRepo {
   setVariantPdf(variantId: string, file: PdfFile, audit: AuditEntry): Promise<{ previousKey: string | null } | null>;
   /** Featured e-book select in the post editor. */
   listOptions(): Promise<{ id: string; slug: string }[]>;
+  /** Orders (any status) placed for any edition of this product. */
+  countOrders(productId: string): Promise<number>;
+  /** Hard delete; translations and editions cascade. Orders block it (`orders.variant_id` is RESTRICT). */
+  remove(productId: string, audit: AuditEntry): Promise<'removed' | 'has_orders'>;
 }
 
 export function createAdminProductsRepo(db: Db): AdminProductsRepo {
@@ -267,6 +271,25 @@ export function createAdminProductsRepo(db: Db): AdminProductsRepo {
         auditInsert(db, audit),
       ]);
       return { previousKey: row.previousKey };
+    },
+
+    async countOrders(productId) {
+      const [row] = await db
+        .select({ n: count() })
+        .from(orders)
+        .innerJoin(productVariants, eq(productVariants.id, orders.variantId))
+        .where(eq(productVariants.productId, productId));
+      return row?.n ?? 0;
+    },
+
+    async remove(productId, audit) {
+      try {
+        await db.batch([db.delete(products).where(eq(products.id, productId)), auditInsert(db, audit)]);
+        return 'removed';
+      } catch (err) {
+        if (isForeignKeyViolation(err)) return 'has_orders';
+        throw err;
+      }
     },
 
     listOptions() {

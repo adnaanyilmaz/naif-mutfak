@@ -145,6 +145,38 @@ export async function createDraftProduct(deps: AdminProductsDeps, actor: AdminId
   return id;
 }
 
+export interface DeleteProductDeps {
+  products: Pick<AdminProductsRepo, 'find' | 'countOrders' | 'remove'>;
+  /** Best-effort removal of the cover from MEDIA_PUBLIC. */
+  removeMedia: (key: string) => void;
+  /** Best-effort removal of an edition PDF from EBOOKS_PRIVATE. */
+  removeEbook: (key: string) => void;
+}
+
+export type DeleteProductResult = { ok: true; revalidate: string[] } | { ok: false; error: 'not_found' | 'has_orders' };
+
+/**
+ * Permanently deletes an e-book with its translations, editions and files.
+ * Refused once any order exists: buyers keep their download and the sales history stays intact (archive instead).
+ */
+export async function deleteProduct(deps: DeleteProductDeps, actor: AdminIdentity, productId: string): Promise<DeleteProductResult> {
+  const product = await deps.products.find(productId);
+  if (!product) return { ok: false, error: 'not_found' };
+  if ((await deps.products.countOrders(productId)) > 0) return { ok: false, error: 'has_orders' };
+  const outcome = await deps.products.remove(productId, {
+    actorEmail: actor.email,
+    action: 'product.delete',
+    entityType: 'product',
+    entityId: productId,
+    diff: { slug: product.slug, status: product.status, variants: product.variants.map((v) => v.sku) },
+  });
+  if (outcome === 'has_orders') return { ok: false, error: 'has_orders' };
+  if (product.coverImageKey) deps.removeMedia(product.coverImageKey);
+  for (const v of product.variants) if (v.pdfR2Key) deps.removeEbook(v.pdfR2Key);
+  const revalidate = ['tr', 'en', 'ar'].flatMap((l) => [`/${l}`, `/${l}/ebooks`, `/${l}/ebooks/${product.slug}`]);
+  return { ok: true, revalidate };
+}
+
 export interface VariantEditView extends Omit<AdminVariant, 'priceTry' | 'priceUsd' | 'priceSar'> {
   priceTry: string;
   priceUsd: string;

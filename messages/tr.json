@@ -526,6 +526,25 @@
       "methods": "Müşterinin göreceği ödeme yöntemleri",
       "methodsHint": "Ödeme yöntemleri sağlayıcının ödeme penceresinde gösterilir ve sağlayıcı panelinden açılıp kapatılır.",
       "testHint": "Yerelde API anahtarı olmadığı için “Satın al” butonu test ödeme ekranını açar. Canlı ortamda bu mod kapalıdır."
+    },
+    "danger": {
+      "post": {
+        "title": "Yazıyı sil",
+        "body": "Yazı, tüm dillerdeki çevirileri ve kapak görseliyle birlikte kalıcı olarak silinir. Bu işlem geri alınamaz.",
+        "button": "Yazıyı sil",
+        "confirm": "Bu yazı kalıcı olarak silinecek. Emin misiniz?"
+      },
+      "product": {
+        "title": "E-kitabı sil",
+        "body": "E-kitap; çevirileri, baskıları, kapağı ve PDF dosyalarıyla birlikte kalıcı olarak silinir. Siparişi olan bir e-kitap silinemez; onu arşivleyin.",
+        "button": "E-kitabı sil",
+        "confirm": "Bu e-kitap ve PDF dosyaları kalıcı olarak silinecek. Emin misiniz?"
+      },
+      "deleting": "Siliniyor…",
+      "errors": {
+        "not_found": "Kayıt bulunamadı; daha önce silinmiş olabilir.",
+        "has_orders": "Bu e-kitabın siparişleri var, silinemez. Satıştan kaldırmak için durumunu “Arşiv” yapın."
+      }
     }
   },
   "About": {

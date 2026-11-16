@@ -5,12 +5,13 @@ import { redirect } from 'next/navigation';
 import {
   checkSlug,
   createDraftPost,
+  deletePost,
   savePost,
   type SavePostResult,
   type SlugCheck,
 } from '@/services/admin/posts-admin.service';
-import { adminPostsDeps } from '@/services/container';
-import { checkSlugInputSchema, savePostInputSchema } from '@/validators/admin/post';
+import { adminPostsDeps, deletePostDeps } from '@/services/container';
+import { checkSlugInputSchema, postIdSchema, savePostInputSchema } from '@/validators/admin/post';
 import { requireAdmin } from '../_server/require-admin';
 
 export async function createPostAction(): Promise<void> {
@@ -35,6 +36,18 @@ export async function savePostAction(raw: unknown): Promise<SavePostResult> {
     revalidatePath('/admin/posts');
   }
   return result;
+}
+
+/** Redirects to the list on success; returns the reason otherwise. */
+export async function deletePostAction(raw: unknown): Promise<{ error: 'not_found' }> {
+  const admin = await requireAdmin();
+  const id = postIdSchema.safeParse(raw);
+  if (!id.success) return { error: 'not_found' };
+  const result = await deletePost(deletePostDeps(), admin, id.data);
+  if (!result.ok) return { error: result.error };
+  for (const path of result.revalidate) revalidatePath(path);
+  revalidatePath('/admin/posts');
+  redirect('/admin/posts');
 }
 
 export async function checkSlugAction(raw: unknown): Promise<SlugCheck> {

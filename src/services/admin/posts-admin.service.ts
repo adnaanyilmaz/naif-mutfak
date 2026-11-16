@@ -119,6 +119,30 @@ export async function createDraftPost(deps: AdminPostsDeps, actor: AdminIdentity
   return id;
 }
 
+export interface DeletePostDeps {
+  posts: Pick<AdminPostsRepo, 'find' | 'remove'>;
+  /** Best-effort removal of the hero image from MEDIA_PUBLIC. */
+  removeMedia: (key: string) => void;
+}
+
+export type DeletePostResult = { ok: true; revalidate: string[] } | { ok: false; error: 'not_found' };
+
+/** Permanently deletes a post with all of its translations. */
+export async function deletePost(deps: DeletePostDeps, actor: AdminIdentity, postId: string): Promise<DeletePostResult> {
+  const post = await deps.posts.find(postId);
+  if (!post) return { ok: false, error: 'not_found' };
+  await deps.posts.remove(postId, {
+    actorEmail: actor.email,
+    action: 'post.delete',
+    entityType: 'post',
+    entityId: postId,
+    diff: { status: post.status, slugs: post.translations.map((t) => `${t.locale}:${t.slug}`) },
+  });
+  if (post.heroImageKey) deps.removeMedia(post.heroImageKey);
+  const revalidate = post.translations.flatMap((t) => [...pathsFor(t.locale, t.slug), `/${t.locale}/blog/kategori/${post.category}`]);
+  return { ok: true, revalidate: [...new Set(revalidate)] };
+}
+
 export type SlugCheck = 'ok' | 'invalid' | 'taken';
 
 export async function checkSlug(deps: AdminPostsDeps, postId: string, locale: Locale, slug: string): Promise<SlugCheck> {

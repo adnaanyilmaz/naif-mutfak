@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { getPlatformProxy } from 'wrangler';
 import * as schema from '@/db/schema';
 import { createAdminPostsRepo, type AdminPostsRepo, type SavePostWrite } from './admin-posts';
+import { createAdminProductsRepo } from './admin-products';
 import { createAnalyticsRepo } from './analytics.repo';
 
 const POST_A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -155,5 +156,44 @@ describe('AnalyticsRepo on D1', () => {
     if (!last) throw new Error('expected 2 rows');
     const page2 = await analytics.ordersPage(filters, { createdAt: last.createdAt.getTime() / 1000, id: last.id }, 10);
     expect([...page1, ...page2].map((o) => o.id)).toEqual(['o5', 'o3', 'o2', 'o1', 'o4']);
+  });
+});
+
+describe('deleting on D1', () => {
+  const del = (entityType: 'post' | 'product', entityId: string) => ({ ...audit, action: `${entityType}.delete`, entityType, entityId });
+  const one = async (sql: string, ...args: string[]) => (await db.prepare(sql).bind(...args).first<{ n: number }>())?.n ?? 0;
+
+  it('removes a post with its translations and writes an audit row', async () => {
+    const before = await count('admin_audit_log');
+    await repo.remove(POST_B, del('post', POST_B));
+    expect(await repo.find(POST_B)).toBeNull();
+    expect(await one('SELECT count(*) AS n FROM post_translations WHERE post_id = ?', POST_B)).toBe(0);
+    expect(await count('admin_audit_log')).toBe(before + 1);
+  });
+
+  it('removes an e-book without orders, cascading editions and clearing featured links', async () => {
+    const products = createAdminProductsRepo(drizzle(db, { schema }));
+    const FREE = '33333333-3333-4333-8333-333333333333';
+    await db.batch([
+      db.prepare("INSERT INTO products (id, slug, status) VALUES (?, 'free', 'draft')").bind(FREE),
+      db.prepare("INSERT INTO product_translations (product_id, locale, title) VALUES (?, 'tr', 'T')").bind(FREE),
+      db.prepare("INSERT INTO product_variants (id, product_id, content_locale, sku, price_try, price_usd, price_sar) VALUES ('v-free', ?, 'tr', 'SKU-FREE', 1, 1, 1)").bind(FREE),
+      db.prepare('UPDATE posts SET featured_product_id = ? WHERE id = ?').bind(FREE, POST_A),
+    ]);
+    expect(await products.countOrders(FREE)).toBe(0);
+    expect(await products.remove(FREE, del('product', FREE))).toBe('removed');
+    expect(await products.find(FREE)).toBeNull();
+    expect(await one('SELECT count(*) AS n FROM product_variants WHERE product_id = ?', FREE)).toBe(0);
+    expect((await repo.find(POST_A))?.featuredProductId).toBeNull();
+  });
+
+  it('refuses to remove an e-book that has orders and leaves it intact', async () => {
+    const products = createAdminProductsRepo(drizzle(db, { schema }));
+    await db.prepare("INSERT OR IGNORE INTO orders (id, provider, variant_id, customer_locale, status) VALUES ('ord-del', 'lemonsqueezy', ?, 'en', 'pending')").bind(VARIANT).run();
+    const before = await count('admin_audit_log');
+    expect(await products.countOrders(PRODUCT)).toBeGreaterThan(0);
+    expect(await products.remove(PRODUCT, del('product', PRODUCT))).toBe('has_orders');
+    expect(await products.find(PRODUCT)).not.toBeNull();
+    expect(await count('admin_audit_log')).toBe(before);
   });
 });
