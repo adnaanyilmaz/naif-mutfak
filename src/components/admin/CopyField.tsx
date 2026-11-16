@@ -23,7 +23,7 @@ export function CopyField({ value }: { value: string }) {
             setCopied(false);
           }
         }}
-        className="shrink-0 rounded-lg bg-white px-3 py-1.5 text-[0.8125rem] font-semibold shadow-[0_1px_2px_rgb(0_0_0/0.08)] hover:bg-charcoal hover:text-white"
+        className="inline-flex min-h-10 shrink-0 items-center rounded-lg bg-white px-3 md:min-h-0 md:py-1.5 text-[0.8125rem] font-semibold shadow-[0_1px_2px_rgb(0_0_0/0.08)] hover:bg-charcoal hover:text-white"
       >
         <span aria-live="polite">{copied ? t('copied') : t('copy')}</span>
       </button>

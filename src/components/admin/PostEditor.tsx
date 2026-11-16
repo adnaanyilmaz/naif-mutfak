@@ -214,7 +214,7 @@ export function PostEditor(props: PostEditorProps) {
               <StatusBadge status={form.shared.status} label={t(`status.${form.shared.status}`)} />
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto sm:flex-wrap">
             <span aria-live="polite" className="hidden items-center gap-1.5 text-[0.8125rem] text-muted sm:inline-flex" title={t('editor.shortcut')}>
               {pending ? (
                 t('common.saving')
@@ -231,15 +231,15 @@ export function PostEditor(props: PostEditorProps) {
               )}
             </span>
             {props.publicPath ? (
-              <Link href={props.publicPath} target="_blank" rel="noopener" className={secondaryButton}>
-                {t('editor.viewOnSite')}
+              <Link href={props.publicPath} target="_blank" rel="noopener" aria-label={t('editor.viewOnSite')} className={`${secondaryButton} max-sm:px-3`}>
+                <span className="max-sm:hidden">{t('editor.viewOnSite')}</span>
                 <ExternalIcon className="size-4" />
               </Link>
             ) : null}
-            <button type="button" onClick={() => save(false)} disabled={pending || !dirty} className={secondaryButton}>
+            <button type="button" onClick={() => save(false)} disabled={pending || !dirty} className={`${secondaryButton} max-sm:flex-1 max-sm:justify-center`}>
               {t('common.save')}
             </button>
-            <button type="button" onClick={() => save(true)} disabled={pending} className={accentButton}>
+            <button type="button" onClick={() => save(true)} disabled={pending} className={`${accentButton} max-sm:flex-1 max-sm:justify-center`}>
               {t('common.publish')}
             </button>
           </div>
@@ -402,7 +402,7 @@ export function PostEditor(props: PostEditorProps) {
 
         <AdminCard id="content" title={t('editor.sectionContent')} hint={t('editor.sectionContentHint')} className="scroll-mt-28">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <div role="tablist" aria-label={t('editor.sectionContent')} className="flex gap-1 overflow-x-auto rounded-pill bg-linen p-1">
+            <div role="tablist" aria-label={t('editor.sectionContent')} className="scrollbar-none flex max-w-full gap-1 overflow-x-auto rounded-pill bg-linen p-1">
               {LOCALES.map((l) => {
                 const selected = view === 'tabs' && active === l;
                 return (
@@ -415,7 +415,7 @@ export function PostEditor(props: PostEditorProps) {
                       setView('tabs');
                       setActive(l);
                     }}
-                    className={`inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-[0.875rem] font-semibold whitespace-nowrap ${
+                    className={`inline-flex min-h-10 items-center gap-2 rounded-pill px-4 py-1.5 text-[0.875rem] md:min-h-0 font-semibold whitespace-nowrap ${
                       selected ? 'bg-white text-charcoal shadow-[0_1px_3px_rgb(0_0_0/0.1)]' : 'text-stone hover:text-charcoal'
                     }`}
                   >

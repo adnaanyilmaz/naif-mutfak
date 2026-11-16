@@ -23,7 +23,7 @@ export function RevealEmail({ orderId, masked, revealAction }: RevealEmailProps)
           type="button"
           disabled={pending}
           onClick={() => start(async () => setEmail(await revealAction({ orderId })))}
-          className="text-eyebrow text-terracotta underline-offset-4 hover:underline disabled:opacity-50"
+          className="relative text-eyebrow text-terracotta after:absolute after:-inset-3 md:after:hidden underline-offset-4 hover:underline disabled:opacity-50"
         >
           {pending ? t('revealing') : t('reveal')}
         </button>

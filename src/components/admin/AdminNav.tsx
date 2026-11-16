@@ -10,7 +10,7 @@ export async function AdminNav({ email, devMode }: { email: string; devMode: boo
   return (
     <aside className="z-30 border-b border-hairline bg-white md:sticky md:top-0 md:h-dvh md:w-64 md:shrink-0 md:border-b-0 md:border-e">
       <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between gap-3 px-5 py-4 md:py-6">
+        <div className="flex items-center justify-between gap-3 px-4 py-3 md:px-5 md:py-6">
           <Link href="/admin" className="rounded-pill">
             <Logo size={36} />
           </Link>
@@ -18,7 +18,7 @@ export async function AdminNav({ email, devMode }: { email: string; devMode: boo
             href="/tr"
             target="_blank"
             rel="noopener"
-            className="inline-flex items-center gap-1.5 rounded-pill border border-hairline px-3 py-1.5 text-[0.8125rem] font-medium text-stone hover:border-charcoal hover:text-charcoal md:hidden"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-pill border border-hairline px-3 text-[0.8125rem] font-medium text-stone hover:border-charcoal hover:text-charcoal md:hidden"
           >
             {t('viewSite')}
             <ExternalIcon className="size-3.5" />

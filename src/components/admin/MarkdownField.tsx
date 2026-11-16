@@ -18,7 +18,11 @@ interface MarkdownFieldProps {
   rows?: number;
 }
 
-type Insert = { before: string; after?: string; placeholder?: string; block?: boolean };
+/** 40px touch target on phones, compact from `md` up. */
+const toolClass =
+  'inline-flex min-h-10 items-center rounded-card border border-hairline bg-paper px-3 text-eyebrow hover:bg-linen md:min-h-0 md:px-2 md:py-1';
+
+type Insert ={ before: string; after?: string; placeholder?: string; block?: boolean };
 
 /** Markdown textarea with a small toolbar and a live preview through the public remark pipeline (no eval). */
 export function MarkdownField({ id, label, value, onChange, dir, lang, ebookSlugs, rows = 14 }: MarkdownFieldProps) {
@@ -63,7 +67,7 @@ export function MarkdownField({ id, label, value, onChange, dir, lang, ebookSlug
               key={tool.key}
               type="button"
               onClick={() => insert(tool.insert)}
-              className="rounded-card border border-hairline bg-paper px-2 py-1 text-eyebrow hover:bg-linen"
+              className={toolClass}
             >
               {t(`toolbar.${tool.key}`)}
             </button>
@@ -75,7 +79,7 @@ export function MarkdownField({ id, label, value, onChange, dir, lang, ebookSlug
               onChange={(e) => {
                 if (e.target.value) insert({ before: `::ebook{product="${e.target.value}"}\n`, block: true });
               }}
-              className="rounded-card border border-hairline bg-paper px-2 py-1 text-eyebrow"
+              className={`${toolClass} max-w-40`}
             >
               <option value="">{t('toolbar.ebook')}</option>
               {ebookSlugs.map((s) => (
@@ -89,7 +93,7 @@ export function MarkdownField({ id, label, value, onChange, dir, lang, ebookSlug
             type="button"
             aria-pressed={preview}
             onClick={() => setPreview((p) => !p)}
-            className="rounded-card border border-hairline bg-paper px-2 py-1 text-eyebrow hover:bg-linen"
+            className={toolClass}
           >
             {preview ? t('hidePreview') : t('preview')}
           </button>

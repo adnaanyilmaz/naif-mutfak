@@ -35,7 +35,7 @@ export function UploadButton({ kind, entityId, accept, label, onUploaded }: Uplo
     <span className="inline-flex flex-wrap items-center gap-2">
       <label
         htmlFor={id}
-        className={`cursor-pointer rounded-pill border border-hairline bg-paper px-3 py-1.5 hover:bg-linen ${busy ? 'pointer-events-none opacity-60' : ''}`}
+        className={`inline-flex min-h-10 cursor-pointer items-center rounded-pill border border-hairline bg-paper px-4 hover:bg-linen md:min-h-0 md:px-3 md:py-1.5 ${busy ? 'pointer-events-none opacity-60' : ''}`}
       >
         {busy ? t('common.uploading') : label}
       </label>

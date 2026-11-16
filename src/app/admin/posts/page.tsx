@@ -46,7 +46,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
       ) : (
         <div className="overflow-hidden rounded-2xl border border-hairline bg-white">
           <div className="flex flex-col gap-3 border-b border-hairline p-4 md:flex-row md:items-center md:justify-between">
-            <nav aria-label={t('posts.filterLabel')} className="flex gap-1 overflow-x-auto rounded-pill bg-linen p-1">
+            <nav aria-label={t('posts.filterLabel')} className="scrollbar-none flex gap-1 overflow-x-auto rounded-pill bg-linen p-1">
               {[null, ...POST_STATUSES].map((s) => {
                 const active = (query.status ?? null) === s;
                 return (
@@ -54,7 +54,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
                     key={s ?? 'all'}
                     href={tabHref(s)}
                     aria-current={active ? 'page' : undefined}
-                    className={`inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap ${
+                    className={`inline-flex min-h-10 items-center gap-1.5 rounded-pill px-3.5 py-1.5 text-[0.8125rem] md:min-h-0 font-semibold whitespace-nowrap ${
                       active ? 'bg-white text-charcoal shadow-[0_1px_3px_rgb(0_0_0/0.1)]' : 'text-stone hover:text-charcoal'
                     }`}
                   >

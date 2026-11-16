@@ -20,6 +20,10 @@ export function Panel({ title, children, hint }: { title: string; children: Reac
   );
 }
 
+const filterControl = 'min-h-10 w-full min-w-0 rounded-card border border-hairline bg-paper px-2 md:min-h-0 md:py-1.5';
+/** Text links in admin toolbars/pagination: 40px tall on phones. */
+export const touchLink = 'inline-flex min-h-10 items-center underline md:min-h-0';
+
 interface FilterFieldProps {
   name: string;
   label: string;
@@ -29,9 +33,9 @@ interface FilterFieldProps {
 
 export function FilterSelect({ name, label, value, options }: FilterFieldProps) {
   return (
-    <label className="flex flex-col gap-1">
+    <label className="flex min-w-0 flex-col gap-1">
       <span className="text-eyebrow text-muted">{label}</span>
-      <select name={name} defaultValue={value ?? ''} className="rounded-card border border-hairline bg-paper px-2 py-1.5">
+      <select name={name} defaultValue={value ?? ''} className={filterControl}>
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
@@ -44,9 +48,9 @@ export function FilterSelect({ name, label, value, options }: FilterFieldProps) 
 
 export function FilterDate({ name, label, value }: { name: string; label: string; value: string }) {
   return (
-    <label className="flex flex-col gap-1">
+    <label className="flex min-w-0 flex-col gap-1">
       <span className="text-eyebrow text-muted">{label}</span>
-      <input type="date" name={name} defaultValue={value} className="rounded-card border border-hairline bg-paper px-2 py-1.5" />
+      <input type="date" name={name} defaultValue={value} className={filterControl} />
     </label>
   );
 }

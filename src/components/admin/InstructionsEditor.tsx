@@ -16,7 +16,7 @@ interface InstructionsEditorProps {
   mediaBaseUrl: string;
 }
 
-const cell = 'w-full rounded-card border border-hairline bg-paper px-2 py-1.5';
+const cell = 'w-full min-w-0 rounded-card border border-hairline bg-paper px-3 py-2 md:px-2 md:py-1.5';
 
 export function InstructionsEditor({ postId, sections, onChange, dir, lang, mediaBaseUrl }: InstructionsEditorProps) {
   const t = useTranslations('Admin');
@@ -30,7 +30,7 @@ export function InstructionsEditor({ postId, sections, onChange, dir, lang, medi
   const offsets = sections.map((_, i) => sections.slice(0, i).reduce((sum, sec) => sum + sec.steps.length, 0));
 
   return (
-    <fieldset className="space-y-4">
+    <fieldset className="min-w-0 space-y-4">
       <legend className="font-display text-h3">{t('editor.instructions')}</legend>
       {sections.map((s, si) => (
         <div key={s.key} className="rounded-card border border-hairline bg-cream p-3">
@@ -59,7 +59,7 @@ export function InstructionsEditor({ postId, sections, onChange, dir, lang, medi
               const label = t('editor.stepText', { n: (offsets[si] ?? 0) + sti + 1 });
               return (
                 <li key={step.id} className="rounded-card border border-hairline bg-paper p-3">
-                  <div className="flex items-start gap-2">
+                  <div className="flex flex-col gap-2 md:flex-row md:items-start">
                     <textarea
                       aria-label={label}
                       placeholder={label}
@@ -70,7 +70,7 @@ export function InstructionsEditor({ postId, sections, onChange, dir, lang, medi
                       onChange={(e) => setStep(si, sti, { text: e.target.value })}
                       className={cell}
                     />
-                    <span className="flex flex-col gap-1">
+                    <span className="flex gap-1 self-end md:flex-col md:self-auto">
                       <IconButton label={t('common.moveUp')} onClick={() => setSection(si, { ...s, steps: moveItem(s.steps, sti, -1) })} disabled={sti === 0}>
                         ↑
                       </IconButton>
@@ -94,14 +94,14 @@ export function InstructionsEditor({ postId, sections, onChange, dir, lang, medi
                         inputMode="decimal"
                         dir="ltr"
                         onChange={(e) => setStep(si, sti, { timerMinutes: e.target.value })}
-                        className="w-20 rounded-card border border-hairline bg-paper px-2 py-1"
+                        className="w-20 rounded-card border border-hairline bg-paper px-2 py-2 md:py-1"
                       />
                     </label>
                     {step.imageKey ? (
                       <span className="inline-flex items-center gap-2">
                         {/* eslint-disable-next-line @next/next/no-img-element -- admin thumbnail of an R2 original */}
                         <img src={mediaUrl(mediaBaseUrl, step.imageKey)} alt="" className="size-12 rounded-card object-cover" />
-                        <button type="button" onClick={() => setStep(si, sti, { imageKey: null })} className="text-eyebrow text-danger">
+                        <button type="button" onClick={() => setStep(si, sti, { imageKey: null })} className="inline-flex min-h-10 items-center text-eyebrow text-danger md:min-h-0">
                           {t('editor.removeImage')}
                         </button>
                       </span>
@@ -121,7 +121,7 @@ export function InstructionsEditor({ postId, sections, onChange, dir, lang, medi
           <button
             type="button"
             onClick={() => setSection(si, { ...s, steps: [...s.steps, emptyStep()] })}
-            className="mt-2 text-terracotta underline-offset-4 hover:underline"
+            className="mt-2 inline-flex min-h-10 items-center text-terracotta underline-offset-4 hover:underline md:min-h-0"
           >
             + {t('editor.addStep')}
           </button>
@@ -130,7 +130,7 @@ export function InstructionsEditor({ postId, sections, onChange, dir, lang, medi
       <button
         type="button"
         onClick={() => onChange([...sections, { key: newId(), title: '', steps: [emptyStep()] }])}
-        className="rounded-pill border border-hairline bg-paper px-3 py-1.5 hover:bg-linen"
+        className="inline-flex min-h-10 items-center rounded-pill border border-hairline bg-paper px-4 hover:bg-linen md:min-h-0 md:px-3 md:py-1.5"
       >
         + {t('editor.addSection')}
       </button>

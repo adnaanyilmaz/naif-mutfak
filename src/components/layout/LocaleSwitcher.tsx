@@ -28,7 +28,7 @@ export function LocaleSwitcher() {
                 aria-label={LOCALE_META[locale].label}
                 title={LOCALE_META[locale].label}
                 aria-current={active ? 'true' : undefined}
-                className={`flex h-8 min-w-10 items-center justify-center rounded-pill px-2.5 text-[0.8125rem] font-semibold transition-all duration-200 ${
+                className={`flex h-10 min-w-10 md:h-8 items-center justify-center rounded-pill px-2.5 text-[0.8125rem] font-semibold transition-all duration-200 ${
                   active ? 'bg-white text-charcoal shadow-[0_1px_3px_rgb(0_0_0/0.12)]' : 'text-muted hover:text-charcoal'
                 }`}
               >

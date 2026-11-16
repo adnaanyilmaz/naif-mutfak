@@ -34,7 +34,7 @@ export async function SiteHeader() {
         <LocaleSwitcher />
       </div>
       <nav aria-label="Primary" className="border-t border-hairline/80 md:hidden">
-        <ul className="mx-auto flex max-w-page gap-1 overflow-x-auto px-2 py-1.5">{links}</ul>
+        <ul className="mx-auto scrollbar-none flex max-w-page gap-1 overflow-x-auto px-2 py-1.5">{links}</ul>
       </nav>
     </header>
   );

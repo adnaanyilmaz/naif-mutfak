@@ -105,14 +105,14 @@ export function CheckboxField({
   describedBy?: string;
 }) {
   return (
-    <label className={`inline-flex items-center gap-2 ${disabled ? 'cursor-not-allowed text-muted' : ''}`}>
+    <label className={`inline-flex min-h-10 items-center gap-2 md:min-h-0 ${disabled ? 'cursor-not-allowed text-muted' : ''}`}>
       <input
         type="checkbox"
         checked={checked}
         disabled={disabled}
         aria-describedby={describedBy}
         onChange={(e) => onChange(e.target.checked)}
-        className="size-4 accent-terracotta"
+        className="size-5 accent-terracotta md:size-4"
       />
       <span>{label}</span>
     </label>
@@ -127,7 +127,7 @@ export function IconButton({ label, onClick, children, disabled }: { label: stri
       title={label}
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex size-8 items-center justify-center rounded-card border border-hairline bg-paper hover:bg-linen disabled:opacity-40"
+      className="inline-flex size-10 shrink-0 items-center md:size-8 justify-center rounded-card border border-hairline bg-paper hover:bg-linen disabled:opacity-40"
     >
       {children}
     </button>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getFormatter, getTranslations } from 'next-intl/server';
-import { FilterDate, FilterSelect, Kpi, Panel, withParams } from '@/components/admin/AnalyticsParts';
+import { FilterDate, FilterSelect, Kpi, Panel, touchLink, withParams } from '@/components/admin/AnalyticsParts';
 import { BarList } from '@/components/admin/charts/BarList';
 import { LineChart } from '@/components/admin/charts/LineChart';
 import { RevealEmail } from '@/components/admin/RevealEmail';
@@ -154,12 +154,12 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
             value={query.product}
             options={[any, ...products.map((p) => ({ value: p.id, label: p.slug }))]}
           />
-          <button className="rounded-pill border border-charcoal px-4 py-2">{t('common.apply')}</button>
-          <span className="ms-auto flex flex-wrap gap-3">
-            <a className="underline" href={`/api/admin/exports/orders${withParams(base, { bucket: null })}`}>
+          <button className="min-h-10 rounded-pill border border-charcoal px-4 py-2">{t('common.apply')}</button>
+          <span className="flex w-full flex-wrap gap-x-4 sm:ms-auto sm:w-auto">
+            <a className={touchLink} href={`/api/admin/exports/orders${withParams(base, { bucket: null })}`}>
               {t('common.exportCsv')}
             </a>
-            <a className="text-danger underline" href={`/api/admin/exports/orders${withParams(base, { bucket: null, unmasked: '1' })}`}>
+            <a className={`${touchLink} text-danger`} href={`/api/admin/exports/orders${withParams(base, { bucket: null, unmasked: '1' })}`}>
               {t('common.exportUnmasked')}
             </a>
           </span>
@@ -203,12 +203,12 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
         </div>
         <nav className="mt-3 flex gap-4">
           {query.cursor ? (
-            <Link className="underline" href={`/admin/analytics/sales${withParams(base, { cursor: null })}`}>
+            <Link className={touchLink} href={`/admin/analytics/sales${withParams(base, { cursor: null })}`}>
               {t('common.firstPage')}
             </Link>
           ) : null}
           {orders.nextCursor ? (
-            <Link className="underline" href={`/admin/analytics/sales${withParams(base, { cursor: orders.nextCursor })}`}>
+            <Link className={touchLink} href={`/admin/analytics/sales${withParams(base, { cursor: orders.nextCursor })}`}>
               {t('common.nextPage')}
             </Link>
           ) : null}

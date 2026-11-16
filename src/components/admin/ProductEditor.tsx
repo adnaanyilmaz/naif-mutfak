@@ -151,7 +151,7 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
               <StatusBadge status={product.status} label={t(`status.${product.status}`)} />
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto sm:flex-wrap">
             <span aria-live="polite" className="hidden items-center gap-1.5 text-[0.8125rem] text-muted sm:inline-flex">
               {pending ? (
                 t('common.saving')
@@ -168,16 +168,16 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
               ) : null}
             </span>
             {view.product.status === 'active' ? (
-              <Link href={`/tr/ebooks/${view.product.slug}`} target="_blank" rel="noopener" className={secondaryButton}>
-                {t('productEditor.viewOnSite')}
+              <Link href={`/tr/ebooks/${view.product.slug}`} target="_blank" rel="noopener" aria-label={t('productEditor.viewOnSite')} className={`${secondaryButton} max-sm:px-3`}>
+                <span className="max-sm:hidden">{t('productEditor.viewOnSite')}</span>
                 <ExternalIcon className="size-4" />
               </Link>
             ) : null}
-            <button type="button" onClick={() => save()} disabled={pending} className={canPublish ? secondaryButton : accentButton}>
+            <button type="button" onClick={() => save()} disabled={pending} className={`${canPublish ? secondaryButton : accentButton} max-sm:flex-1 max-sm:justify-center`}>
               {t('common.save')}
             </button>
             {canPublish ? (
-              <button type="button" onClick={() => save('active')} disabled={pending} className={accentButton}>
+              <button type="button" onClick={() => save('active')} disabled={pending} className={`${accentButton} max-sm:flex-1 max-sm:justify-center`}>
                 {t('productEditor.publish')}
               </button>
             ) : null}
@@ -281,7 +281,7 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
       </div>
 
       <AdminCard title={t('productEditor.sectionTexts')} hint={t('productEditor.sectionTextsHint')}>
-      <div role="tablist" className="mb-4 flex w-fit gap-1 rounded-pill bg-linen p-1">
+      <div role="tablist" className="scrollbar-none mb-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-pill bg-linen p-1">
         {LOCALES.map((l) => (
           <button
             key={l}
@@ -289,7 +289,7 @@ export function ProductEditor({ view, saveAction }: ProductEditorProps) {
             role="tab"
             aria-selected={active === l}
             onClick={() => setActive(l)}
-            className={`inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-[0.875rem] font-semibold ${active === l ? 'bg-white text-charcoal shadow-[0_1px_3px_rgb(0_0_0/0.1)]' : 'text-stone hover:text-charcoal'}`}
+            className={`inline-flex min-h-10 items-center gap-2 rounded-pill px-4 py-1.5 text-[0.875rem] font-semibold whitespace-nowrap md:min-h-0 ${active === l ? 'bg-white text-charcoal shadow-[0_1px_3px_rgb(0_0_0/0.1)]' : 'text-stone hover:text-charcoal'}`}
           >
             <span aria-hidden className={`size-2 rounded-full ${translations[l]?.title ? 'bg-olive' : 'bg-hairline'}`} />
             {t(`locales.${l}`)}
