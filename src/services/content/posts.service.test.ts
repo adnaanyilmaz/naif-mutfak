@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { PostsRepo, PostSummary } from '@/repositories/posts';
-import { categoryPath, listActiveCategories, listPosts, type ContentDeps } from './posts.service';
+import type { PostDetail, PostsRepo, PostSummary } from '@/repositories/posts';
+import { categoryPath, listActiveCategories, listPosts, toRecipe, type ContentDeps } from './posts.service';
 
 const summary: PostSummary = {
   id: 'p1',
@@ -55,6 +55,40 @@ describe('listActiveCategories', () => {
       { category: 'legacy', count: 3 },
     ]);
     expect(await listActiveCategories(deps(posts), 'tr')).toEqual(['ekmekler', 'tatlilar']);
+  });
+});
+
+describe('toRecipe', () => {
+  const detail: PostDetail = {
+    ...summary,
+    bodyMd: '',
+    seoTitle: null,
+    seoDescription: null,
+    ingredients: [{ items: [{ id: 'i1', quantity: 500, unit: 'g', name: 'Un', scalable: true }] }],
+    instructions: [
+      {
+        steps: [
+          { id: 's1', text: 'Yoğurun.', imageKey: 'posts/p1/step one.jpg' },
+          { id: 's2', text: 'Pişirin.' },
+        ],
+      },
+    ],
+    keywords: null,
+    cuisine: null,
+    baseServings: 4,
+    featuredProductId: null,
+    updatedAt: new Date('2026-01-02T00:00:00Z'),
+  };
+
+  it('maps step images to sized public urls, keyed by step id', () => {
+    const recipe = toRecipe(detail, 'https://media.example/');
+    expect(recipe?.stepImageUrls).toEqual({
+      s1: 'https://media.example/cdn-cgi/image/width=1080,format=auto/posts/p1/step%20one.jpg',
+    });
+  });
+
+  it('returns null for non-recipes', () => {
+    expect(toRecipe({ ...detail, isRecipe: false }, 'https://media.example')).toBeNull();
   });
 });
 

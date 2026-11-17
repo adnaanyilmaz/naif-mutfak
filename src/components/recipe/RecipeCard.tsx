@@ -56,6 +56,7 @@ export async function RecipeCard({ recipe }: { recipe: RecipeView }) {
         baseServings={recipe.baseServings}
         ingredients={recipe.ingredients}
         instructions={recipe.instructions}
+        stepImageUrls={recipe.stepImageUrls}
       />
     </section>
   );

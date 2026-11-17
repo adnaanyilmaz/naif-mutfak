@@ -37,6 +37,8 @@ export interface RecipeView {
   difficulty: PostDetail['difficulty'];
   ingredients: Ingredients;
   instructions: Instructions;
+  /** Step id → public image URL, for steps that carry an image. */
+  stepImageUrls: Record<string, string>;
 }
 
 export interface ArticleView {
@@ -107,7 +109,19 @@ export async function listActiveCategories(deps: Pick<ContentDeps, 'posts'>, loc
   return categoriesWithPosts(await deps.posts.countPublishedByCategory(locale));
 }
 
-function toRecipe(p: PostDetail): RecipeView | null {
+export const STEP_IMAGE_WIDTH = 1080;
+
+function stepImageUrls(instructions: Instructions, mediaBaseUrl: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const section of instructions) {
+    for (const step of section.steps) {
+      if (step.imageKey) out[step.id] = mediaUrl(mediaBaseUrl, step.imageKey, STEP_IMAGE_WIDTH);
+    }
+  }
+  return out;
+}
+
+export function toRecipe(p: PostDetail, mediaBaseUrl: string): RecipeView | null {
   if (!p.isRecipe || !p.ingredients || !p.instructions || !p.baseServings) return null;
   return {
     postId: p.id,
@@ -120,6 +134,7 @@ function toRecipe(p: PostDetail): RecipeView | null {
     difficulty: p.difficulty,
     ingredients: p.ingredients,
     instructions: p.instructions,
+    stepImageUrls: stepImageUrls(p.instructions, mediaBaseUrl),
   };
 }
 
@@ -139,7 +154,7 @@ export async function getArticle(
   ]);
 
   const canonicalUrl = `${deps.siteUrl.replace(/\/+$/, '')}${blogPath(locale, post.slug)}`;
-  const recipe = toRecipe(post);
+  const recipe = toRecipe(post, deps.mediaBaseUrl);
   const jsonLd =
     recipe === null
       ? null
@@ -165,7 +180,7 @@ export async function getArticle(
             keywords: post.keywords,
             ingredients: recipe.ingredients,
             instructions: recipe.instructions,
-            imageUrl: (key) => mediaUrl(deps.mediaBaseUrl, key, 1080),
+            imageUrl: (key) => mediaUrl(deps.mediaBaseUrl, key, STEP_IMAGE_WIDTH),
           }),
         );
 

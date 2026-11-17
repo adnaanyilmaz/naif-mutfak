@@ -20,12 +20,13 @@ interface RecipeCardInteractiveProps {
   baseServings: number;
   ingredients: Ingredients;
   instructions: Instructions;
+  stepImageUrls: Record<string, string>;
 }
 
 const chip =
   'min-h-10 min-w-11 rounded-pill px-3 text-ui font-semibold tabular-nums transition-colors duration-200 ease-editorial';
 
-export function RecipeCardInteractive({ postId, baseServings, ingredients, instructions }: RecipeCardInteractiveProps) {
+export function RecipeCardInteractive({ postId, baseServings, ingredients, instructions, stepImageUrls }: RecipeCardInteractiveProps) {
   const t = useTranslations('Recipe');
   const locale = useLocale();
   const [servings, setServings] = useState(baseServings);
@@ -144,6 +145,7 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
               {section.steps.map((step, k) => {
                 const index = (sectionOffsets[si] ?? 0) + k;
                 const isDone = progress.done.has(step.id);
+                const imageUrl = stepImageUrls[step.id];
                 return (
                   <li key={step.id} id={stepAnchor(index)} className="scroll-mt-24">
                     <button
@@ -161,6 +163,17 @@ export function RecipeCardInteractive({ postId, baseServings, ingredients, instr
                       </span>
                       <span className={`pt-1 text-[1.0625rem] leading-relaxed ${isDone ? 'line-through print:no-underline' : ''}`}>{step.text}</span>
                     </button>
+                    {imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element -- URLs are pre-sized by Cloudflare Image Transformations.
+                      <img
+                        src={imageUrl}
+                        alt=""
+                        width={1080}
+                        height={720}
+                        loading="lazy"
+                        className={`mt-2 ms-15 block h-auto w-[calc(100%-3.75rem)] rounded-2xl transition-opacity duration-200 ease-editorial print:ms-0 print:w-1/2 ${isDone ? 'opacity-50' : ''}`}
+                      />
+                    )}
                   </li>
                 );
               })}
