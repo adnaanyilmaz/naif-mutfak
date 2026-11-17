@@ -6,8 +6,11 @@ import { EbookCallout } from '@/components/commerce/EbookCallout';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { listEbooks } from '@/services/catalog/catalog.service';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { contentDeps } from '@/services/container';
 import { listPosts } from '@/services/content/posts.service';
+import { buildOrganizationJsonLd } from '@/services/seo/organization-jsonld';
+import { loadSocialLinks } from './_server/social';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,15 +30,17 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: 'Home' });
+  const [t, m] = await Promise.all([getTranslations({ locale, namespace: 'Home' }), getTranslations({ locale, namespace: 'Metadata' })]);
 
   const deps = contentDeps();
-  const [posts, ebooks] = await Promise.all([listPosts(deps, locale, { limit: 9 }), listEbooks(deps, locale)]);
+  const [posts, ebooks, social] = await Promise.all([listPosts(deps, locale, { limit: 9 }), listEbooks(deps, locale), loadSocialLinks()]);
+  const organizationJsonLd = buildOrganizationJsonLd({ name: m('siteName'), siteUrl: deps.siteUrl, links: social });
   const [lead, ...latest] = posts;
   const featuredEbook = ebooks[0];
 
   return (
     <>
+      <JsonLd json={organizationJsonLd} />
       {/* Hero */}
       <section className="mx-auto grid max-w-page items-center gap-10 px-4 pt-10 pb-16 sm:px-6 md:pt-16 lg:grid-cols-12 lg:gap-14 lg:pb-24">
         <div className="lg:col-span-6">

@@ -33,7 +33,14 @@
   "Footer": {
     "rights": "All rights reserved.",
     "tagline": "Recipes cooked slowly with simple ingredients. In Turkish, English and Arabic.",
-    "explore": "Explore"
+    "explore": "Explore",
+    "follow": "Follow us",
+    "followOn": "Our {platform} account",
+    "platforms": {
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "tiktok": "TikTok"
+    }
   },
   "Blog": {
     "title": "Recipes",
@@ -141,7 +148,8 @@
       "insights": "Reports",
       "signedIn": "Signed in",
       "settings": "Settings",
-      "payments": "Payment settings"
+      "payments": "Payment settings",
+      "social": "Social media"
     },
     "auth": {
       "unauthorizedTitle": "Sign-in required",
@@ -593,6 +601,24 @@
         "body_lists": "Body: list item count differs",
         "body_links": "Body: links differ",
         "body_directives": "Body: special blocks differ"
+      }
+    },
+    "social": {
+      "title": "Social media",
+      "subtitle": "Social links shown at the bottom of the site.",
+      "profiles": "Accounts",
+      "hint": "Enter a profile link or a username. Accounts left empty are not shown on the site.",
+      "invalid": "Not a valid profile link or username for this platform.",
+      "failed": "Could not save. Try again.",
+      "platforms": {
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "tiktok": "TikTok"
+      },
+      "placeholders": {
+        "instagram": "https://www.instagram.com/username/ · @username",
+        "youtube": "https://www.youtube.com/@channel · @channel",
+        "tiktok": "https://www.tiktok.com/@username · @username"
       }
     }
   },

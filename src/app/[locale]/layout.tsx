@@ -7,12 +7,17 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { LOCALE_META } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
+import { socialProfiles } from '@/services/settings/social.service';
 import { fontVariables } from '../fonts';
+import { loadSocialLinks } from './_server/social';
 
 interface LocaleLayoutProps {
   children: ReactNode;
   params: Promise<{ locale: string }>;
 }
+
+// The footer reads admin-managed social links from D1 on every request.
+export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -35,7 +40,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   setRequestLocale(locale);
 
   const meta = LOCALE_META[locale];
-  const t = await getTranslations({ locale, namespace: 'Header' });
+  const [t, social] = await Promise.all([getTranslations({ locale, namespace: 'Header' }), loadSocialLinks()]);
 
   return (
     <html lang={locale} dir={meta.dir} data-script={meta.script} className={fontVariables}>
@@ -51,7 +56,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           <main id="main" className="flex-1">
             {children}
           </main>
-          <SiteFooter />
+          <SiteFooter profiles={socialProfiles(social)} />
         </NextIntlClientProvider>
       </body>
     </html>

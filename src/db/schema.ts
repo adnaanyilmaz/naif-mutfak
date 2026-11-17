@@ -212,6 +212,13 @@ export const subscribers = sqliteTable(
 
 /* ───────────── Admin ───────────── */
 
+/** Small site-wide settings edited in /admin, one JSON document per key (validated per key in validators/settings.ts). */
+export const siteSettings = sqliteTable('site_settings', {
+  key: text('key').primaryKey(),
+  valueJson: text('value_json', { mode: 'json' }).$type<Record<string, unknown>>().notNull(),
+  updatedAt: updatedAt(),
+});
+
 export const adminAuditLog = sqliteTable(
   'admin_audit_log',
   {

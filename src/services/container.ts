@@ -15,6 +15,7 @@ import { createOrderSummaryRepo } from '@/repositories/order-summary';
 import { createOrdersRepo } from '@/repositories/orders';
 import { createPostsRepo } from '@/repositories/posts';
 import { createProductsRepo } from '@/repositories/products';
+import { createSiteSettingsRepo } from '@/repositories/site-settings';
 import { createSubscribersRepo } from '@/repositories/subscribers';
 import type { AdminAuthDeps } from './admin/auth.service';
 import type { OverviewDeps } from './admin/overview.service';
@@ -27,6 +28,7 @@ import type { UploadDeps } from './admin/upload.service';
 import type { DevMediaDeps } from './media/dev-media.service';
 import type { ContentDeps } from './content/posts.service';
 import type { SubscribeDeps } from './newsletter/subscribe.service';
+import type { SocialDeps } from './settings/social.service';
 import type { CheckoutDeps } from './payments/checkout.service';
 import type { RedeemDeps } from './payments/delivery.service';
 import { createLemonSqueezyProvider } from './payments/lemonsqueezy';
@@ -48,6 +50,10 @@ export function contentDeps(): ContentDeps {
     siteUrl: env.SITE_URL,
     mediaBaseUrl: env.MEDIA_PUBLIC_URL,
   };
+}
+
+export function socialDeps(): SocialDeps {
+  return { settings: createSiteSettingsRepo(getDb()) };
 }
 
 export function subscribeDeps(): SubscribeDeps {

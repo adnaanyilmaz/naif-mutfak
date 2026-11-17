@@ -157,7 +157,14 @@ erDiagram
     text diff_json
     integer created_at
   }
+  site_settings {
+    text key PK "e.g. social"
+    text value_json "validated per key (validators/settings.ts)"
+    integer updated_at
+  }
 ```
+
+`site_settings` holds small admin-edited, site-wide documents (one row per key). `social` = `{ instagram, youtube, tiktok }` canonical https profile URLs or null; read by the locale layout (footer) and home page (`Organization.sameAs`).
 
 ## JSON Column Contracts (`src/validators/content.ts`)
 

@@ -1,9 +1,11 @@
 import { getTranslations } from 'next-intl/server';
 import { NewsletterForm } from '@/components/newsletter/NewsletterForm';
 import { Link } from '@/i18n/navigation';
+import type { SocialPlatform } from '@/services/settings/social-links';
 import { Logo } from './Logo';
+import { SocialIcon } from './SocialIcons';
 
-export async function SiteFooter() {
+export async function SiteFooter({ profiles }: { profiles: { platform: SocialPlatform; url: string }[] }) {
   const [t, n, h] = await Promise.all([getTranslations('Footer'), getTranslations('Newsletter'), getTranslations('Header')]);
   return (
     <footer className="mt-8 print:hidden">
@@ -27,6 +29,23 @@ export async function SiteFooter() {
           <div className="max-w-sm">
             <Logo />
             <p className="mt-4 text-ui text-stone">{t('tagline')}</p>
+            {profiles.length > 0 && (
+              <ul aria-label={t('follow')} className="mt-5 flex gap-2">
+                {profiles.map(({ platform, url }) => (
+                  <li key={platform}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="me noopener noreferrer"
+                      aria-label={t('followOn', { platform: t(`platforms.${platform}`) })}
+                      className="flex size-11 items-center justify-center rounded-pill border border-hairline text-charcoal transition-colors duration-200 ease-editorial hover:border-terracotta hover:bg-terracotta hover:text-white"
+                    >
+                      <SocialIcon platform={platform} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <nav aria-label={t('explore')}>
             <p className="text-eyebrow font-semibold text-muted uppercase arabic:normal-case">{t('explore')}</p>

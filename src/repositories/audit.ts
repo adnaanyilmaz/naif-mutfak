@@ -4,7 +4,7 @@ import { adminAuditLog } from '@/db/schema';
 export interface AuditEntry {
   actorEmail: string;
   action: string;
-  entityType: 'post' | 'product' | 'variant' | 'upload' | 'order' | 'export';
+  entityType: 'post' | 'product' | 'variant' | 'upload' | 'order' | 'export' | 'settings';
   entityId: string;
   /** Minimal diff: changed field names / ids only, never full bodies or PII. */
   diff: Record<string, unknown> | null;

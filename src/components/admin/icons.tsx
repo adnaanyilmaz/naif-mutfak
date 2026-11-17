@@ -14,6 +14,14 @@ export const HomeIcon = (p: { className?: string }) => (
     <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
   </Icon>
 );
+export const ShareIcon = (p: { className?: string }) => (
+  <Icon {...p}>
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
+  </Icon>
+);
 export const PostsIcon = (p: { className?: string }) => (
   <Icon {...p}>
     <path d="M6 3h9l4 4v14H6z" />

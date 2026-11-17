@@ -33,7 +33,14 @@
   "Footer": {
     "rights": "Tüm hakları saklıdır.",
     "tagline": "Sade malzemelerle, sabırla pişirilen tarifler. Türkçe, İngilizce ve Arapça.",
-    "explore": "Keşfet"
+    "explore": "Keşfet",
+    "follow": "Bizi takip edin",
+    "followOn": "{platform} hesabımız",
+    "platforms": {
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "tiktok": "TikTok"
+    }
   },
   "Blog": {
     "title": "Tarifler",
@@ -141,7 +148,8 @@
       "insights": "Raporlar",
       "signedIn": "Oturum açık",
       "settings": "Ayarlar",
-      "payments": "Ödeme ayarları"
+      "payments": "Ödeme ayarları",
+      "social": "Sosyal medya"
     },
     "auth": {
       "unauthorizedTitle": "Oturum gerekli",
@@ -593,6 +601,24 @@
         "body_lists": "Metin: liste maddesi sayısı farklı",
         "body_links": "Metin: bağlantılar farklı",
         "body_directives": "Metin: özel bloklar farklı"
+      }
+    },
+    "social": {
+      "title": "Sosyal medya",
+      "subtitle": "Sitenin altında görünen sosyal medya bağlantıları.",
+      "profiles": "Hesaplar",
+      "hint": "Profil linkini veya kullanıcı adını yazın. Boş bırakılan hesap sitede gösterilmez.",
+      "invalid": "Bu platforma ait geçerli bir profil linki veya kullanıcı adı değil.",
+      "failed": "Kaydedilemedi. Tekrar deneyin.",
+      "platforms": {
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "tiktok": "TikTok"
+      },
+      "placeholders": {
+        "instagram": "https://www.instagram.com/kullaniciadi/ · @kullaniciadi",
+        "youtube": "https://www.youtube.com/@kanal · @kanal",
+        "tiktok": "https://www.tiktok.com/@kullaniciadi · @kullaniciadi"
       }
     }
   },

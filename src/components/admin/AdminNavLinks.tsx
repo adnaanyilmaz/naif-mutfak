@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
-import { BookIcon, CardIcon, ChartIcon, HomeIcon, PostsIcon, UsersIcon } from './icons';
+import { BookIcon, CardIcon, ChartIcon, HomeIcon, PostsIcon, ShareIcon, UsersIcon } from './icons';
 
 const GROUPS = [
   { key: null, items: [{ href: '/admin', key: 'overview', Icon: HomeIcon, exact: true }] },
@@ -24,7 +24,10 @@ const GROUPS = [
   },
   {
     key: 'settings',
-    items: [{ href: '/admin/payments', key: 'payments', Icon: CardIcon, exact: false }],
+    items: [
+      { href: '/admin/payments', key: 'payments', Icon: CardIcon, exact: false },
+      { href: '/admin/social', key: 'social', Icon: ShareIcon, exact: false },
+    ],
   },
 ] as const;
 

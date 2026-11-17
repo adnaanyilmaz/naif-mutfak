@@ -33,7 +33,14 @@
   "Footer": {
     "rights": "جميع الحقوق محفوظة.",
     "tagline": "وصفات تُطهى بتأنٍّ بمكوّنات بسيطة. بالتركية والإنجليزية والعربية.",
-    "explore": "استكشف"
+    "explore": "استكشف",
+    "follow": "تابعونا",
+    "followOn": "حسابنا على {platform}",
+    "platforms": {
+      "instagram": "إنستغرام",
+      "youtube": "يوتيوب",
+      "tiktok": "تيك توك"
+    }
   },
   "Blog": {
     "title": "الوصفات",
@@ -141,7 +148,8 @@
       "insights": "التقارير",
       "signedIn": "تم تسجيل الدخول",
       "settings": "الإعدادات",
-      "payments": "إعدادات الدفع"
+      "payments": "إعدادات الدفع",
+      "social": "وسائل التواصل"
     },
     "auth": {
       "unauthorizedTitle": "تسجيل الدخول مطلوب",
@@ -593,6 +601,24 @@
         "body_lists": "النص: عدد عناصر القائمة مختلف",
         "body_links": "النص: الروابط مختلفة",
         "body_directives": "النص: الكتل الخاصة مختلفة"
+      }
+    },
+    "social": {
+      "title": "وسائل التواصل الاجتماعي",
+      "subtitle": "روابط التواصل الاجتماعي المعروضة أسفل الموقع.",
+      "profiles": "الحسابات",
+      "hint": "أدخل رابط الملف الشخصي أو اسم المستخدم. الحسابات الفارغة لا تظهر في الموقع.",
+      "invalid": "ليس رابط ملف شخصي أو اسم مستخدم صالحاً لهذه المنصة.",
+      "failed": "تعذّر الحفظ. حاول مرة أخرى.",
+      "platforms": {
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "tiktok": "TikTok"
+      },
+      "placeholders": {
+        "instagram": "https://www.instagram.com/username/ · ‎@username",
+        "youtube": "https://www.youtube.com/@channel · ‎@channel",
+        "tiktok": "https://www.tiktok.com/@username · ‎@username"
       }
     }
   },

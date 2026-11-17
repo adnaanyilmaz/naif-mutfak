@@ -29,6 +29,13 @@
       "when": 1794925783718,
       "tag": "0003_recipe_video",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1794928257998,
+      "tag": "0004_site_settings",
+      "breakpoints": true
     }
   ]
 }
