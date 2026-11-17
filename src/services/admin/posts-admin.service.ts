@@ -30,7 +30,7 @@ export type SavePostResult =
 
 const toSeconds = (d: Date) => Math.floor(d.getTime() / 1000);
 
-function pathsFor(locale: Locale, slug: string): string[] {
+export function pathsFor(locale: Locale, slug: string): string[] {
   return [`/${locale}`, `/${locale}/blog`, `/${locale}/blog/${slug}`];
 }
 
