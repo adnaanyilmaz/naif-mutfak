@@ -13,7 +13,7 @@ Runtime: Next.js App Router on Cloudflare Workers via `@opennextjs/cloudflare`. 
 - Database schema, ERD, Drizzle conventions → [docs/architecture/database.md](docs/architecture/database.md)
 - Checkout, webhooks, PDF delivery → [docs/architecture/payments.md](docs/architecture/payments.md)
 - Design tokens, typography, Recipe Card, e-book callout → [docs/design/editorial-system.md](docs/design/editorial-system.md)
-- `/admin` auth (Cloudflare Access JWT), i18n editor, presigned R2 uploads, analytics → [docs/architecture/admin.md](docs/architecture/admin.md)
+- `/admin` auth (Cloudflare Access JWT), i18n editor, AI auto-translation (Workers AI), presigned R2 uploads, analytics → [docs/architecture/admin.md](docs/architecture/admin.md)
 
 ## Directory Layout
 ```

@@ -89,6 +89,26 @@ Route: `/admin/posts/[id]`. One post = shared fields (`posts`) + up to three `po
 | Publishing | Post-level `status` + per-locale `is_published`. Publish requires the locale's required fields + valid JSON-LD (dry-run `recipe-jsonld` generation). On publish: set `published_at` if null, then `revalidatePath('/{locale}/…')` / tag revalidation for affected locales. |
 | Products | `/admin/products/[id]` mirrors the pattern: shared fields + `product_translations` tabs + variants table (content locale, SKU, TRY/USD/SAR prices in major units converted to minor on save, MoR IDs, PDF upload, active toggle). Activation requires PDF present and MoR ID set for the active provider. |
 
+### 2.1 Auto-translation (TR → EN/AR, Workers AI)
+
+Design: `docs/superpowers/specs/2026-11-16-auto-translation-design.md`. Free tooling only (Workers AI free allocation, 10,000 Neurons/day, resets 00:00 UTC).
+
+| Concern | Spec |
+|---|---|
+| Trigger | "Automatic translation" card above the content tabs. One button per target locale; disabled while the form has unsaved changes or the TR title is empty. One locale per request (`translatePostAction` → `services/admin/post-translate.service.ts`). |
+| Flow | Saved TR row → (1) strings-only JSON payload to `AI_TRANSLATE_MODEL` (1 retry on unusable JSON) → (2) body Markdown in ≤ 12,000-char chunks (fences / `:::` containers never split) → merge → deterministic checks → (3) review by `AI_REVIEW_MODEL` → `saveAiTranslation`. |
+| Numbers never leave the server | The model only sees and returns text keyed by ingredient/step `id`. Quantities, `unitGrams`, timers, image keys and structure are copied from TR by code (`services/translation/payload.ts`); unknown ids are ignored, missing ones keep the TR text and are reported. |
+| Write | Upsert of that locale with `is_published = 0`; `posts.updated_at` (editor token) is untouched. Slug: existing slug kept; else `slugify(title)`, fallback `{trSlug}-{locale}`, suffixes `-2…-9`. Audit `post.translate` with counts only. |
+| Metadata | `post_translations.ai_source_hash`, `ai_content_hash`, `ai_report_json`, `ai_translated_at`. Hash = SHA-256 of a normalised text-only projection (`services/translation/content-hash.ts`), stable through the editor's form round-trip. |
+| Origin / out of date | No row → `none`; row without metadata → `manual`; content hash matches → `ai`; else `ai_edited`. `outdated` = TR hash ≠ `ai_source_hash`. |
+| Overwrite guard | `manual`, `ai_edited` or published rows need explicit confirmation (`overwrite: true`); confirming unpublishes the row and revalidates its old paths. |
+| Checks (code) | `missing_item`, `untranslated`, `clamped` (column limits), `wrong_script`, `numbers` (Arabic-Indic digits normalised), `body_headings`, `body_lists`, `body_links`, `body_directives`. |
+| Review (AI) | Up to 20 issues, Turkish one-sentence messages, rendered as plain text. Any review failure saves the translation with `reviewed: false`. |
+| Errors | `quota` (3036 daily allocation), `ai_unavailable` (capacity 3040, network, no binding), `model_output`, `source_missing`, `needs_confirm`, `slug`. Nothing is written on any error before step 3. |
+| Models | `vars.AI_TRANSLATE_MODEL` / `AI_REVIEW_MODEL` in `wrangler.jsonc`. `lib/cloudflare/ai.ts` accepts only ids in its typed enum (currently `@cf/google/gemma-4-26b-a4b-it`, `@cf/zai-org/glm-4.7-flash`): swapping = add the id there + change the var. Thinking is disabled (`enable_thinking: false`). |
+| Local dev | `AI` is a remote-only binding. `next dev` connects remote bindings only with `CF_REMOTE_BINDINGS=true` in `.env.local` after `npx wrangler login` (real Neurons are spent); otherwise translation reports `ai_unavailable`. Integration tests use `remoteBindings: false`. |
+| Cost | Not yet measured. After the first real run, record "≈ N Neurons per recipe (EN + AR)" here from the Workers AI dashboard. |
+
 ## 3. Direct R2 Uploads — presigned PUT
 
 R2 bindings cannot presign, so presigning uses R2's S3-compatible API with `aws4fetch` (Web Crypto, Workers-safe). The browser uploads directly to R2; file bytes never pass through the Worker.
