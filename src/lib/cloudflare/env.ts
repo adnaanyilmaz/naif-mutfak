@@ -1,5 +1,7 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import {
+  parseAiEnv,
+  type AiEnv,
   parseAdminEnv,
   parseEnv,
   parsePaymentEnv,
@@ -35,6 +37,11 @@ export function getAdminEnv(): AdminEnv {
 /** R2 presign credentials and bucket names. */
 export function getUploadEnv(): UploadEnv {
   return parseUploadEnv({ ...getBindings() });
+}
+
+/** Workers AI model ids for admin auto-translation. */
+export function getAiEnv(): AiEnv {
+  return parseAiEnv({ ...getBindings() });
 }
 
 /** `ctx.waitUntil` for post-response side effects. */

@@ -125,3 +125,20 @@ export function parseUploadEnv(source: Record<string, unknown>): UploadEnv {
   }
   return result.data;
 }
+
+/** Workers AI model ids for admin auto-translation (vars in wrangler.jsonc). */
+const workersAiModel = z.string().regex(/^@(cf|hf)\//);
+export const aiEnvSchema = z.object({
+  AI_TRANSLATE_MODEL: workersAiModel,
+  AI_REVIEW_MODEL: workersAiModel,
+});
+
+export type AiEnv = z.infer<typeof aiEnvSchema>;
+
+export function parseAiEnv(source: Record<string, unknown>): AiEnv {
+  const result = aiEnvSchema.safeParse(source);
+  if (!result.success) {
+    throw new EnvValidationError(result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`));
+  }
+  return result.data;
+}

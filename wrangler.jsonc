@@ -26,6 +26,8 @@
     { "binding": "EBOOKS_PRIVATE", "bucket_name": "naif-mutfak-ebooks" }
   ],
   // Workers Rate Limiting (payments.md): checkout keyed on a hashed client IP, downloads on the order id.
+  // Workers AI (admin auto-translation, admin.md §2). Free allocation: 10,000 Neurons/day.
+  "ai": { "binding": "AI" },
   "ratelimits": [
     { "name": "CHECKOUT_LIMITER", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
     { "name": "DOWNLOAD_LIMITER", "namespace_id": "1002", "simple": { "limit": 20, "period": 60 } }
@@ -37,7 +39,10 @@
     "PAYMENT_PROVIDER": "lemonsqueezy",
     // R2 bucket names for presigned S3 PUTs (must match r2_buckets above).
     "R2_MEDIA_BUCKET": "naif-mutfak-media",
-    "R2_EBOOKS_BUCKET": "naif-mutfak-ebooks"
+    "R2_EBOOKS_BUCKET": "naif-mutfak-ebooks",
+    // Admin auto-translation models (free-plan Workers AI models; swap here without code changes).
+    "AI_TRANSLATE_MODEL": "@cf/google/gemma-4-26b-a4b-it",
+    "AI_REVIEW_MODEL": "@cf/zai-org/glm-4.7-flash"
   },
   "observability": { "enabled": true }
 }
