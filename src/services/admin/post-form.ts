@@ -2,6 +2,7 @@
 import type { AdminPostRecord, AdminTranslation } from '@/repositories/admin-posts';
 import { DEFAULT_CATEGORY, findCategory } from '@/services/content/category';
 import { slugify } from '@/services/content/slug';
+import { parseYouTubeId, youTubeWatchUrl } from '@/services/media/youtube';
 import type { Ingredients, Instructions, Locale } from '@/validators/content';
 import type {
   IngredientGroupForm,
@@ -122,6 +123,8 @@ export function toPostForm(post: AdminPostRecord): PostForm {
       baseServings: str(post.baseServings),
       difficulty: post.difficulty ?? '',
       featuredProductId: post.featuredProductId ?? '',
+      youtubeUrl: post.youtubeVideoId ? youTubeWatchUrl(post.youtubeVideoId) : '',
+      videoMode: post.videoMode,
     },
     translations: { tr: find('tr'), en: find('en'), ar: find('ar') },
   };
@@ -138,6 +141,9 @@ export function sharedFromForm(s: SharedForm): PostSharedInput {
     baseServings: parseNumber(s.baseServings),
     difficulty: s.difficulty === '' ? null : s.difficulty,
     featuredProductId: s.featuredProductId === '' ? null : s.featuredProductId,
+    // An unrecognised link is passed through so Zod rejects it with a path instead of silently dropping it.
+    youtubeVideoId: s.youtubeUrl.trim() === '' ? null : (parseYouTubeId(s.youtubeUrl) ?? s.youtubeUrl.trim()),
+    videoMode: s.videoMode,
   };
 }
 

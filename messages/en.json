@@ -87,7 +87,10 @@
     "instructions": "Instructions",
     "reset": "Clear checks",
     "stepDone": "Mark step as done",
-    "timer": "Timer: {time}"
+    "timer": "Timer: {time}",
+    "watchVideo": "Watch video",
+    "closeVideo": "Close",
+    "videoTitle": "{title} video"
   },
   "Newsletter": {
     "title": "New recipes in your inbox",
@@ -311,7 +314,13 @@
       "urlPreview": "URL: {url}",
       "charCount": "{count, number} / {max, number} characters",
       "issueGoTo": "Go to language",
-      "savedToast": "Changes saved"
+      "savedToast": "Changes saved",
+      "video": "YouTube video (optional)",
+      "videoInvalid": "Not a valid YouTube link.",
+      "videoMode": "Video opening",
+      "videoMode_button": "On button click (with sound)",
+      "videoMode_auto": "On page load (starts muted)",
+      "videoHint": "When a link is set, the video plays automatically in a popup on the recipe card. Shared across languages; leave empty for no video."
     },
     "issues": {
       "invalid": "Invalid value: {path}",

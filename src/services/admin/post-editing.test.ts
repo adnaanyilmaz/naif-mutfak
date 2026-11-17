@@ -79,6 +79,8 @@ const record: AdminPostRecord = {
   baseServings: 8,
   difficulty: 'medium',
   featuredProductId: null,
+  youtubeVideoId: null,
+  videoMode: 'button',
   publishedAt: null,
   updatedAt: new Date('2026-11-12T10:00:00Z'),
   translations: [
@@ -123,6 +125,28 @@ describe('post form model', () => {
     expect(result.success).toBe(false);
     expect(result.error?.issues[0]?.path.join('.')).toBe('post.prepMinutes');
     expect(toSaveInput(toPostForm(record), record.id, 1).translations.map((t) => t.locale)).toEqual(['tr']);
+  });
+
+  it('round-trips the recipe video and rejects an unrecognised link with a path', () => {
+    const form = toPostForm({ ...record, youtubeVideoId: 'dQw4w9WgXcQ', videoMode: 'auto' });
+    expect(form.shared.youtubeUrl).toBe('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+    form.shared.youtubeUrl = 'https://youtu.be/dQw4w9WgXcQ?si=x';
+    expect(savePostInputSchema.parse(toSaveInput(form, record.id, 1)).post).toMatchObject({ youtubeVideoId: 'dQw4w9WgXcQ', videoMode: 'auto' });
+
+    form.shared.youtubeUrl = '  ';
+    expect(savePostInputSchema.parse(toSaveInput(form, record.id, 1)).post.youtubeVideoId).toBeNull();
+
+    form.shared.youtubeUrl = 'https://vimeo.com/123';
+    const result = savePostInputSchema.safeParse(toSaveInput(form, record.id, 1));
+    expect(result.error?.issues[0]?.path.join('.')).toBe('post.youtubeVideoId');
+  });
+
+  it('restores drafts saved before the video fields existed', () => {
+    const shared: Record<string, unknown> = { ...toPostForm(record).shared };
+    delete shared.youtubeUrl;
+    delete shared.videoMode;
+    const parsed = postFormSchema.parse({ ...toPostForm(record), shared });
+    expect(parsed.shared).toMatchObject({ youtubeUrl: '', videoMode: 'button' });
   });
 
   it('copies structure from TR with blank names but shared ids and quantities', () => {

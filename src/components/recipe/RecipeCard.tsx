@@ -3,6 +3,7 @@ import type { RecipeView } from '@/services/content/posts.service';
 import { splitDuration } from '@/services/recipe/duration';
 import { PrintButton } from './PrintButton';
 import { RecipeCardInteractive } from './RecipeCardInteractive';
+import { RecipeVideo } from './RecipeVideo';
 
 const DIFFICULTY_KEY = {
   easy: 'difficultyEasy',
@@ -39,7 +40,17 @@ export async function RecipeCard({ recipe }: { recipe: RecipeView }) {
             {recipe.title}
           </h2>
         </div>
-        <PrintButton label={t('print')} />
+        <div className="flex flex-wrap justify-end gap-2">
+          {recipe.video && (
+            <RecipeVideo
+              youtubeId={recipe.video.youtubeId}
+              mode={recipe.video.mode}
+              title={t('videoTitle', { title: recipe.title })}
+              labels={{ watch: t('watchVideo'), close: t('closeVideo') }}
+            />
+          )}
+          <PrintButton label={t('print')} />
+        </div>
       </div>
 
       <dl className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">

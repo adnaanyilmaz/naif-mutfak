@@ -77,8 +77,18 @@ describe('toRecipe', () => {
     cuisine: null,
     baseServings: 4,
     featuredProductId: null,
+    youtubeVideoId: null,
+    videoMode: 'button',
     updatedAt: new Date('2026-01-02T00:00:00Z'),
   };
+
+  it('exposes the video only when an id is set', () => {
+    expect(toRecipe(detail, 'https://media.example')?.video).toBeNull();
+    expect(toRecipe({ ...detail, youtubeVideoId: 'dQw4w9WgXcQ', videoMode: 'auto' }, 'https://media.example')?.video).toEqual({
+      youtubeId: 'dQw4w9WgXcQ',
+      mode: 'auto',
+    });
+  });
 
   it('maps step images to sized public urls, keyed by step id', () => {
     const recipe = toRecipe(detail, 'https://media.example/');

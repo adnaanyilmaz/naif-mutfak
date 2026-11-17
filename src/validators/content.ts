@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const LOCALES = ['tr', 'en', 'ar'] as const;
 export const CURRENCIES = ['TRY', 'USD', 'SAR'] as const;
+export const VIDEO_MODES = ['button', 'auto'] as const;
+export type VideoMode = (typeof VIDEO_MODES)[number];
 
 export type Locale = (typeof LOCALES)[number];
 export type Currency = (typeof CURRENCIES)[number];

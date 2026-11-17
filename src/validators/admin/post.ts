@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { CATEGORY_KEYS } from '@/services/content/category';
 import { SLUG_MAX, SLUG_PATTERN } from '@/services/content/slug';
-import { ingredientsSchema, instructionsSchema, localeSchema, LOCALES } from '@/validators/content';
+import { YOUTUBE_ID_PATTERN } from '@/services/media/youtube';
+import { ingredientsSchema, instructionsSchema, localeSchema, LOCALES, VIDEO_MODES } from '@/validators/content';
 
 export const slugSchema = z.string().min(1).max(SLUG_MAX).regex(SLUG_PATTERN);
 const nullableText = (max: number) =>
@@ -26,6 +27,8 @@ export const postSharedInputSchema = z.object({
   baseServings: z.number().int().min(1).max(48).nullable(),
   difficulty: z.enum(DIFFICULTIES).nullable(),
   featuredProductId: z.guid().nullable(),
+  youtubeVideoId: z.string().regex(YOUTUBE_ID_PATTERN).nullable(),
+  videoMode: z.enum(VIDEO_MODES),
 });
 
 export const postTranslationInputSchema = z.object({

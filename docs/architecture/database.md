@@ -39,6 +39,8 @@ erDiagram
     integer base_servings
     text difficulty "easy|medium|advanced"
     text featured_product_id FK
+    text youtube_video_id "nullable; recipe popup video"
+    text video_mode "button|auto"
     integer published_at "timestamp"
     integer created_at
     integer updated_at
@@ -232,6 +234,8 @@ export const posts = sqliteTable('posts', {
   baseServings: integer('base_servings'),
   difficulty: text('difficulty', { enum: ['easy', 'medium', 'advanced'] }),
   featuredProductId: text('featured_product_id').references(() => products.id, { onDelete: 'set null' }),
+  youtubeVideoId: text('youtube_video_id'),
+  videoMode: text('video_mode', { enum: VIDEO_MODES }).notNull().default('button'),
   publishedAt: integer('published_at', { mode: 'timestamp' }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),

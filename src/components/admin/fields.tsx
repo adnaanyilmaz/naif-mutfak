@@ -35,7 +35,7 @@ interface TextFieldProps extends BaseProps {
   dir?: 'ltr' | 'rtl';
   lang?: string;
   multiline?: boolean;
-  inputMode?: 'text' | 'decimal' | 'numeric';
+  inputMode?: 'text' | 'decimal' | 'numeric' | 'url';
   maxLength?: number;
 }
 

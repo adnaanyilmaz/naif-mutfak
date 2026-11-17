@@ -87,7 +87,10 @@
     "instructions": "Yapılışı",
     "reset": "İşaretleri temizle",
     "stepDone": "Adımı tamamlandı olarak işaretle",
-    "timer": "Süre: {time}"
+    "timer": "Süre: {time}",
+    "watchVideo": "Videoyu izle",
+    "closeVideo": "Kapat",
+    "videoTitle": "{title} videosu"
   },
   "Newsletter": {
     "title": "Yeni tarifler e-postanızda",
@@ -311,7 +314,13 @@
       "urlPreview": "Adres: {url}",
       "charCount": "{count, number} / {max, number} karakter",
       "issueGoTo": "İlgili dile git",
-      "savedToast": "Değişiklikler kaydedildi"
+      "savedToast": "Değişiklikler kaydedildi",
+      "video": "YouTube videosu (isteğe bağlı)",
+      "videoInvalid": "Geçerli bir YouTube bağlantısı değil.",
+      "videoMode": "Video açılışı",
+      "videoMode_button": "Butona tıklayınca (sesli)",
+      "videoMode_auto": "Sayfa açılınca (sessiz başlar)",
+      "videoHint": "Bağlantı eklenirse tarif kartında video açılır pencerede otomatik oynar. Tüm diller için ortaktır; boş bırakılırsa video gösterilmez."
     },
     "issues": {
       "invalid": "Geçersiz değer: {path}",

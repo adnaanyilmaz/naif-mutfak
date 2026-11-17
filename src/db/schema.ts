@@ -2,7 +2,7 @@
 import { sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import type { TranslationReport } from '../validators/admin/translation';
-import { CURRENCIES, LOCALES, type Ingredients, type Instructions, type Utm } from '../validators/content';
+import { CURRENCIES, LOCALES, VIDEO_MODES, type Ingredients, type Instructions, type Utm } from '../validators/content';
 
 const PROVIDERS = ['lemonsqueezy', 'paddle'] as const;
 
@@ -30,6 +30,10 @@ export const posts = sqliteTable(
     baseServings: integer('base_servings'),
     difficulty: text('difficulty', { enum: ['easy', 'medium', 'advanced'] }),
     featuredProductId: text('featured_product_id').references(() => products.id, { onDelete: 'set null' }),
+    /** Optional recipe video, shown in a popup; null = no video. */
+    youtubeVideoId: text('youtube_video_id'),
+    /** `button`: opens on click (with sound). `auto`: opens on page load (muted, per browser autoplay rules). */
+    videoMode: text('video_mode', { enum: VIDEO_MODES }).notNull().default('button'),
     publishedAt: integer('published_at', { mode: 'timestamp' }),
     createdAt: createdAt(),
     updatedAt: updatedAt(),

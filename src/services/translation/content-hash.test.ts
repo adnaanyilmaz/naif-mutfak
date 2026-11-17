@@ -43,6 +43,8 @@ describe('contentHash', () => {
       baseServings: 4,
       difficulty: null,
       featuredProductId: null,
+      youtubeVideoId: null,
+      videoMode: 'button',
       publishedAt: null,
       updatedAt: new Date(0),
       translations: [tr, { ...en, dek: null, seoTitle: null }],

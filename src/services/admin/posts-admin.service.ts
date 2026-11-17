@@ -95,7 +95,7 @@ function dedupe(issues: AdminIssue[]): AdminIssue[] {
 
 /** Minimal audit diff: names of changed shared fields and touched locales (never bodies). */
 const SHARED_KEYS = [
-  'status', 'category', 'isRecipe', 'prepMinutes', 'cookMinutes', 'restMinutes', 'baseServings', 'difficulty', 'featuredProductId',
+  'status', 'category', 'isRecipe', 'prepMinutes', 'cookMinutes', 'restMinutes', 'baseServings', 'difficulty', 'featuredProductId', 'youtubeVideoId', 'videoMode',
 ] as const satisfies readonly (keyof SavePostInput['post'])[];
 
 const TRANSLATION_KEYS = [

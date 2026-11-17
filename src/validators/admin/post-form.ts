@@ -1,7 +1,7 @@
 // Editor form model: every field explicit and string-typed for inputs. Also parses localStorage drafts.
 import { z } from 'zod';
 import { CATEGORY_KEYS } from '@/services/content/category';
-import { localeSchema } from '@/validators/content';
+import { localeSchema, VIDEO_MODES } from '@/validators/content';
 import { DIFFICULTIES, POST_STATUSES } from './post';
 
 export const ingredientRowSchema = z.object({
@@ -60,6 +60,9 @@ export const sharedFormSchema = z.object({
   baseServings: z.string(),
   difficulty: z.enum(['', ...DIFFICULTIES]),
   featuredProductId: z.string(),
+  // Defaults keep localStorage drafts saved before the video fields existed restorable.
+  youtubeUrl: z.string().default(''),
+  videoMode: z.enum(VIDEO_MODES).default('button'),
 });
 
 export const postFormSchema = z.object({

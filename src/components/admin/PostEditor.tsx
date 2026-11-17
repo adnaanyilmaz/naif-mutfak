@@ -20,6 +20,8 @@ import { translationCompleteness, type AdminIssue, type Completeness, type Struc
 import type { PostForm, SharedForm, TranslationForm } from '@/validators/admin/post-form';
 import { DIFFICULTIES, POST_STATUSES } from '@/validators/admin/post';
 import { CATEGORY_KEYS } from '@/services/content/category';
+import { parseYouTubeId } from '@/services/media/youtube';
+import { VIDEO_MODES } from '@/validators/content';
 import { AdminCard, StatusBadge, accentButton, primaryButton, secondaryButton } from './AdminPage';
 import { CheckboxField, SelectField, TextField } from './fields';
 import { AlertIcon, BackIcon, CheckIcon, ExternalIcon, ImageIcon } from './icons';
@@ -238,6 +240,7 @@ export function PostEditor(props: PostEditorProps) {
 
   const generalIssues =
     notice?.kind === 'issues' ? notice.issues.filter((i) => !issueLocale(i.path, notice.sent) || !i.path.split('.')[2]) : [];
+  const videoInvalid = form.shared.youtubeUrl.trim() !== '' && parseYouTubeId(form.shared.youtubeUrl) === null;
   const localeOptions = LOCALES.map((l) => ({ value: l, label: t(`locales.${l}`) }));
   const title = form.translations.tr?.title || form.translations.en?.title || form.translations.ar?.title || t('posts.untitled');
   const goToLocale = (l: Locale) => {
@@ -444,6 +447,23 @@ export function PostEditor(props: PostEditorProps) {
                 onChange={(v) => setShared('difficulty', v)}
               />
             </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_16rem]">
+              <TextField
+                label={t('editor.video')}
+                value={form.shared.youtubeUrl}
+                inputMode="url"
+                dir="ltr"
+                onChange={(v) => setShared('youtubeUrl', v)}
+                error={videoInvalid ? t('editor.videoInvalid') : null}
+              />
+              <SelectField
+                label={t('editor.videoMode')}
+                value={form.shared.videoMode}
+                options={VIDEO_MODES.map((m) => ({ value: m, label: t(`editor.videoMode_${m}`) }))}
+                onChange={(v) => setShared('videoMode', v)}
+              />
+            </div>
+            <p className="mt-2 text-[0.8125rem] text-muted">{t('editor.videoHint')}</p>
           </AdminCard>
         ) : null}
 

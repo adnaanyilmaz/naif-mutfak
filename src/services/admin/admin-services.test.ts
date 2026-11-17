@@ -37,6 +37,8 @@ function postRecord(over: Partial<AdminPostRecord> = {}): AdminPostRecord {
     baseServings: null,
     difficulty: null,
     featuredProductId: null,
+    youtubeVideoId: null,
+    videoMode: 'button',
     publishedAt: null,
     updatedAt: new Date(T0 * 1000),
     translations: [],
@@ -80,6 +82,8 @@ const postInput = (over: Partial<SavePostInput> = {}): SavePostInput => ({
     baseServings: null,
     difficulty: null,
     featuredProductId: null,
+    youtubeVideoId: null,
+    videoMode: 'button',
   },
   translations: [
     {

@@ -1,7 +1,7 @@
 import { and, count, desc, eq } from 'drizzle-orm';
 import { posts, postTranslations } from '@/db/schema';
 import type { Db } from '@/lib/cloudflare/db';
-import type { Ingredients, Instructions, Locale } from '@/validators/content';
+import type { Ingredients, Instructions, Locale, VideoMode } from '@/validators/content';
 
 export interface PostSummary {
   id: string;
@@ -30,6 +30,8 @@ export interface PostDetail extends PostSummary {
   cuisine: string | null;
   baseServings: number | null;
   featuredProductId: string | null;
+  youtubeVideoId: string | null;
+  videoMode: VideoMode;
   updatedAt: Date;
 }
 
@@ -100,6 +102,8 @@ export function createPostsRepo(db: Db): PostsRepo {
           cuisine: postTranslations.cuisine,
           baseServings: posts.baseServings,
           featuredProductId: posts.featuredProductId,
+          youtubeVideoId: posts.youtubeVideoId,
+          videoMode: posts.videoMode,
           updatedAt: postTranslations.updatedAt,
         })
         .from(postTranslations)

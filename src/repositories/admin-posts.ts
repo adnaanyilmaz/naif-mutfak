@@ -3,7 +3,7 @@ import type { BatchItem } from 'drizzle-orm/batch';
 import { posts, postTranslations } from '@/db/schema';
 import type { Db } from '@/lib/cloudflare/db';
 import { translationReportSchema, type TranslationReport } from '@/validators/admin/translation';
-import type { Ingredients, Instructions, Locale } from '@/validators/content';
+import type { Ingredients, Instructions, Locale, VideoMode } from '@/validators/content';
 import { auditInsert, type AuditEntry } from './audit';
 import { isGuardViolation, isUniqueViolation } from './db-errors';
 import { guardUpdatedAt } from './guards';
@@ -30,6 +30,8 @@ export interface AdminPostShared {
   baseServings: number | null;
   difficulty: Difficulty | null;
   featuredProductId: string | null;
+  youtubeVideoId: string | null;
+  videoMode: VideoMode;
 }
 
 export interface AdminTranslation {
@@ -111,6 +113,8 @@ const sharedColumns = {
   baseServings: posts.baseServings,
   difficulty: posts.difficulty,
   featuredProductId: posts.featuredProductId,
+  youtubeVideoId: posts.youtubeVideoId,
+  videoMode: posts.videoMode,
 };
 
 function contentValues(t: AdminTranslation) {

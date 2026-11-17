@@ -23,7 +23,7 @@ let repo: AdminPostsRepo;
 beforeAll(async () => {
   proxy = await getPlatformProxy<{ DB: D1Database }>({ persist: false, remoteBindings: false });
   db = proxy.env.DB;
-  for (const file of ['0000_init.sql', '0002_ai_translation_meta.sql']) {
+  for (const file of ['0000_init.sql', '0002_ai_translation_meta.sql', '0003_recipe_video.sql']) {
     const sql = readFileSync(new URL(`../../migrations/${file}`, import.meta.url), 'utf8');
     await db.batch(sql.split('--> statement-breakpoint').map((s) => s.trim()).filter(Boolean).map((s) => db.prepare(s)));
   }
@@ -58,6 +58,8 @@ const write = (expected: Date, next: Date, slug: string, title: string): SavePos
     baseServings: null,
     difficulty: null,
     featuredProductId: null,
+    youtubeVideoId: null,
+    videoMode: 'button',
   },
   translations: [
     {

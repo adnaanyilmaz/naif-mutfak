@@ -1,9 +1,10 @@
 import type { PostAlternate, PostDetail, PostsRepo, PostSummary } from '@/repositories/posts';
 import { getEbooksBySlugs, type CatalogDeps, type EbookView } from '@/services/catalog/catalog.service';
 import { mediaUrl } from '@/services/media/image-url';
+import { YOUTUBE_ID_PATTERN } from '@/services/media/youtube';
 import { serializeJsonLd } from '@/services/seo/jsonld';
 import { buildRecipeJsonLd } from '@/services/seo/recipe-jsonld';
-import type { Ingredients, Instructions, Locale } from '@/validators/content';
+import type { Ingredients, Instructions, Locale, VideoMode } from '@/validators/content';
 import { categoriesWithPosts, type CategoryKey } from './category';
 import { ebookSlugs, parseMarkdown, type ParsedMarkdown } from './markdown';
 
@@ -39,6 +40,7 @@ export interface RecipeView {
   instructions: Instructions;
   /** Step id → public image URL, for steps that carry an image. */
   stepImageUrls: Record<string, string>;
+  video: { youtubeId: string; mode: VideoMode } | null;
 }
 
 export interface ArticleView {
@@ -135,6 +137,7 @@ export function toRecipe(p: PostDetail, mediaBaseUrl: string): RecipeView | null
     ingredients: p.ingredients,
     instructions: p.instructions,
     stepImageUrls: stepImageUrls(p.instructions, mediaBaseUrl),
+    video: p.youtubeVideoId && YOUTUBE_ID_PATTERN.test(p.youtubeVideoId) ? { youtubeId: p.youtubeVideoId, mode: p.videoMode } : null,
   };
 }
 
