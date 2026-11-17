@@ -2,7 +2,8 @@
 // `app/` imports deps from here; business services stay pure and receive deps as arguments.
 import { accessJwks } from '@/lib/cloudflare/access-jwks';
 import { getDb } from '@/lib/cloudflare/db';
-import { getAdminEnv, getBindings, getEnv, getPaymentEnv, getUploadEnv, isConfigured, waitUntil } from '@/lib/cloudflare/env';
+import { getTextModel } from '@/lib/cloudflare/ai';
+import { getAdminEnv, getAiEnv, getBindings, getEnv, getPaymentEnv, getUploadEnv, isConfigured, waitUntil } from '@/lib/cloudflare/env';
 import { clientKey, getCheckoutLimiter, getDownloadLimiter } from '@/lib/cloudflare/rate-limit';
 import { getPrivateEbookStore, getPublicMediaObject, getUploadStores } from '@/lib/cloudflare/r2';
 import { createDevSigner, createR2Signer } from '@/lib/cloudflare/r2-presign';
@@ -20,6 +21,7 @@ import type { OverviewDeps } from './admin/overview.service';
 import type { PaymentSettingsDeps } from './admin/payment-settings.service';
 import type { AnalyticsDeps } from './admin/analytics.service';
 import type { AdminPostsDeps, DeletePostDeps } from './admin/posts-admin.service';
+import type { PostTranslateDeps } from './admin/post-translate.service';
 import type { AdminProductsDeps, DeleteProductDeps } from './admin/products-admin.service';
 import type { UploadDeps } from './admin/upload.service';
 import type { DevMediaDeps } from './media/dev-media.service';
@@ -155,6 +157,17 @@ export function adminAuthDeps(): AdminAuthDeps {
 export function adminPostsDeps(): AdminPostsDeps {
   const env = getEnv();
   return { posts: createAdminPostsRepo(getDb()), siteUrl: env.SITE_URL, mediaBaseUrl: env.MEDIA_PUBLIC_URL, now, newId };
+}
+
+export function postTranslateDeps(): PostTranslateDeps {
+  const env = getAiEnv();
+  return {
+    posts: createAdminPostsRepo(getDb()),
+    model: getTextModel(),
+    translateModel: env.AI_TRANSLATE_MODEL,
+    reviewModel: env.AI_REVIEW_MODEL,
+    now,
+  };
 }
 
 export function adminProductsDeps(): AdminProductsDeps {

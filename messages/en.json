@@ -545,6 +545,46 @@
         "not_found": "Record not found; it may already have been deleted.",
         "has_orders": "This e-book has orders and cannot be deleted. Set its status to “Archived” to take it off sale."
       }
+    },
+    "translate": {
+      "title": "Automatic translation",
+      "hint": "Creates draft translations from the saved Turkish text. Nothing is published until you publish it.",
+      "translate": "Translate",
+      "retranslate": "Re-translate",
+      "running": "Translating…",
+      "saveFirst": "Save the Turkish version first.",
+      "origin": {
+        "none": "No translation",
+        "manual": "Written by hand",
+        "ai": "AI draft",
+        "ai_edited": "AI draft (edited)"
+      },
+      "outdated": "Turkish changed — out of date",
+      "clean": "No issues found",
+      "warnings": "{count, plural, one {# warning} other {# warnings}}",
+      "notReviewed": "AI review unavailable",
+      "confirmOverwrite": "The existing text in this language will be replaced by the AI translation and unpublished if it is live. Continue?",
+      "errors": {
+        "quota": "The free daily AI quota is used up. Try again tomorrow.",
+        "ai_unavailable": "The AI service is not responding. Try again shortly.",
+        "model_output": "The AI did not return a usable translation. Try again.",
+        "source_missing": "Write and save the Turkish title first.",
+        "slug": "No free URL slug was found for this language.",
+        "not_found": "Post not found.",
+        "invalid": "Invalid request.",
+        "needs_confirm": "Not translated, to keep the existing text."
+      },
+      "checks": {
+        "missing_item": "{field}: translation missing, Turkish text kept",
+        "untranslated": "{field}: looks untranslated",
+        "clamped": "{field}: too long, shortened",
+        "wrong_script": "{field}: not in the expected language",
+        "numbers": "{field}: numbers differ from the Turkish text",
+        "body_headings": "Body: heading count differs",
+        "body_lists": "Body: list item count differs",
+        "body_links": "Body: links differ",
+        "body_directives": "Body: special blocks differ"
+      }
     }
   },
   "About": {

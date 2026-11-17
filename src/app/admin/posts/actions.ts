@@ -10,8 +10,13 @@ import {
   type SavePostResult,
   type SlugCheck,
 } from '@/services/admin/posts-admin.service';
-import { adminPostsDeps, deletePostDeps } from '@/services/container';
+import { translationToForm } from '@/services/admin/post-form';
+import { translatePost, type TranslateError } from '@/services/admin/post-translate.service';
+import type { TranslationStatus } from '@/services/translation/content-hash';
+import { adminPostsDeps, deletePostDeps, postTranslateDeps } from '@/services/container';
 import { checkSlugInputSchema, postIdSchema, savePostInputSchema } from '@/validators/admin/post';
+import type { TranslationForm } from '@/validators/admin/post-form';
+import { translateInputSchema, type TargetLocale } from '@/validators/admin/translation';
 import { requireAdmin } from '../_server/require-admin';
 
 export async function createPostAction(): Promise<void> {
@@ -55,4 +60,20 @@ export async function checkSlugAction(raw: unknown): Promise<SlugCheck> {
   const parsed = checkSlugInputSchema.safeParse(raw);
   if (!parsed.success) return 'invalid';
   return checkSlug(adminPostsDeps(), parsed.data.postId, parsed.data.locale, parsed.data.slug);
+}
+
+export type TranslateActionResult =
+  | { ok: true; locale: TargetLocale; form: TranslationForm; status: TranslationStatus }
+  | { ok: false; error: TranslateError | 'invalid' };
+
+/** Translates the saved Turkish version into one target locale as an unpublished draft. */
+export async function translatePostAction(raw: unknown): Promise<TranslateActionResult> {
+  const admin = await requireAdmin();
+  const parsed = translateInputSchema.safeParse(raw);
+  if (!parsed.success) return { ok: false, error: 'invalid' };
+  const result = await translatePost(postTranslateDeps(), admin, parsed.data);
+  if (!result.ok) return result;
+  for (const path of result.revalidate) revalidatePath(path);
+  revalidatePath('/admin/posts');
+  return { ok: true, locale: parsed.data.locale, form: translationToForm(result.translation), status: result.status };
 }

@@ -7,7 +7,7 @@ import { listProductOptions } from '@/services/admin/products-admin.service';
 import { adminPostsDeps, adminProductsDeps } from '@/services/container';
 import { postIdSchema } from '@/validators/admin/post';
 import { requireAdmin } from '../../_server/require-admin';
-import { checkSlugAction, deletePostAction, savePostAction } from '../actions';
+import { checkSlugAction, deletePostAction, savePostAction, translatePostAction } from '../actions';
 
 export default async function AdminPostEditPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -31,6 +31,8 @@ export default async function AdminPostEditPage({ params }: { params: Promise<{ 
       saveAction={savePostAction}
       checkSlugAction={checkSlugAction}
       publicPath={publicPathOf(view.post.status, view.post.translations)}
+      translateAction={translatePostAction}
+      translationStatus={view.translationStatus}
     />
     <DangerZone kind="post" entityId={view.post.id} deleteAction={deletePostAction} />
     </>

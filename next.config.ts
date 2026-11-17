@@ -13,4 +13,6 @@ const nextConfig: NextConfig = {
 export default withNextIntl(nextConfig);
 
 // Exposes wrangler bindings (D1, R2, vars) to `next dev` via getCloudflareContext().
-void initOpenNextCloudflareForDev();
+// Workers AI only exists remotely: opt in with CF_REMOTE_BINDINGS=true in .env.local after `wrangler login`,
+// so `next dev` still starts offline / logged out (auto-translation then reports "AI unavailable").
+void initOpenNextCloudflareForDev({ remoteBindings: process.env.CF_REMOTE_BINDINGS === 'true' });

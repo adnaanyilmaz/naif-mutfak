@@ -13,6 +13,8 @@ import {
   toSaveInput,
 } from '@/services/admin/post-form';
 import type { SavePostResult, SlugCheck } from '@/services/admin/posts-admin.service';
+import type { TranslationStatus } from '@/services/translation/content-hash';
+import type { TargetLocale } from '@/validators/admin/translation';
 import { translationCompleteness, type AdminIssue, type Completeness, type StructureWarning } from '@/services/admin/post-rules';
 import type { PostForm, SharedForm, TranslationForm } from '@/validators/admin/post-form';
 import { DIFFICULTIES, POST_STATUSES } from '@/validators/admin/post';
@@ -20,6 +22,7 @@ import { CATEGORY_KEYS } from '@/services/content/category';
 import { AdminCard, StatusBadge, accentButton, primaryButton, secondaryButton } from './AdminPage';
 import { CheckboxField, SelectField, TextField } from './fields';
 import { AlertIcon, BackIcon, CheckIcon, ExternalIcon, ImageIcon } from './icons';
+import { TranslateBar, type TranslateBarError } from './TranslateBar';
 import { TranslationPane } from './TranslationPane';
 import { UploadButton } from './UploadButton';
 import { useStoredDraft } from './use-stored-draft';
@@ -38,7 +41,14 @@ interface PostEditorProps {
   checkSlugAction: (raw: unknown) => Promise<SlugCheck>;
   /** Public URL of the live post (null while unpublished). */
   publicPath: string | null;
+  translateAction: (raw: unknown) => Promise<TranslateResultLike>;
+  translationStatus: Record<TargetLocale, TranslationStatus>;
 }
+
+/** Shape of translatePostAction's result (components never import app/). */
+type TranslateResultLike =
+  | { ok: true; locale: TargetLocale; form: TranslationForm; status: TranslationStatus }
+  | { ok: false; error: TranslateBarError };
 
 type Notice = { kind: 'saved' } | { kind: 'conflict' } | { kind: 'issues'; issues: AdminIssue[]; sent: Locale[] } | null;
 
@@ -66,6 +76,9 @@ export function PostEditor(props: PostEditorProps) {
   const [toast, setToast] = useState(false);
   const [pending, startTransition] = useTransition();
   const stored = useStoredDraft(props.postId);
+  const [translationStatus, setTranslationStatus] = useState(props.translationStatus);
+  const [translating, setTranslating] = useState<TargetLocale | null>(null);
+  const [translateErrors, setTranslateErrors] = useState<Partial<Record<TargetLocale, TranslateBarError>>>({});
 
   const dirty = JSON.stringify(form) !== savedJson;
   const completeness = useMemo(() => {
@@ -161,6 +174,39 @@ export function PostEditor(props: PostEditorProps) {
     const status = await props.checkSlugAction({ postId: props.postId, locale: l, slug });
     setSlugStatus((s) => ({ ...s, [l]: status }));
   }
+
+  async function translate(locale: TargetLocale, overwrite = false): Promise<void> {
+    setTranslating(locale);
+    setTranslateErrors((e) => ({ ...e, [locale]: undefined }));
+    try {
+      const result = await props.translateAction({ postId: props.postId, locale, overwrite });
+      if (result.ok) {
+        const next: PostForm = { ...form, translations: { ...form.translations, [locale]: result.form } };
+        setForm(next);
+        setSavedJson(JSON.stringify(next));
+        stored.clear();
+        setSlugTouched((s) => ({ ...s, [locale]: true }));
+        setSlugStatus((s) => ({ ...s, [locale]: undefined }));
+        setTranslationStatus((s) => ({ ...s, [locale]: result.status }));
+        setView('tabs');
+        setActive(locale);
+      } else if (result.error === 'needs_confirm' && !overwrite) {
+        if (window.confirm(t('translate.confirmOverwrite'))) {
+          setTranslating(null);
+          await translate(locale, true);
+          return;
+        }
+      } else {
+        setTranslateErrors((e) => ({ ...e, [locale]: result.error }));
+      }
+    } catch {
+      setTranslateErrors((e) => ({ ...e, [locale]: 'ai_unavailable' }));
+    } finally {
+      setTranslating((cur) => (cur === locale ? null : cur));
+    }
+  }
+
+  const translateBlocked = dirty || pending ? 'unsaved' : !form.translations.tr?.title.trim() ? 'no_source' : null;
 
   const pane = (l: Locale) => (
     <TranslationPane
@@ -400,6 +446,14 @@ export function PostEditor(props: PostEditorProps) {
             </div>
           </AdminCard>
         ) : null}
+
+        <TranslateBar
+          statuses={translationStatus}
+          blocked={translateBlocked}
+          running={translating}
+          errors={translateErrors}
+          onTranslate={(l) => void translate(l)}
+        />
 
         <AdminCard id="content" title={t('editor.sectionContent')} hint={t('editor.sectionContentHint')} className="scroll-mt-28">
           <div className="flex flex-wrap items-end justify-between gap-4">

@@ -87,7 +87,7 @@ function instructionsToForm(sections: Instructions | null): SectionForm[] {
   }));
 }
 
-function translationToForm(t: AdminTranslation): TranslationForm {
+export function translationToForm(t: AdminTranslation): TranslationForm {
   return {
     locale: t.locale,
     title: t.title,

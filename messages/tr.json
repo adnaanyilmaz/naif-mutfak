@@ -545,6 +545,46 @@
         "not_found": "Kayıt bulunamadı; daha önce silinmiş olabilir.",
         "has_orders": "Bu e-kitabın siparişleri var, silinemez. Satıştan kaldırmak için durumunu “Arşiv” yapın."
       }
+    },
+    "translate": {
+      "title": "Otomatik çeviri",
+      "hint": "Kaydedilmiş Türkçe metinden taslak çeviri üretir. Çeviriler yayınlanmaz; inceleyip siz yayınlarsınız.",
+      "translate": "Çevir",
+      "retranslate": "Yeniden çevir",
+      "running": "Çevriliyor…",
+      "saveFirst": "Önce Türkçe sürümü kaydedin.",
+      "origin": {
+        "none": "Çeviri yok",
+        "manual": "Elle yazıldı",
+        "ai": "AI taslağı",
+        "ai_edited": "AI taslağı (düzenlendi)"
+      },
+      "outdated": "Türkçe değişti — güncel değil",
+      "clean": "Sorun bulunmadı",
+      "warnings": "{count} uyarı",
+      "notReviewed": "AI kontrolü yapılamadı",
+      "confirmOverwrite": "Bu dildeki mevcut metin AI çevirisiyle değiştirilecek ve yayındaysa yayından kaldırılacak. Devam edilsin mi?",
+      "errors": {
+        "quota": "Günlük ücretsiz AI kotası doldu. Yarın tekrar deneyin.",
+        "ai_unavailable": "AI servisi şu an yanıt vermiyor. Biraz sonra tekrar deneyin.",
+        "model_output": "AI geçerli bir çeviri üretemedi. Tekrar deneyin.",
+        "source_missing": "Önce Türkçe başlığı yazıp kaydedin.",
+        "slug": "Bu dil için uygun bir URL adı bulunamadı.",
+        "not_found": "Yazı bulunamadı.",
+        "invalid": "Geçersiz istek.",
+        "needs_confirm": "Mevcut metin korunmak için çeviri yapılmadı."
+      },
+      "checks": {
+        "missing_item": "{field}: çeviri eksik, Türkçe metin bırakıldı",
+        "untranslated": "{field}: çevrilmemiş görünüyor",
+        "clamped": "{field}: çok uzundu, kısaltıldı",
+        "wrong_script": "{field}: beklenen dilde değil",
+        "numbers": "{field}: sayılar Türkçe metinle uyuşmuyor",
+        "body_headings": "Metin: başlık sayısı farklı",
+        "body_lists": "Metin: liste maddesi sayısı farklı",
+        "body_links": "Metin: bağlantılar farklı",
+        "body_directives": "Metin: özel bloklar farklı"
+      }
     }
   },
   "About": {

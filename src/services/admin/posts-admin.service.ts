@@ -4,7 +4,9 @@ import { mediaUrl } from '@/services/media/image-url';
 import { DEFAULT_CATEGORY } from '@/services/content/category';
 import { isValidSlug } from '@/services/content/slug';
 import type { AdminIdentity } from '@/services/admin/auth.service';
+import { describeTranslation, type TranslationStatus } from '@/services/translation/content-hash';
 import type { SavePostInput } from '@/validators/admin/post';
+import type { TargetLocale } from '@/validators/admin/translation';
 import type { Locale } from '@/validators/content';
 import {
   diffStructure,
@@ -191,6 +193,8 @@ export interface AdminPostEditView {
   updatedAtSeconds: number;
   heroImageUrl: string | null;
   completeness: Record<Locale, Completeness>;
+  /** Auto-translation state per target locale (origin, out of date, last check report). */
+  translationStatus: Record<TargetLocale, TranslationStatus>;
 }
 
 export async function getPostForEdit(deps: AdminPostsDeps, id: string): Promise<AdminPostEditView | null> {
@@ -198,11 +202,15 @@ export async function getPostForEdit(deps: AdminPostsDeps, id: string): Promise<
   if (!post) return null;
   const ctx = { heroImageKey: post.heroImageKey, mediaBaseUrl: deps.mediaBaseUrl, siteUrl: deps.siteUrl };
   const at = (l: Locale) => translationCompleteness(post, post.translations.find((t) => t.locale === l), ctx);
+  const source = post.translations.find((t) => t.locale === 'tr');
+  const status = (l: TargetLocale) => describeTranslation(source, post.translations.find((t) => t.locale === l), post.aiMeta[l]);
+  const [en, ar] = await Promise.all([status('en'), status('ar')]);
   return {
     post,
     updatedAtSeconds: toSeconds(post.updatedAt),
     heroImageUrl: post.heroImageKey ? mediaUrl(deps.mediaBaseUrl, post.heroImageKey) : null,
     completeness: { tr: at('tr'), en: at('en'), ar: at('ar') },
+    translationStatus: { en, ar },
   };
 }
 

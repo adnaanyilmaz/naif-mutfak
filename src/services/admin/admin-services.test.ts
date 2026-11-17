@@ -8,7 +8,9 @@ import { majorToMinor, minorToMajor } from '@/services/catalog/money';
 import type { SavePostInput } from '@/validators/admin/post';
 import type { SaveProductInput } from '@/validators/admin/product';
 import type { AdminIdentity } from './auth.service';
-import { deletePost, savePost } from './posts-admin.service';
+import { deletePost, getPostForEdit, savePost } from './posts-admin.service';
+import { contentHash } from '@/services/translation/content-hash';
+import { trSource } from '@/services/translation/fixtures';
 import { activationIssues, deleteProduct, saveProduct } from './products-admin.service';
 import { createUploadIntent, finalizeUpload, isDevUploadKey, type UploadDeps } from './upload.service';
 import { isKeyForKind, sniffType } from './upload-policy';
@@ -463,5 +465,27 @@ describe('deleteProduct', () => {
   it('reports a missing e-book', async () => {
     const { repo } = fakeProductsRepo(productRecord());
     expect((await run(repo, NEW_ID)).result).toEqual({ ok: false, error: 'not_found' });
+  });
+});
+
+describe('getPostForEdit translation status', () => {
+  const en = { ...trSource, locale: 'en' as const, slug: 'bread', title: 'Bread', isPublished: false };
+  const meta = async (sourceTitle = trSource.title) => ({
+    sourceHash: await contentHash({ ...trSource, title: sourceTitle }),
+    contentHash: await contentHash(en),
+    report: { checks: [], review: [], reviewed: true },
+    translatedAt: new Date(0),
+  });
+
+  it('reports none / ai / out of date per target locale', async () => {
+    const trOnly = await getPostForEdit(postDeps(fakePostsRepo(postRecord({ translations: [trSource] })).repo), POST);
+    expect(trOnly?.translationStatus.en.origin).toBe('none');
+    expect(trOnly?.translationStatus.ar.origin).toBe('none');
+
+    const fresh = await getPostForEdit(postDeps(fakePostsRepo(postRecord({ translations: [trSource, en], aiMeta: { en: await meta() } })).repo), POST);
+    expect(fresh?.translationStatus.en).toMatchObject({ origin: 'ai', outdated: false });
+
+    const stale = await getPostForEdit(postDeps(fakePostsRepo(postRecord({ translations: [trSource, en], aiMeta: { en: await meta('Eski başlık') } })).repo), POST);
+    expect(stale?.translationStatus.en.outdated).toBe(true);
   });
 });
