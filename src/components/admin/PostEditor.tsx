@@ -11,6 +11,7 @@ import {
   ruleInputs,
   startedTranslations,
   toSaveInput,
+  withSavedTranslation,
 } from '@/services/admin/post-form';
 import type { SavePostResult, SlugCheck } from '@/services/admin/posts-admin.service';
 import type { TranslationStatus } from '@/services/translation/content-hash';
@@ -181,10 +182,9 @@ export function PostEditor(props: PostEditorProps) {
     try {
       const result = await props.translateAction({ postId: props.postId, locale, overwrite });
       if (result.ok) {
-        const next: PostForm = { ...form, translations: { ...form.translations, [locale]: result.form } };
-        setForm(next);
-        setSavedJson(JSON.stringify(next));
-        stored.clear();
+        // Functional updates: the user may have kept editing while the request ran.
+        setForm((f) => withSavedTranslation(JSON.stringify(f), f, locale, result.form).form);
+        setSavedJson((saved) => withSavedTranslation(saved, form, locale, result.form).savedJson);
         setSlugTouched((s) => ({ ...s, [locale]: true }));
         setSlugStatus((s) => ({ ...s, [locale]: undefined }));
         setTranslationStatus((s) => ({ ...s, [locale]: result.status }));

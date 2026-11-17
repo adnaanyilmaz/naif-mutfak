@@ -70,8 +70,28 @@ describe('mergePayload', () => {
     const { content } = mergePayload(trSource, { ...p, ingredients: [{ id: 'flour', name: 'flour', unit: ' ', note: '' }, p.ingredients[1]!] });
     expect(content.dek).toBeNull();
     expect(content.keywords).toEqual(['bread']);
-    expect(content.ingredients?.[0]?.items[0]).not.toHaveProperty('unit');
+    expect(content.ingredients?.[0]?.items[0]?.unit).toBe('g'); // blank unit keeps the source unit (reported)
     expect(content.ingredients?.[0]?.items[0]).not.toHaveProperty('note');
     expect(validRow(content)).toBe(true);
+  });
+});
+
+describe('mergePayload keeps source units, notes and titles the model left empty', () => {
+  it('reports instead of dropping them', () => {
+    const p = enPayload();
+    const { content, checks } = mergePayload(trSource, {
+      ...p,
+      groupTitles: [null],
+      ingredients: [{ id: 'flour', name: 'flour', unit: null, note: null }, { id: 'salt', name: 'salt', unit: 'g', note: '' }],
+    });
+    const items = content.ingredients?.[0]?.items ?? [];
+    expect(items[0]?.unit).toBe('g');
+    expect(items[1]?.note).toBe('ince');
+    expect(content.ingredients?.[0]?.title).toBe('Hamur');
+    expect(checks).toEqual([
+      { code: 'missing_item', field: 'ingredients.groups.0' },
+      { code: 'missing_item', field: 'ingredients.flour' },
+      { code: 'missing_item', field: 'ingredients.salt' },
+    ]);
   });
 });

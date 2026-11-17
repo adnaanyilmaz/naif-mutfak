@@ -11,6 +11,7 @@ import type {
   StepForm,
   TranslationForm,
 } from '@/validators/admin/post-form';
+import { postFormSchema } from '@/validators/admin/post-form';
 import type { PostSharedInput, PostTranslationInput } from '@/validators/admin/post';
 import type { RuleShared, RuleTranslation } from './post-rules';
 
@@ -264,4 +265,15 @@ export function issueLocale(path: string, sent: readonly Locale[]): Locale | nul
   if (seg === 'tr' || seg === 'en' || seg === 'ar') return seg;
   const idx = Number(seg);
   return Number.isInteger(idx) ? (sent[idx] ?? null) : null;
+}
+
+/**
+ * Applies a server-saved translation (auto-translate) to both the live form and the saved snapshot, so edits
+ * made elsewhere while the request ran stay in the form and stay dirty.
+ */
+export function withSavedTranslation(savedJson: string, current: PostForm, locale: Locale, translation: TranslationForm): { form: PostForm; savedJson: string } {
+  const form: PostForm = { ...current, translations: { ...current.translations, [locale]: translation } };
+  const saved = postFormSchema.safeParse(JSON.parse(savedJson));
+  const base = saved.success ? saved.data : current;
+  return { form, savedJson: JSON.stringify({ ...base, translations: { ...base.translations, [locale]: translation } }) };
 }

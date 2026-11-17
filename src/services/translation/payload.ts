@@ -63,26 +63,38 @@ export function mergePayload(source: AdminTranslation, model: ModelPayload): { c
     return clampText(v, max);
   };
 
+  const missing = (field: string) => {
+    if (!checks.some((c) => c.code === 'missing_item' && c.field === field)) checks.push({ code: 'missing_item', field });
+  };
+  /** Translated text for a source value that exists; an empty translation keeps the source text and is reported. */
+  const keep = (sourceValue: string | undefined, translated: string | null | undefined, max: number, field: string): string | null => {
+    if (sourceValue === undefined || !sourceValue.trim()) return null;
+    const v = text(translated, max, field);
+    if (v !== null) return v;
+    missing(field);
+    return sourceValue;
+  };
+
   const names = new Map(model.ingredients.map((i) => [i.id, i]));
   const steps = new Map(model.steps.map((s) => [s.id, s]));
 
   const ingredients =
     source.ingredients?.map((g, gi) => ({
-      ...withTitle(g.title === undefined ? null : text(model.groupTitles[gi] ?? g.title, LIMIT.groupTitle, `ingredients.groups.${gi}`)),
+      ...withTitle(keep(g.title, model.groupTitles[gi], LIMIT.groupTitle, `ingredients.groups.${gi}`)),
       items: g.items.map((item) => {
+        const field = `ingredients.${item.id}`;
         const m = names.get(item.id);
-        const name = m ? text(m.name, LIMIT.name, `ingredients.${item.id}`) : null;
-        if (!name) checks.push({ code: 'missing_item', field: `ingredients.${item.id}` });
-        const unit = item.unit === undefined ? null : m ? text(m.unit, LIMIT.unit, `ingredients.${item.id}`) : item.unit;
-        const note = item.note === undefined ? null : m ? text(m.note, LIMIT.note, `ingredients.${item.id}`) : item.note;
+        const name = keep(item.name, m?.name, LIMIT.name, field) ?? item.name;
+        const unit = keep(item.unit, m?.unit, LIMIT.unit, field);
+        const note = keep(item.note, m?.note, LIMIT.note, field);
         const { unit: _unit, note: _note, ...rest } = item;
-        return { ...rest, name: name ?? item.name, ...(unit === null ? {} : { unit }), ...(note === null ? {} : { note }) };
+        return { ...rest, name, ...(unit === null ? {} : { unit }), ...(note === null ? {} : { note }) };
       }),
     })) ?? null;
 
   const instructions =
     source.instructions?.map((s, si) => ({
-      ...withTitle(s.title === undefined ? null : text(model.sectionTitles[si] ?? s.title, LIMIT.groupTitle, `instructions.sections.${si}`)),
+      ...withTitle(keep(s.title, model.sectionTitles[si], LIMIT.groupTitle, `instructions.sections.${si}`)),
       steps: s.steps.map((step) => {
         const translated = text(steps.get(step.id)?.text, LIMIT.stepText, `steps.${step.id}`);
         if (!translated) checks.push({ code: 'missing_item', field: `steps.${step.id}` });

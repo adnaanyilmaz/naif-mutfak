@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import type { AdminPostRecord } from '@/repositories/admin-posts';
 import { slugify } from '@/services/content/slug';
 import { savePostInputSchema } from '@/validators/admin/post';
-import { copyStructure, emptyTranslation, issueLocale, parseNumber, toPostForm, toSaveInput } from './post-form';
+import { copyStructure, emptyTranslation, issueLocale, parseNumber, toPostForm, toSaveInput, withSavedTranslation } from './post-form';
+import { postFormSchema } from '@/validators/admin/post-form';
 import { diffStructure, publishIssues, translationCompleteness, type RuleShared, type RuleTranslation } from './post-rules';
 
 const shared: RuleShared = { isRecipe: true, baseServings: 8, prepMinutes: 20, cookMinutes: 35, restMinutes: null, category: 'ekmekler' };
@@ -139,5 +140,27 @@ describe('post form model', () => {
     expect(issueLocale('translations.1.title', ['tr', 'ar'])).toBe('ar');
     expect(issueLocale('translations.en.dek', [])).toBe('en');
     expect(issueLocale('post.status', ['tr'])).toBeNull();
+  });
+});
+
+describe('withSavedTranslation', () => {
+  it('replaces one locale in the saved snapshot and keeps unsaved edits elsewhere dirty', () => {
+    const saved = toPostForm(record);
+    const editing = { ...saved, translations: { ...saved.translations, tr: saved.translations.tr && { ...saved.translations.tr, title: 'Edited while translating' } } };
+    const translated = { ...emptyTranslation('en'), title: 'AI title', slug: 'ai-title' };
+    const next = withSavedTranslation(JSON.stringify(saved), editing, 'en', translated);
+    expect(next.form.translations.en?.title).toBe('AI title');
+    expect(next.form.translations.tr?.title).toBe('Edited while translating');
+    const savedAfter = postFormSchema.parse(JSON.parse(next.savedJson));
+    expect(savedAfter.translations.en?.title).toBe('AI title');
+    expect(savedAfter.translations.tr?.title).toBe(saved.translations.tr?.title);
+    expect(JSON.stringify(next.form) === next.savedJson).toBe(false);
+  });
+
+  it('is clean when nothing else changed', () => {
+    const saved = toPostForm(record);
+    const translated = { ...emptyTranslation('en'), title: 'AI title', slug: 'ai-title' };
+    const next = withSavedTranslation(JSON.stringify(saved), saved, 'en', translated);
+    expect(JSON.stringify(next.form)).toBe(next.savedJson);
   });
 });
