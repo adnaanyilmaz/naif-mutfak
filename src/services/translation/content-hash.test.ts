@@ -20,7 +20,8 @@ describe('contentHash', () => {
     const h = await contentHash(trSource);
     const ingredients = trSource.ingredients?.map((g) => ({ ...g, items: g.items.map((i) => ({ ...i, quantity: 1 })) })) ?? null;
     const instructions = trSource.instructions?.map((s) => ({ ...s, steps: s.steps.map((st) => ({ ...st, timerSeconds: 5 })) })) ?? null;
-    expect(await contentHash({ ...trSource, ingredients, instructions, slug: 'x', isPublished: false })).toBe(h);
+    const changed: AdminTranslation = { ...trSource, ingredients, instructions, slug: 'x', isPublished: false };
+    expect(await contentHash(changed)).toBe(h);
     expect(await contentHash({ ...trSource, dek: null })).toBe(await contentHash({ ...trSource, dek: '' }));
   });
 
