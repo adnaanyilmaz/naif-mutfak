@@ -320,7 +320,7 @@
       "videoMode": "Video açılışı",
       "videoMode_button": "Butona tıklayınca (sesli)",
       "videoMode_auto": "Sayfa açılınca (sessiz başlar)",
-      "videoHint": "Bağlantı eklenirse tarif kartında video açılır pencerede otomatik oynar. Tüm diller için ortaktır; boş bırakılırsa video gösterilmez."
+      "videoHint": "Bağlantı eklenirse video sayfanın köşesindeki küçük oynatıcıda otomatik oynar; ziyaretçi bu sırada tarifi okumaya devam edebilir. Tüm diller için ortaktır; boş bırakılırsa video gösterilmez."
     },
     "issues": {
       "invalid": "Geçersiz değer: {path}",

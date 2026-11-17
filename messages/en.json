@@ -320,7 +320,7 @@
       "videoMode": "Video opening",
       "videoMode_button": "On button click (with sound)",
       "videoMode_auto": "On page load (starts muted)",
-      "videoHint": "When a link is set, the video plays automatically in a popup on the recipe card. Shared across languages; leave empty for no video."
+      "videoHint": "When a link is set, the video plays automatically in a small player docked to the corner, so visitors can keep reading the recipe. Shared across languages; leave empty for no video."
     },
     "issues": {
       "invalid": "Invalid value: {path}",
