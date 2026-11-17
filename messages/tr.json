@@ -126,7 +126,7 @@
     },
     "nav": {
       "label": "Yönetim menüsü",
-      "posts": "Yazılar",
+      "posts": "Tarifler",
       "products": "E-kitaplar",
       "sales": "Satışlar",
       "subscribers": "Aboneler",
@@ -192,27 +192,27 @@
       "ar": "Arapça"
     },
     "posts": {
-      "title": "Yazılar",
-      "new": "Yeni yazı",
-      "empty": "Henüz yazı yok.",
+      "title": "Tarifler",
+      "new": "Yeni tarif",
+      "empty": "Henüz tarif yok.",
       "colTitle": "Başlık",
       "colStatus": "Durum",
       "colLocales": "Diller",
       "colUpdated": "Güncellendi",
       "untitled": "Başlıksız",
-      "subtitle": "Tarifleri ve yazıları üç dilde düzenleyin.",
-      "search": "Yazılarda ara…",
-      "searchLabel": "Yazılarda ara",
+      "subtitle": "Tarifleri üç dilde düzenleyin.",
+      "search": "Tariflerde ara…",
+      "searchLabel": "Tariflerde ara",
       "filterLabel": "Duruma göre filtrele",
       "all": "Tümü",
-      "noResults": "Aramanızla eşleşen yazı yok.",
+      "noResults": "Aramanızla eşleşen tarif yok.",
       "viewOnSite": "Sitede görüntüle",
-      "emptyTitle": "İlk yazınızı oluşturun",
-      "emptyBody": "Oluşturduğunuz tarifler ve yazılar burada listelenir.",
+      "emptyTitle": "İlk tarifinizi oluşturun",
+      "emptyBody": "Oluşturduğunuz tarifler burada listelenir.",
       "localeLegend": "Yeşil: o dilde yayında · gri: taslak"
     },
     "editor": {
-      "heading": "Yazıyı düzenle",
+      "heading": "Tarifi düzenle",
       "shared": "Ortak alanlar",
       "status": "Durum",
       "category": "Kategori",
@@ -287,15 +287,15 @@
         "partial": "Eksik alanlar var",
         "empty": "Başlanmadı"
       },
-      "conflict": "Bu yazı başka bir yerde düzenlendi. Değişikliklerinizi kaybetmemek için kopyalayın ve sayfayı yeniden yükleyin.",
+      "conflict": "Bu tarif başka bir yerde düzenlendi. Değişikliklerinizi kaybetmemek için kopyalayın ve sayfayı yeniden yükleyin.",
       "savedNotice": "Kaydedildi.",
       "restoreDraft": "Kaydedilmemiş bir taslak bulundu.",
       "restore": "Taslağı geri yükle",
       "discard": "Yok say",
       "issuesTitle": "Kaydedilemedi",
       "warningsTitle": "Uyarılar",
-      "notFound": "Yazı bulunamadı.",
-      "back": "Yazılar",
+      "notFound": "Tarif bulunamadı.",
+      "back": "Tarifler",
       "unsaved": "Kaydedilmemiş değişiklikler",
       "allSaved": "Tüm değişiklikler kaydedildi",
       "shortcut": "Kaydetmek için Ctrl + S",
@@ -478,7 +478,7 @@
     "overview": {
       "title": "Genel bakış",
       "subtitle": "Sitenin durumuna hızlı bir bakış.",
-      "posts": "Yazılar",
+      "posts": "Tarifler",
       "published": "{n, number} yayında",
       "drafts": "{n, number} taslak",
       "ebooks": "E-kitaplar",
@@ -490,10 +490,10 @@
       "activeSubs": "{n, number} aktif",
       "pendingSubs": "{n, number} onay bekliyor",
       "quickActions": "Hızlı işlemler",
-      "recentPosts": "Son düzenlenen yazılar",
+      "recentPosts": "Son düzenlenen tarifler",
       "webhookAlert": "Son 7 günde {n, number} ödeme bildirimi işlenemedi.",
       "review": "İncele",
-      "allPosts": "Tüm yazılar"
+      "allPosts": "Tüm tarifler"
     },
     "payments": {
       "title": "Ödeme ayarları",
@@ -529,10 +529,10 @@
     },
     "danger": {
       "post": {
-        "title": "Yazıyı sil",
-        "body": "Yazı, tüm dillerdeki çevirileri ve kapak görseliyle birlikte kalıcı olarak silinir. Bu işlem geri alınamaz.",
-        "button": "Yazıyı sil",
-        "confirm": "Bu yazı kalıcı olarak silinecek. Emin misiniz?"
+        "title": "Tarifi sil",
+        "body": "Tarif, tüm dillerdeki çevirileri ve kapak görseliyle birlikte kalıcı olarak silinir. Bu işlem geri alınamaz.",
+        "button": "Tarifi sil",
+        "confirm": "Bu tarif kalıcı olarak silinecek. Emin misiniz?"
       },
       "product": {
         "title": "E-kitabı sil",
@@ -570,7 +570,7 @@
         "model_output": "AI geçerli bir çeviri üretemedi. Tekrar deneyin.",
         "source_missing": "Önce Türkçe başlığı yazıp kaydedin.",
         "slug": "Bu dil için uygun bir URL adı bulunamadı.",
-        "not_found": "Yazı bulunamadı.",
+        "not_found": "Tarif bulunamadı.",
         "invalid": "Geçersiz istek.",
         "needs_confirm": "Mevcut metin korunmak için çeviri yapılmadı."
       },

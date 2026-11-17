@@ -126,7 +126,7 @@
     },
     "nav": {
       "label": "Admin menu",
-      "posts": "Posts",
+      "posts": "Recipes",
       "products": "E-books",
       "sales": "Sales",
       "subscribers": "Subscribers",
@@ -192,27 +192,27 @@
       "ar": "Arabic"
     },
     "posts": {
-      "title": "Posts",
-      "new": "New post",
-      "empty": "No posts yet.",
+      "title": "Recipes",
+      "new": "New recipe",
+      "empty": "No recipes yet.",
       "colTitle": "Title",
       "colStatus": "Status",
       "colLocales": "Languages",
       "colUpdated": "Updated",
       "untitled": "Untitled",
-      "subtitle": "Edit recipes and stories in three languages.",
-      "search": "Search posts…",
-      "searchLabel": "Search posts",
+      "subtitle": "Edit recipes in three languages.",
+      "search": "Search recipes…",
+      "searchLabel": "Search recipes",
       "filterLabel": "Filter by status",
       "all": "All",
-      "noResults": "No posts match your search.",
+      "noResults": "No recipes match your search.",
       "viewOnSite": "View on site",
-      "emptyTitle": "Create your first post",
-      "emptyBody": "Recipes and stories you create will be listed here.",
+      "emptyTitle": "Create your first recipe",
+      "emptyBody": "Recipes you create will be listed here.",
       "localeLegend": "Green: published in that language · grey: draft"
     },
     "editor": {
-      "heading": "Edit post",
+      "heading": "Edit recipe",
       "shared": "Shared fields",
       "status": "Status",
       "category": "Category",
@@ -287,15 +287,15 @@
         "partial": "Missing required fields",
         "empty": "Not started"
       },
-      "conflict": "This post was edited elsewhere. Copy your changes and reload the page to avoid losing them.",
+      "conflict": "This recipe was edited elsewhere. Copy your changes and reload the page to avoid losing them.",
       "savedNotice": "Saved.",
       "restoreDraft": "An unsaved draft was found.",
       "restore": "Restore draft",
       "discard": "Discard",
       "issuesTitle": "Could not save",
       "warningsTitle": "Warnings",
-      "notFound": "Post not found.",
-      "back": "Posts",
+      "notFound": "Recipe not found.",
+      "back": "Recipes",
       "unsaved": "Unsaved changes",
       "allSaved": "All changes saved",
       "shortcut": "Press Ctrl + S to save",
@@ -478,7 +478,7 @@
     "overview": {
       "title": "Overview",
       "subtitle": "A quick look at how the site is doing.",
-      "posts": "Posts",
+      "posts": "Recipes",
       "published": "{n, number} published",
       "drafts": "{n, number} drafts",
       "ebooks": "E-books",
@@ -490,10 +490,10 @@
       "activeSubs": "{n, number} active",
       "pendingSubs": "{n, number} awaiting confirmation",
       "quickActions": "Quick actions",
-      "recentPosts": "Recently edited posts",
+      "recentPosts": "Recently edited recipes",
       "webhookAlert": "{n, number} payment notifications failed in the last 7 days.",
       "review": "Review",
-      "allPosts": "All posts"
+      "allPosts": "All recipes"
     },
     "payments": {
       "title": "Payment settings",
@@ -529,10 +529,10 @@
     },
     "danger": {
       "post": {
-        "title": "Delete post",
-        "body": "The post is permanently deleted with all of its translations and its hero image. This cannot be undone.",
-        "button": "Delete post",
-        "confirm": "This post will be permanently deleted. Are you sure?"
+        "title": "Delete recipe",
+        "body": "The recipe is permanently deleted with all of its translations and its hero image. This cannot be undone.",
+        "button": "Delete recipe",
+        "confirm": "This recipe will be permanently deleted. Are you sure?"
       },
       "product": {
         "title": "Delete e-book",
@@ -570,7 +570,7 @@
         "model_output": "The AI did not return a usable translation. Try again.",
         "source_missing": "Write and save the Turkish title first.",
         "slug": "No free URL slug was found for this language.",
-        "not_found": "Post not found.",
+        "not_found": "Recipe not found.",
         "invalid": "Invalid request.",
         "needs_confirm": "Not translated, to keep the existing text."
       },
