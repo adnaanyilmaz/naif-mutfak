@@ -21,10 +21,12 @@ let db: D1Database;
 let repo: AdminPostsRepo;
 
 beforeAll(async () => {
-  proxy = await getPlatformProxy<{ DB: D1Database }>({ persist: false });
+  proxy = await getPlatformProxy<{ DB: D1Database }>({ persist: false, remoteBindings: false });
   db = proxy.env.DB;
-  const sql = readFileSync(new URL('../../migrations/0000_init.sql', import.meta.url), 'utf8');
-  await db.batch(sql.split('--> statement-breakpoint').map((s) => s.trim()).filter(Boolean).map((s) => db.prepare(s)));
+  for (const file of ['0000_init.sql', '0002_ai_translation_meta.sql']) {
+    const sql = readFileSync(new URL(`../../migrations/${file}`, import.meta.url), 'utf8');
+    await db.batch(sql.split('--> statement-breakpoint').map((s) => s.trim()).filter(Boolean).map((s) => db.prepare(s)));
+  }
   const t0 = T0.getTime() / 1000;
   await db.batch([
     db.prepare("INSERT INTO posts (id, category, status, updated_at) VALUES (?, 'ekmekler', 'draft', ?), (?, 'ekmekler', 'draft', ?)").bind(POST_A, t0, POST_B, t0),
@@ -116,6 +118,26 @@ describe('AdminPostsRepo on D1', () => {
     expect(await repo.setHeroImage(POST_A, 'posts/a/1.png', { ...audit, action: 'upload.post_hero' })).toEqual({ previousKey: null });
     expect(await repo.setHeroImage(POST_A, 'posts/a/2.png', { ...audit, action: 'upload.post_hero' })).toEqual({ previousKey: 'posts/a/1.png' });
     expect((await repo.find(POST_A))?.updatedAt).toEqual(before);
+  });
+
+  it('saves an AI translation as an unpublished draft with metadata, keeping updated_at', async () => {
+    const before = (await repo.find(POST_A))?.updatedAt;
+    const report = { checks: [{ code: 'numbers' as const, field: 'bodyMd' }], review: [], reviewed: true };
+    const meta = { sourceHash: 'h1', contentHash: 'c1', report, translatedAt: new Date('2026-11-02T00:00:00Z') };
+    const translation = { ...write(T0, T0, 'ai-bread', 'AI Bread').translations[0]!, locale: 'ar' as const, isPublished: false };
+    expect(await repo.saveAiTranslation({ postId: POST_A, translation, meta, audit: { ...audit, action: 'post.translate' } })).toBe('saved');
+    const post = await repo.find(POST_A);
+    expect(post?.translations.find((t) => t.locale === 'ar')).toMatchObject({ slug: 'ai-bread', isPublished: false });
+    expect(post?.aiMeta.ar).toEqual(meta);
+    expect(post?.aiMeta.en).toBeUndefined();
+    expect(post?.updatedAt).toEqual(before);
+  });
+
+  it('maps AI translation slug collisions to slug_taken', async () => {
+    const report = { checks: [], review: [], reviewed: false };
+    const meta = { sourceHash: 'h', contentHash: 'c', report, translatedAt: T0 };
+    const translation = { ...write(T0, T0, 'taken-slug', 'Dup').translations[0]!, isPublished: false };
+    expect(await repo.saveAiTranslation({ postId: POST_A, translation, meta, audit })).toBe('slug_taken');
   });
 });
 

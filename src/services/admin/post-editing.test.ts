@@ -67,6 +67,7 @@ describe('diffStructure', () => {
 
 const record: AdminPostRecord = {
   id: '7b0c6c1e-0000-4000-8000-000000000a01',
+  aiMeta: {},
   status: 'draft',
   category: 'ekmekler',
   heroImageKey: null,

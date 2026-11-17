@@ -38,6 +38,7 @@ function postRecord(over: Partial<AdminPostRecord> = {}): AdminPostRecord {
     publishedAt: null,
     updatedAt: new Date(T0 * 1000),
     translations: [],
+    aiMeta: {},
     ...over,
   };
 }
@@ -55,6 +56,7 @@ function fakePostsRepo(record: AdminPostRecord, opts: { takenSlugs?: string[]; o
       return opts.outcome ?? 'saved';
     },
     setHeroImage: async () => null,
+    saveAiTranslation: async () => 'saved',
     exists: async (id) => id === record.id,
     remove: async (_id, audit) => {
       removed.push(audit);

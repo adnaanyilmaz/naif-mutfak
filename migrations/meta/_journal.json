@@ -15,6 +15,13 @@
       "when": 1794841628678,
       "tag": "0001_recipe_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794916086975,
+      "tag": "0002_ai_translation_meta",
+      "breakpoints": true
     }
   ]
 }

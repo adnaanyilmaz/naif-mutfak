@@ -16,7 +16,7 @@ let repo: OrdersRepo;
 let db: D1Database;
 
 beforeAll(async () => {
-  proxy = await getPlatformProxy<{ DB: D1Database }>({ persist: false });
+  proxy = await getPlatformProxy<{ DB: D1Database }>({ persist: false, remoteBindings: false });
   db = proxy.env.DB;
   const sql = readFileSync(new URL('../../migrations/0000_init.sql', import.meta.url), 'utf8');
   const statements = sql.split('--> statement-breakpoint').map((s) => s.trim()).filter(Boolean);

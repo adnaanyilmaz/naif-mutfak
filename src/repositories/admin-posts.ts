@@ -2,6 +2,7 @@ import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import type { BatchItem } from 'drizzle-orm/batch';
 import { posts, postTranslations } from '@/db/schema';
 import type { Db } from '@/lib/cloudflare/db';
+import { translationReportSchema, type TranslationReport } from '@/validators/admin/translation';
 import type { Ingredients, Instructions, Locale } from '@/validators/content';
 import { auditInsert, type AuditEntry } from './audit';
 import { isGuardViolation, isUniqueViolation } from './db-errors';
@@ -47,12 +48,29 @@ export interface AdminTranslation {
   isPublished: boolean;
 }
 
+/** Stored with an AI-generated translation; hashes are compared to derive origin / out-of-date state. */
+export interface AiTranslationMeta {
+  sourceHash: string;
+  contentHash: string;
+  report: TranslationReport;
+  translatedAt: Date;
+}
+
 export interface AdminPostRecord extends AdminPostShared {
   id: string;
   heroImageKey: string | null;
   publishedAt: Date | null;
   updatedAt: Date;
   translations: AdminTranslation[];
+  /** Locales whose current row was written by auto-translation (metadata complete and valid). */
+  aiMeta: Partial<Record<Locale, AiTranslationMeta>>;
+}
+
+export interface AiTranslationWrite {
+  postId: string;
+  translation: AdminTranslation;
+  meta: AiTranslationMeta;
+  audit: AuditEntry;
 }
 
 export interface SavePostWrite {
@@ -74,6 +92,8 @@ export interface AdminPostsRepo {
   createDraft(input: { id: string; category: string }, audit: AuditEntry): Promise<void>;
   isSlugTaken(locale: Locale, slug: string, excludePostId: string): Promise<boolean>;
   save(write: SavePostWrite): Promise<SavePostOutcome>;
+  /** Upserts one locale from auto-translation without touching `posts.updated_at` (editor concurrency token). */
+  saveAiTranslation(write: AiTranslationWrite): Promise<'saved' | 'slug_taken'>;
   /** Upload finalize: swaps the hero key without touching `updated_at` (editor concurrency token). */
   setHeroImage(postId: string, key: string, audit: AuditEntry): Promise<{ previousKey: string | null } | null>;
   exists(postId: string): Promise<boolean>;
@@ -92,6 +112,23 @@ const sharedColumns = {
   difficulty: posts.difficulty,
   featuredProductId: posts.featuredProductId,
 };
+
+function contentValues(t: AdminTranslation) {
+  return {
+    slug: t.slug,
+    title: t.title,
+    dek: t.dek,
+    bodyMd: t.bodyMd,
+    heroImageAlt: t.heroImageAlt,
+    seoTitle: t.seoTitle,
+    seoDescription: t.seoDescription,
+    ingredientsJson: t.ingredients,
+    instructionsJson: t.instructions,
+    keywordsJson: t.keywords,
+    cuisine: t.cuisine,
+    isPublished: t.isPublished,
+  };
+}
 
 export function createAdminPostsRepo(db: Db): AdminPostsRepo {
   return {
@@ -123,8 +160,16 @@ export function createAdminPostsRepo(db: Db): AdminPostsRepo {
         .limit(1);
       if (!post) return null;
       const rows = await db.select().from(postTranslations).where(eq(postTranslations.postId, id));
+      const aiMeta: Partial<Record<Locale, AiTranslationMeta>> = {};
+      for (const t of rows) {
+        const report = translationReportSchema.safeParse(t.aiReportJson);
+        if (t.aiSourceHash && t.aiContentHash && t.aiTranslatedAt && report.success) {
+          aiMeta[t.locale] = { sourceHash: t.aiSourceHash, contentHash: t.aiContentHash, report: report.data, translatedAt: t.aiTranslatedAt };
+        }
+      }
       return {
         ...post,
+        aiMeta,
         translations: rows.map((t) => ({
           locale: t.locale,
           slug: t.slug,
@@ -169,20 +214,7 @@ export function createAdminPostsRepo(db: Db): AdminPostsRepo {
           .where(eq(posts.id, w.postId)),
       ];
       for (const t of w.translations) {
-        const values = {
-          slug: t.slug,
-          title: t.title,
-          dek: t.dek,
-          bodyMd: t.bodyMd,
-          heroImageAlt: t.heroImageAlt,
-          seoTitle: t.seoTitle,
-          seoDescription: t.seoDescription,
-          ingredientsJson: t.ingredients,
-          instructionsJson: t.instructions,
-          keywordsJson: t.keywords,
-          cuisine: t.cuisine,
-          isPublished: t.isPublished,
-        };
+        const values = contentValues(t);
         stmts.push(
           db
             .insert(postTranslations)
@@ -199,6 +231,29 @@ export function createAdminPostsRepo(db: Db): AdminPostsRepo {
         return 'saved';
       } catch (err) {
         if (isGuardViolation(err)) return 'conflict';
+        if (isUniqueViolation(err, 'post_translations.locale')) return 'slug_taken';
+        throw err;
+      }
+    },
+
+    async saveAiTranslation({ postId, translation: t, meta, audit }) {
+      const values = {
+        ...contentValues(t),
+        aiSourceHash: meta.sourceHash,
+        aiContentHash: meta.contentHash,
+        aiReportJson: meta.report,
+        aiTranslatedAt: meta.translatedAt,
+      };
+      try {
+        await db.batch([
+          db
+            .insert(postTranslations)
+            .values({ postId, locale: t.locale, ...values })
+            .onConflictDoUpdate({ target: [postTranslations.postId, postTranslations.locale], set: { ...values, updatedAt: new Date() } }),
+          auditInsert(db, audit),
+        ]);
+        return 'saved';
+      } catch (err) {
         if (isUniqueViolation(err, 'post_translations.locale')) return 'slug_taken';
         throw err;
       }

@@ -1,6 +1,7 @@
 // Relative imports only: drizzle-kit loads this file outside the Next.js resolver.
 import { sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import type { TranslationReport } from '../validators/admin/translation';
 import { CURRENCIES, LOCALES, type Ingredients, type Instructions, type Utm } from '../validators/content';
 
 const PROVIDERS = ['lemonsqueezy', 'paddle'] as const;
@@ -59,6 +60,11 @@ export const postTranslations = sqliteTable(
     keywordsJson: text('keywords_json', { mode: 'json' }).$type<string[]>(),
     cuisine: text('cuisine'),
     isPublished: integer('is_published', { mode: 'boolean' }).notNull().default(false),
+    /** AI auto-translation metadata (admin.md §2): hashes drive "hand-edited" / "out of date". */
+    aiSourceHash: text('ai_source_hash'),
+    aiContentHash: text('ai_content_hash'),
+    aiReportJson: text('ai_report_json', { mode: 'json' }).$type<TranslationReport>(),
+    aiTranslatedAt: integer('ai_translated_at', { mode: 'timestamp' }),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
